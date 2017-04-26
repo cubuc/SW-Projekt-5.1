@@ -5,4 +5,4 @@ all :
 	dvipdf Pflichtenheft.dvi
 
 clean:
-	rm -f *{.toc,.fdb_latexmk,.fls,.aux,.dvi,.log,.out,.ps[0-9]*}
+	rm -f *{.synctex.gz,.toc,.fdb_latexmk,.fls,.aux,.dvi,.log,.out,.ps[0-9]*}

@@ -1,0 +1,6 @@
+{
+"file_records":[
+{"id":1,"name":"mcuimg.bin","size":163840,"ver":"03","dest_file":"","flag":2},
+{"id":2,"name":"param_sensortag_conf.html","size":1024,"ver":"03","dest_file":"www/param_sensortag_conf.html","flag":4}]
+{"id":3,"name":"param_config.html","size":4096,"ver":"02”,”dest_file":"www/param_config.html","flag":4}]
+}

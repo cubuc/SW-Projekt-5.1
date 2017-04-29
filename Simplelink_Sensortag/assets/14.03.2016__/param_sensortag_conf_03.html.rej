@@ -1,0 +1,16 @@
+***************
+*** 0 ****
+--- 1,13 ----
++ <html>
++ <body>
++ <p id="tst">__SL_G_UTS</p>
++ <p id="cfg">__SL_G_UCF</p>
++ <p id="led">__SL_G_ULD</p>
++ <p id="ito">__SL_G_ITO</p>
++ <p id="rte">__SL_G_RTE</p>
++ <p id="ots">__SL_G_OTS</p>
++ <p id="fwr">__SL_G_UFW</p>
++ <p id="mac">__SL_G_N.D</p>
++ <p id="url">__SL_G_UIC__SL_G_UIB</p>
++ </body>
++ </html>

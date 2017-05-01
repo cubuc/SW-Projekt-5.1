@@ -22,6 +22,6 @@
 
 [nice vid to watch](https://pusher.com/sessions/meetup/js-monthly-london/webvr-how-to-create-virtual-worlds-with-javascript)
 [three.js](https://github.com/mrdoob/three.js/)
-[website for examples](https://threejs.org/)
 [Polyfill](https://github.com/googlevr/webvr-polyfill)
+[website for examples](https://threejs.org/examples/?q=webvr#webvr_cubes)
 [basic example using three.js](https://github.com/mrdoob/three.js/blob/master/examples/webvr_cubes.html)

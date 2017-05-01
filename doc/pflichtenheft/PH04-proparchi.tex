@@ -1,0 +1,32 @@
+\section{Proposed Architecture}
+
+\subsection{Overview}
+
+\subsubsection{Services}
+From \href{https://developer.android.com/guide/components/services.html}{AndroidDoc}: \\
+\"A Service is an application component that can perform long-running operations in the background, and it does not provide a user interface\".
+\begin{itemize}
+  \item \textbf{SensorTagBluetoothReceiverService:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI cc2650. \\
+  \item \textbf{SensorTagTrackingService} Handles the tracking of the Sensors.
+\end{itemize}
+
+
+\subsubsection{Activities}
+From \href{https://developer.android.com/guide/components/services.html}{AndroidDoc}: \\
+\"They (Activities) serve as the entry point for a user's interaction with an app, and are also central to how a user navigates within an app (as with the Back button) or between apps (as with the Recents button)\". \newline
+\begin{itemize}
+  \item \textbf{MainActivity} Provides the main startup screen as the main entry point.
+  \item \textbf{VRViewActivity} shall provide the WebVR view using the android.webkit library (esp. .webview).
+  \item \textbf{LiveDataActivity} shall provide a view of the sensor data in human readable form.
+  \item \textbf{TISettingsActivity:} Settings screen containing scanning \& connecting, connected devices and device settings fragments. \\
+  \begin{itemize}
+    \item \textbf{ScanningConnectingFragment} shall show the scanning results, delivered by the BluetoothReceiverService and controll to which device to connect to or disconnect.
+    \item \textbf{ConnectedDevicesFragment} shall show a list of all connected devices and a short info about the current setting and state of the TI SimpleLink SensorTag device.
+    \item \textbf{ConnectedDevicesSettingsFragment} shall implement the configuration of the app features of the sensor.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Additional Files}
+\begin{itemize}
+  \item GATT characteristics and profiles for the sensors including extraction operations from raw to get proper values.
+\end{itemize}

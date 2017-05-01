@@ -7,7 +7,7 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
 \"A Service is an application component that can perform long-running operations in the background, and it does not provide a user interface\".
 \begin{itemize}
   \item \textbf{SensorTagBluetoothReceiverService:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI cc2650. \\
-  \item \textbf{SensorTagTrackingService} Handles the tracking of the Sensors.
+  \item \textbf{SensorTagTrackingService} Handles the tracking of the TI SensorTag devices.
 \end{itemize}
 
 
@@ -20,13 +20,13 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
   \item \textbf{LiveDataActivity} shall provide a view of the sensor data in human readable form.
   \item \textbf{TISettingsActivity:} Settings screen containing scanning \& connecting, connected devices and device settings fragments. \\
   \begin{itemize}
-    \item \textbf{ScanningConnectingFragment} shall show the scanning results, delivered by the BluetoothReceiverService and controll to which device to connect to or disconnect.
+    \item \textbf{ScanningConnectingFragment} shall show the scanning results, delivered by the SensorTagBluetoothReceiverService and controll to which device to connect to or disconnect.
     \item \textbf{ConnectedDevicesFragment} shall show a list of all connected devices and a short info about the current setting and state of the TI SimpleLink SensorTag device.
     \item \textbf{ConnectedDevicesSettingsFragment} shall implement the configuration of the app features of the sensor.
   \end{itemize}
 \end{itemize}
 
-\subsubsection{Additional Files}
+\subsubsection{Additional Classes}
 \begin{itemize}
   \item GATT characteristics and profiles for the sensors including extraction operations from raw to get proper values.
 \end{itemize}

@@ -2,69 +2,38 @@
 
 %\comment{functional Requirements}
 
-\subsection{Settings}
-  The User can set the following Options:
-  \begin{description}
-    \item[/F0100/]
-  	\textit{Sensor:} The User can set, which data shall be displayed in the VR-World (Temperature, etc.)
-  \end{description}
+\subsection{General Features}
+  \item[F0.1] The app shall use the Bluetooth adapter of the smartphone and the Android.bluetooth library to connect to a TI SimpleLink SensorTag device.
+\item[F0.2] The app shall provide a live data view of the sensor feedback
+\item[F0.3] The app shall track connected TI SimpleLink SensorTag devices
+
 
 \subsection{VR-World}
   The VR-Mode is 3D view of the world on entering VR-Mode the user will see a fullscreen 3D world and by pressing the button in the lower right corner he can enter the  stereoscopic view of the World.
   The VR-World is a 3D representation of a real series of rooms.
   \begin{description}
-    \item[/F0300/]
-      \textit{Look around:} The User can look around in the Vr-World by touching and draging on the Screen or by moving his head around to pan the camera.
+    \item[F1.1] The VR-World shall model at least two different rooms and a connect hallway.
+    \item[F1.2] The VR-World shall be viewed inside a web browser and from the App.
+    \item[F1.3] The VR-World shall have a stereoscopic 3D-Mode of the World.
+    \item[F1.4] While viewing the VR-World the user shall be able to look around using the gyro senor of his phone to pan the camera around.
+    \item[F1.5] While the App is not in stereoscopic 3D mode the User shall be able to click and drag to pan the camera around.
+    \item[F1.6] The app shall be able to move the camera inside the VR-World by using a bluetooth controller.
+    \item[F1.7] The Data fechted from the Sensors shall be displayed inside the VR-World.
+    \item[F1.8] The App shall be in fullscreen mode, while in VR-Mode.
+    \item[F1.9] The app shall exit the VR-Mode if the user is pressing the x in the top right corner of the screen or if the user is looking for 5 seconds directly on the x under his feet.
+    \item[F1.10] The app shall be able to switch between stereoscopic 3D and normal 3D mode.
+    \item[F1.11] The app shall be able to switch from fullscreen VR-Mode to stereoscopic by pressing the button in the lower right corner or by pressing the A-Button on his controller.
+    \item[F1.12] While in stereoscopic 3D-Mode the app shall be able to exit it if the user is looking for 5 seconds at the cross under his feet or by pressing the back button on his device or by touching the back button in the top left corner.
+    \item[F1.13] The app shall be able to switch to the settings screen when it is in normal 3D mode.
+    \item[F1.14] The app shall switch rooms if the user pushes the B-Button on his controller or by looking up at the door sign for at least 5 seconds, when the app is in a visualization state.
+    \item[F1.15] The app shall visualize the position of connected TI SimpleLink SensorTag devices.
   \end{description}
 
-  \begin{description}
-    \item[/F0310/]
 
-      \textit{Move inside VR-World:} The User can move inside the VR-World by tilting the joystick of his controller forward. Turning will be done by looking around with the VR-headset
-                                    or by clicking and dragging on the screen.
-  \end{description}
+  \subsection{Settings}
+    The User can set the following Options:
 
-  \begin{description}
-    \item[/F0320/]
-      \textit{Switch Data representation:} The User can switch between two different respresentations of the bluetooth data from the sensor by pressing the A-Button on his controller.
-  \end{description}
-
-  \begin{description}
-    \item[/F0330/]
-      \textit{Exit VR-Mode:} The User can exit the VR-Mode by pressing the x in the top right corner of the screen or by looking for 5 seconds directly on the x under his feet.
-  \end{description}
-
-  \begin{description}
-    \item[/F0340/]
-  	\textit{Enter stereoscopic VR-Mode:} The User can switch from fullscreen VR-Mode to stereoscopic by pressing the button in the lower right corner or by pressing the A-Button on his controller.
-  \end{description}
-
-  \begin{description}
-    \item[/F0350/]
-      \textit{Exit stereoscopic VR-Mode:} The User can leave stereoscopic Vr-Mode by pressing the back button on his device or by touching the back button in the top left corner.
-  \end{description}
-
-  \begin{description}
-    \item[/F0360/]
-      \textit{Enter Settings:} The User shall be able to enter the Settings menu while in normal 3D-Mode.
-  \end{description}
-
-  \begin{description}
-    \item[/F0370/]
-      \textit{Switch rooms:} The User can easily switch rooms by pressing the B-Button on his controller or by looking up at the door sign for at least 5 seconds.
-  \end{description}
-
-  \begin{description}
-    \item The VR-World shall model at least two different rooms and a connect hallway.
-    \item The VR-World shall be viewed inside a web browser and from the App.
-    \item The VR-World shall have a stereoscopic 3D-Mode of the World.
-    \item While viewing the VR-World the user shall be able to look around using the gyro senor of his phone to pan the camera around.
-    \item While the App is not in stereoscopic 3D mode the User shall be able to click and drag to pan the camera around.
-    \item The User shall be able to move the camera inside the Vr-World by using his controller.
-    \item The Data fechted from the Sensor shall be displayed inside the VR-World.
-    \item There shall be at least two different representations the data from the Sensor.
-    \item The VR-World shall represent at least two different real world rooms.
-    \item The User shall be able to easily switch between stereoscopic 3D and normal 3D mode.
-    \item The App shall be in fullscreen mode, while in VR-Mode.
-    \item While in stereoscopic 3D-Mode the user shall be able to exit it by looking for 5 seconds at the cross under his feet.
-  \end{description}
+    \begin{description}
+      \item[F2.1]
+    	\textit{Sensor:} The app shall be configuarable so that the user may choose wich data shall be displayed in the VR-World (Temperature, etc.)
+    \end{description}

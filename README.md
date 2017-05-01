@@ -25,3 +25,6 @@
 [Polyfill](https://github.com/googlevr/webvr-polyfill)
 [website for examples](https://threejs.org/examples/?q=webvr#webvr_cubes)
 [basic example using three.js](https://github.com/mrdoob/three.js/blob/master/examples/webvr_cubes.html)
+[maybe use a-Frame](https://aframe.io/docs/0.5.0/introduction/getting-started.html)
+[hosting the webvr stuff](https://pages.github.com/)
+[short three.js tutorial for webvr](http://elevr.com/a-webvr-with-threejs-tutorial/)

@@ -16,3 +16,12 @@
 [Repo zur Vorlage](https://bitbucket.org/StylingAndroid/bluetoothle/src/1fe191cf34f34f9917b1d0d62c617c607fe3df4d/src/main/AndroidManifest.xml?at=Part2&fileviewer=file-view-default)
 [Beacon-HowTo Java App:]( https://www.pubnub.com/blog/2015-04-14-building-android-beacon-android-ibeacon-tutorial-overview/)
 [Android Beacon Library](https://github.com/AltBeacon/android-beacon-library)
+
+
+## VR
+
+[nice vid to watch](https://pusher.com/sessions/meetup/js-monthly-london/webvr-how-to-create-virtual-worlds-with-javascript)
+[three.js](https://github.com/mrdoob/three.js/)
+[website for examples](https://threejs.org/)
+[Polyfill](https://github.com/googlevr/webvr-polyfill)
+[basic example using three.js](https://github.com/mrdoob/three.js/blob/master/examples/webvr_cubes.html)

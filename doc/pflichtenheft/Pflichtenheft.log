@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.3)  2 MAY 2017 08:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.3)  2 MAY 2017 13:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -489,29 +489,29 @@ LaTeX Warning: You have requested package `',
 Package: hyperref 
 
 Package hyperref Warning: Option `pdftex' has already been used,
-(hyperref)                setting the option has no effect on input line 15.
+(hyperref)                setting the option has no effect on input line 14.
 
-Package hyperref Info: Option `colorlinks' set `true' on input line 15.
-Package hyperref Info: Option `breaklinks' set `true' on input line 15.
+Package hyperref Info: Option `colorlinks' set `true' on input line 14.
+Package hyperref Info: Option `breaklinks' set `true' on input line 14.
 (./_Pflichtenheft.tex
 \c@subsubsubsection=\count123
 ) (./Pflichtenheft.aux)
 \openout1 = `Pflichtenheft.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
 
 (/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -528,7 +528,7 @@ LaTeX Font Info:    ... okay on input line 21.
 \everyMPtoPDFconversion=\toks19
 )
 \AtBeginShipoutBox=\box28
-Package hyperref Info: Link coloring ON on input line 21.
+Package hyperref Info: Link coloring ON on input line 20.
  (/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -537,9 +537,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count130
 )
-LaTeX Info: Redefining \ref on input line 21.
-LaTeX Info: Redefining \pageref on input line 21.
-LaTeX Info: Redefining \nameref on input line 21.
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
 
 (./Pflichtenheft.out) (./Pflichtenheft.out)
 \@outlinefile=\write4
@@ -563,23 +563,23 @@ e
 ))
 (./PH00-title.tex)
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 22.
+(Font)              <10.95> on input line 21.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 22.
+(Font)              <8> on input line 21.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 22.
+(Font)              <6> on input line 21.
 
-Overfull \hbox (13.29999pt too wide) in paragraph at lines 22--22
+Overfull \hbox (13.29999pt too wide) in paragraph at lines 21--21
  [][][][][][] 
  []
 
 
-Overfull \hbox (13.29999pt too wide) in paragraph at lines 22--22
+Overfull \hbox (13.29999pt too wide) in paragraph at lines 21--21
  [][][][][][] 
  []
 
 
-Overfull \hbox (94.16513pt too wide) in paragraph at lines 22--22
+Overfull \hbox (94.16513pt too wide) in paragraph at lines 21--21
  []
  []
 
@@ -613,44 +613,39 @@ Underfull \hbox (badness 10000) in paragraph at lines 15--17
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 21--22
-
- []
-
-) [7] [8] (./PH05-data.tex
+) [7] (./PH05-data.tex
 Underfull \hbox (badness 10000) in paragraph at lines 3--5
 
  []
 
-) [9] (./PH06-ui.tex <pics/startscreen.jpg, id=199, 467.7475pt x 179.67125pt>
+) [8] (./PH06-ui.tex <pics/startscreen.jpg, id=195, 467.7475pt x 179.67125pt>
 File: pics/startscreen.jpg Graphic file (type jpg)
 
 <use pics/startscreen.jpg>
 Package pdftex.def Info: pics/startscreen.jpg used on input line 9.
 (pdftex.def)             Requested size: 233.87317pt x 89.83539pt.
 
-<pics/Vr-Mode.jpg, id=200, 482.80376pt x 179.67125pt>
+<pics/Vr-Mode.jpg, id=196, 482.80376pt x 179.67125pt>
 File: pics/Vr-Mode.jpg Graphic file (type jpg)
  <use pics/Vr-Mode.jpg>
 Package pdftex.def Info: pics/Vr-Mode.jpg used on input line 13.
 (pdftex.def)             Requested size: 241.40129pt x 89.83539pt.
 
-<pics/Live_Data.jpg, id=201, 293.095pt x 131.49126pt>
+<pics/Live_Data.jpg, id=197, 293.095pt x 131.49126pt>
 File: pics/Live_Data.jpg Graphic file (type jpg)
  <use pics/Live_Data.jpg>
 Package pdftex.def Info: pics/Live_Data.jpg used on input line 18.
 (pdftex.def)             Requested size: 146.54713pt x 65.74545pt.
 
-<pics/Settings.jpg, id=202, 292.09125pt x 77.28876pt>
+<pics/Settings.jpg, id=198, 292.09125pt x 77.28876pt>
 File: pics/Settings.jpg Graphic file (type jpg)
  <use pics/Settings.jpg>
 Package pdftex.def Info: pics/Settings.jpg used on input line 22.
 (pdftex.def)             Requested size: 146.04526pt x 38.64427pt.
 
-[10 <./pics/startscreen.jpg> <./pics/Vr-Mode.jpg> <./pics/Live_Data.jpg> <./pic
-s/Settings.jpg>]
-<pics/startScreen_mockup.jpg, id=207, 201.75375pt x 392.46625pt>
+[9 <./pics/startscreen.jpg> <./pics/Vr-Mode.jpg> <./pics/Live_Data.jpg> <./pics
+/Settings.jpg>]
+<pics/startScreen_mockup.jpg, id=203, 201.75375pt x 392.46625pt>
 File: pics/startScreen_mockup.jpg Graphic file (type jpg)
 
 <use pics/startScreen_mockup.jpg>
@@ -666,34 +661,44 @@ Underfull \hbox (badness 10000) in paragraph at lines 27--32
 
  []
 
-<pics/VRView_mockup.jpg, id=208, 393.47pt x 201.75375pt>
+<pics/VRView_mockup.jpg, id=204, 393.47pt x 201.75375pt>
 File: pics/VRView_mockup.jpg Graphic file (type jpg)
 
 <use pics/VRView_mockup.jpg>
 Package pdftex.def Info: pics/VRView_mockup.jpg used on input line 36.
 (pdftex.def)             Requested size: 196.73451pt x 100.87662pt.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 33--29
+Underfull \hbox (badness 10000) in paragraph at lines 33--28
 
  []
 
-[11 <./pics/startScreen_mockup.jpg> <./pics/VRView_mockup.jpg>]
-(./PH07-quality.tex) [12] (./PH08-tests.tex) [13] (./PH09-devenv.tex) [14]
-(./PH10-projectplan.tex) [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 34.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 34.
+[10 <./pics/startScreen_mockup.jpg> <./pics/VRView_mockup.jpg>]
+(./PH07-quality.tex) [11] (./PH08-tests.tex) [12] (./PH09-devenv.tex) [13]
+(./PH10-projectplan.tex
+Overfull \hbox (52.05759pt too wide) in paragraph at lines 4--28
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--28
+
+ []
+
+) [14]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 33.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 33.
  (./Pflichtenheft.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 34.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 34.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 33.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 33.
 Package rerunfilecheck Info: File `Pflichtenheft.out' has not changed.
 (rerunfilecheck)             Checksum: 8045860CB6BCD41C4D81C49C397786B3;1725.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 34.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 33.
  ) 
 Here is how much of TeX's memory you used:
- 6396 strings out of 493089
- 92171 string characters out of 6134842
+ 6393 strings out of 493089
+ 92148 string characters out of 6134842
  192515 words of memory out of 5000000
- 9710 multiletter control sequences out of 15000+600000
+ 9708 multiletter control sequences out of 15000+600000
  9191 words of font info for 32 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  29i,11n,43p,306b,397s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -706,10 +711,10 @@ usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on Pflichtenheft.pdf (15 pages, 230499 bytes).
+Output written on Pflichtenheft.pdf (14 pages, 231752 bytes).
 PDF statistics:
- 278 PDF objects out of 1000 (max. 8388607)
- 243 compressed objects within 3 object streams
- 46 named destinations out of 1000 (max. 500000)
+ 274 PDF objects out of 1000 (max. 8388607)
+ 240 compressed objects within 3 object streams
+ 45 named destinations out of 1000 (max. 500000)
  263 words of extra memory for PDF output out of 10000 (max. 10000000)
 

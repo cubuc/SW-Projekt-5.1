@@ -6,8 +6,9 @@
 From \href{https://developer.android.com/guide/components/services.html}{AndroidDoc}: \\
 ``A Service is an application component that can perform long-running operations in the background, and it does not provide a user interface''.
 \begin{itemize}
-  \item \textbf{SensorTagBluetoothReceiverService:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI cc2650. \\
+  \item \textbf{SensorTagBluetoothReceiverService:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI CC2650. \\
   \item \textbf{SensorTagTrackingService:} Handles the tracking of the TI SensorTag devices.
+  \item \textbf{nodejsService:} uses \href{https://github.com/paddybyers/anode}{Paddy Byer's anode framework} to start a node.js server on the localhost
 \end{itemize}
 
 
@@ -28,5 +29,7 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
 
 \subsubsection{Additional Classes}
 \begin{itemize}
-  \item GATT characteristics and profiles for the sensors including extraction operations from raw to get proper values.
+  \item \textbf{GATT Profiles} (for each sensor one)
+  \item \textbf{GATT Sensor Service UUIDs}
+  \item \textbf{Parser Functions} because the BLE protocol implemented in the TI CC2650 delivers raw sensor output
 \end{itemize}

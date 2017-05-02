@@ -3,21 +3,32 @@
 %\comment{Auf welche Qualitätsanforderungen (Zuverlässigkeit, Robustheit, Benutzungsfreundlichkeit, Effizienz, ...) wird besonderen Wert gelegt?}
 
 \begin{center}
- \begin{tabular}{l|c|c|c|c}
+ \begin{tabular}{lcccc}
   ~ & very important & important & less important & lesser important \\
-  \hline \hline
-  \textit{Robustness}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ \\
+  \hline 
+  \multicolumn{5}{l}{\textbf{Functionality}} \\
+  
+  \quad\textit{Adequacy}&&\textbf{X}&&\\
+  \quad\textit{Correctness}~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \quad\textit{Interoperability}&&&& \textbf{X}\\
+  \quad\textit{Security}&&&&\textbf{X}\\
+ 
   \hline
-  \textit{Reliability}~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \textbf{Reliability}~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+ 
   \hline
-  \textit{Correctness}~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \multicolumn{5}{l}{\textbf{Usability}}\\
+  \quad\textit{Comprehensibleness}&&&\textbf{X}&\\
+  \quad\textit{Usability}&&&\textbf{X}&\\
   \hline
-  \textit{Usability}~ & \textbf{X}~ & ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \multicolumn{5}{l}{\textbf{Efficiency}}\\
+  \quad\textit{Time response}&&\textbf{X}&&\\
+  \quad\textit{Resource costs}&&&\textbf{X}&\\
   \hline
-  \textit{Efficiency}~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ \\
+  \textbf{Portability}~ &  ~ ~ ~ & ~ ~ ~ &  ~\textbf{X} ~ &  ~ ~ ~ \\
   \hline
-  \textit{Portability}~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ &  ~ ~ ~ \\
-  \hline
-  \textit{Compatibility}~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ \\
+  %\textit{Compatibility}~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X}~ &  ~ ~ ~ \\
+  %\quad\textit{Robustness}~ &  ~ ~ ~ &  ~ ~ ~ &  ~ ~ ~ & \textbf{X} \\
  \end{tabular}
 \end{center}
+

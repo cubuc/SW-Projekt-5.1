@@ -2,17 +2,22 @@
 
 \subsection{Overview}
 
+\includegraphics[scale=0.35]{pics/composite_app.png}
+
+\subsection{Component Decomposition}
+
 \subsubsection{Services}
 From \href{https://developer.android.com/guide/components/services.html}{AndroidDoc}: \\
 ``A Service is an application component that can perform long-running operations in the background, and it does not provide a user interface''.
 \begin{itemize}
-  \item \textbf{SensorTagBluetoothReceiverService:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI CC2650. \\
-  \item \textbf{SensorTagTrackingService:} Handles the tracking of the TI SensorTag devices.
-  \item \textbf{nodejsService:} uses \href{https://github.com/paddybyers/anode}{Paddy Byer's anode framework} to start a node.js server on the localhost
+  \item \textbf{BluetoothManager:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI CC2650.
+  \item \textbf{TrackingManager:} Handles the tracking of the TI SensorTag devices.
+  \item \textbf{WebVRManager:} uses \href{https://github.com/paddybyers/anode}{Paddy Byer's anode framework} to start a node.js server on the localhost
+  \item \textbf{StorageManager:} uses a DB (z.B. NeDB or internal stor or similar to safe parsed sensor input, location, settings,...)
 \end{itemize}
 
 
-\subsubsection{Activities}
+\subsubsection{GUI}
 From \href{https://developer.android.com/guide/components/services.html}{AndroidDoc}: \\
 ``They (Activities) serve as the entry point for a user's interaction with an app, and are also central to how a user navigates within an app (as with the Back button) or between apps (as with the Recents button)''. \newline
 \begin{itemize}

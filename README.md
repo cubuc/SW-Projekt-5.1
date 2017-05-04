@@ -47,6 +47,7 @@
 [maybe use a-Frame](https://aframe.io/docs/0.5.0/introduction/getting-started.html)  
 [hosting the webvr stuff](https://pages.github.com/)  
 [short three.js tutorial for webvr](http://elevr.com/a-webvr-with-threejs-tutorial/)  
+[webview von der app zum java script](https://developer.android.com/guide/webapps/webview.html)  
   
 ## Frameworks and Examples  
 [Evothings Guide](http://evothings.com/quick-guide-to-making-a-mobile-app-for-the-ti-sensortag-using-javascript/)  

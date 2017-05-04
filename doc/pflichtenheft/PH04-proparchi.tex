@@ -12,8 +12,12 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
 \begin{itemize}
   \item \textbf{BluetoothManager:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI CC2650.
   \item \textbf{TrackingManager:} Handles the tracking of the TI SensorTag devices.
-  \item \textbf{WebVRManager:} uses \href{https://github.com/paddybyers/anode}{Paddy Byer's anode framework} to start a node.js server on the localhost
+  \item \textbf{WebVRManager:} Uses webview to display the WebVr-World and communicates with the WebVr-Site.
   \item \textbf{StorageManager:} uses a DB (z.B. NeDB or internal stor or similar to safe parsed sensor input, location, settings,...)
+  \item \textbf{VRBox:} Handles the display of the Vr-World and the given data from the sensor.
+
+  \includegraphics[scale=0.35]{pics/VRBox.png}
+
 \end{itemize}
 
 

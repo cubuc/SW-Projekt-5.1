@@ -11,7 +11,11 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
 ``A Service is an application component that can perform long-running operations in the background, and it does not provide a user interface''.
 \begin{itemize}
   \item \textbf{BluetoothManager:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the TI CC2650.
-  \item \textbf{TrackingManager:} Handles the tracking of the TI SensorTag devices.
+  \item \textbf{TrackingManager:} Handles the tracking of the cellphone and therefore of the TI SensorTag devices. the current position gets determined by GPS and enhanced by the cellphone sensor and wifi data.
+  \begin{center}
+  \includegraphics[scale=0.4]{pics/TrackingManager_Composition.png}
+  \end{center}
+  
   \item \textbf{WebVRManager:} Uses webview to display the WebVr-World and communicates with the WebVr-Site.
   \item \textbf{StorageManager:} uses a DB (z.B. NeDB or internal stor or similar to safe parsed sensor input, location, settings,...)
   \item \textbf{VRBox:} Handles the display of the Vr-World and the given data from the sensor.

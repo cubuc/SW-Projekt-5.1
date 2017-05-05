@@ -1,0 +1,19 @@
+Interface TrackingManager {
+   public Point p getCurrentPosition() {
+      ensures iff lockCustomPos
+         p == customPos;
+      else
+         p == currentPosition;
+   }
+
+   //set a custom position that will overwrite the real position
+   //(for testing purposes)
+   public void setCustomPosition(integer newPos) {
+      ensures customPos == newPos;
+      ensures lockCustomPos == true;
+   }
+
+   public void clearCustomPosition() {
+      ensures lockCustomPos == false;
+   }
+}

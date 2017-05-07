@@ -17,11 +17,15 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
   \end{center}
   
   \item \textbf{WebVRManager:} Uses webview to display the WebVr-World and communicates with the WebVr-Site.
-  \item \textbf{StorageManager:} uses a DB (z.B. NeDB or internal stor or similar to safe parsed sensor input, location, settings,...)
+  \item \textbf{StorageManager:} Handles and processes the data provided by the TrackinManager and the BluetoothManager. Uses a DB to store processed Data.
+  \begin{center}
+  	\includegraphics[scale=0.4]{pics/StorageMgr_Composition.png}
+  \end{center}
+  % (z.B. NeDB or internal stor or similar to safe parsed sensor input, location, settings,...)
   \item \textbf{VRBox:} Handles the display of the Vr-World and the given data from the sensor.
-
-  \includegraphics[scale=0.35]{pics/VRBox.png}
-
+  \begin{center}
+	\includegraphics[scale=0.35]{pics/VRBox.png}
+  \end{center}
 \end{itemize}
 
 

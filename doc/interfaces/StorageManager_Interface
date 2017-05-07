@@ -1,0 +1,30 @@
+InterfaceStorageManager {
+	public void setSensor(integer internalSensorID){
+		activeSensor = internalSensorID;
+	}
+
+	//tells the storage manager to get data from the active sensor and
+	//the tracing manager, mark them with a timestamp and store the data
+	//in a DataSet.
+	public void measureNow(){
+	}
+
+	//get the latest measured DataSet of the active sensor	
+	public DataSet getLiveData() {
+		return DataSet;
+	}
+
+	//get a DataSet which contains data of the activeSensor and position
+	//at the specified time. If no data was stored at that time, an empty
+	//DataSet will be returned.
+	public DataSet getDataFrom(int time) {
+		return DataSet;
+
+	//get multiple DataSets which contain all measured Data from the
+	//active Sensor between 'time' and now. 
+	//
+	public DataSet[] getDataSince(int time) {
+		return DataSet[];
+	}
+
+}

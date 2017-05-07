@@ -1,0 +1,8 @@
+Interface BluetoothManager {
+
+	//get the data from the bluetooth sensor in an integer representation.
+	public int getSensorData(int internalSensorID) {
+		return sensorData;
+	}
+
+}

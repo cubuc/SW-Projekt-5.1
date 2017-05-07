@@ -15,8 +15,8 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
   \begin{center}
   \includegraphics[scale=0.4]{pics/TrackingManager_Composition.png}
   \end{center}
-  
-  \item \textbf{WebVRManager:} Uses webview to display the WebVr-World and communicates with the WebVr-Site.
+
+  \item \textbf{WebVRManager:} Uses chrome to display the WebVr-World and communicates with a web server to upload the data for the WebVr-Site.
   \item \textbf{StorageManager:} Handles and processes the data provided by the TrackinManager and the BluetoothManager. Uses a DB to store processed Data.
   \begin{center}
   	\includegraphics[scale=0.4]{pics/StorageMgr_Composition.png}
@@ -34,7 +34,7 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
 ``They (Activities) serve as the entry point for a user's interaction with an app, and are also central to how a user navigates within an app (as with the Back button) or between apps (as with the Recents button)''. \newline
 \begin{itemize}
   \item \textbf{MainActivity} Provides the main startup screen as the main entry point.
-  \item \textbf{VRViewActivity} shall provide the WebVR view using the android.webkit library (especially .webview).
+  \item \textbf{VRViewActivity} Shall open a new browser window to display the WebVR webpage.
   \item \textbf{LiveDataActivity} shall provide a view of the sensor data in human readable form.
   \item \textbf{TISettingsActivity:} Settings screen containing scanning and connecting, connected devices and device settings fragments.
   \begin{itemize}

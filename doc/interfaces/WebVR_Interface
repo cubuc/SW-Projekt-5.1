@@ -1,0 +1,11 @@
+Interface WebVR {
+
+	//Get the data from the webserver to display in VR. The data will be a .csv 
+	//file which will be parsed by in javascript by the web page.
+
+	public int[][] getSensorData(String file) {
+		// parse the sensor Data and return a matrix with all the entries.
+		return sensorData
+	}
+
+}

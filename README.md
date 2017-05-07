@@ -1,3 +1,7 @@
+Wir werden kein webview nutzen koennen!
+
+[kein webveiw support fuer webvr!](https://groups.google.com/a/chromium.org/forum/#!topic/android-webview-dev/iWWQGiIdbMc)
+
 # Ressources
 ## Must Read
 [Android App Fundamentals](https://developer.android.com/guide/components/fundamentals.html)

@@ -9,7 +9,7 @@ InterfaceStorageManager {
 	public void measureNow(){
 	}
 
-	//get the latest measured DataSet of the active sensor	
+	//get the latest measured DataSet of the active sensor
 	public DataSet getLiveData() {
 		return DataSet;
 	}
@@ -21,7 +21,7 @@ InterfaceStorageManager {
 		return DataSet;
 
 	//get multiple DataSets which contain all measured Data from the
-	//active Sensor between 'time' and now. 
+	//active Sensor between 'time' and now.
 	//
 	public DataSet[] getDataSince(int time) {
 		return DataSet[];

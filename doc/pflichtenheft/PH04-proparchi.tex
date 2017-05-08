@@ -1,5 +1,5 @@
 \section{Proposed Architecture}
-
+A better zoomable representation of these diagrams can be found in the github repository of this project in /doc/pflichtenheft/pics, where also the xml sources are.
 \subsection{Overview}
 
 \includegraphics[scale=0.35]{pics/composite_app.png}
@@ -17,21 +17,20 @@ From \href{https://developer.android.com/guide/components/services.html}{Android
   \includegraphics[scale=0.4]{pics/TrackingManager_Composition.png}
   \end{center}
 
-  \item \textbf{WebVRManager:} Uses chrome to display the WebVr-World and communicates with a web server to upload the data for the WebVr-Site.
-  \item \textbf{StorageManager:} Handles and processes the data provided by the TrackinManager and the BluetoothManager. Uses a DB to store processed Data.
+  \item \textbf{StorageManager:} Processes the data provided by the TrackingManager and the BluetoothManager. Uses a JSON file to store data.
   \begin{center}
   	\includegraphics[scale=0.4]{pics/StorageMgr_Composition.png}
   \end{center}
-  % (z.B. NeDB or internal stor or similar to safe parsed sensor input, location, settings,...)
-  \item \textbf{VRBox:} Handles the display of the Vr-World and the given data from the sensor.
+
+  \item \textbf{WebVRManager:} Handles the display of the Vr-World and the given data from the sensor.
   \begin{center}
-	\includegraphics[scale=0.35]{pics/VRBox.png}
+	\includegraphics[scale=0.35]{pics/WebVRManager.png}
   \end{center}
 \end{itemize}
 
 
 \subsubsection{GUI}
-From \href{https://developer.android.com/guide/components/services.html}{AndroidDoc}: \\
+From \href{https://developer.android.com/guide/components/activities.html}{AndroidDoc}: \\
 ``They (Activities) serve as the entry point for a user's interaction with an app, and are also central to how a user navigates within an app (as with the Back button) or between apps (as with the Recents button)''. \newline
 
 \begin{center}

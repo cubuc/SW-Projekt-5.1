@@ -1,5 +1,5 @@
 <diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLGeneric</id><coordinates><x>490</x><y>220</y><w>560</w><h>370</h></coordinates><panel_attributes>symbol=component
-VRBox
+WebVRManager
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>810</x><y>280</y><w>200</w><h>100</h></coordinates><panel_attributes>symbol=component
 VR-World
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>530</x><y>280</y><w>200</w><h>100</h></coordinates><panel_attributes>symbol=component

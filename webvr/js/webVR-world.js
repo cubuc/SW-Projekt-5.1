@@ -88,9 +88,9 @@ function createRoom(){
 
   var wallColor = 0x8c8c8c;
   // right wall
-  createWall(wallColor,0,-Math.PI/2,-12.5,1,0);
+  createWall(wallColor,0,Math.PI/2,-12.5,1,0);
   //left wall
-  createWall(wallColor,0,-Math.PI/2,12.5,1,0);
+  createWall(wallColor,0,Math.PI/2,12.5,1,0);
   //back wall
   createWall(wallColor,0,0,0,1,10);
   //front wall
@@ -103,7 +103,9 @@ function createRoom(){
 
 function createWall(col,xRot,yRot,xPos,yPos,zPos){
   var wallGeo = new THREE.PlaneBufferGeometry( 25, 7 );
-  var wallMat = new THREE.MeshPhongMaterial( { color: col,specular: 0x000099 , side: THREE.DoubleSide } );
+  var wallMat = new THREE.MeshStandardMaterial( { color: col, side: THREE.DoubleSide } );
+  wallMat.color.setHSL(  .74, .64, .59 );
+
   var wall = new THREE.Mesh( wallGeo, wallMat );
   wall.rotation.y = yRot;
   wall.rotation.x = xRot;

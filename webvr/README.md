@@ -1,3 +1,5 @@
+A hosted version available [here](alexejgithub.github.io)  
+
 A small WebVR test. To use it on localhost use:
 
 cd ../webvr/

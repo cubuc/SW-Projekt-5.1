@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="kn.uni.inf.sensortagvr.stor.StorIntentSvc"
+            android:exported="false" />
+        <service
+            android:name="kn.uni.inf.sensortagvr.track.TrackSvc"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="kn.uni.inf.sensortagvr.ble.BleService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

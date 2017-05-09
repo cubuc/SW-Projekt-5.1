@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/App.iml" filepath="$PROJECT_DIR$/App.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file:///media/ojo/Data/Daten/Programming/Android/SW-Projekt-5.1/App/App.iml" filepath="/media/ojo/Data/Daten/Programming/Android/SW-Projekt-5.1/App/App.iml" />
+      <module fileurl="file:///media/ojo/Data/Daten/Programming/Android/SW-Projekt-5.1/App/app/app.iml" filepath="/media/ojo/Data/Daten/Programming/Android/SW-Projekt-5.1/App/app/app.iml" />
     </modules>
   </component>
 </project>

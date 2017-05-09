@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="/media/ojo/Data/Daten/Programming/Android/SW-Projekt-5.1/App" />
+            <option value="/media/ojo/Data/Daten/Programming/Android/SW-Projekt-5.1/App/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

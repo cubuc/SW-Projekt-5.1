@@ -1,18 +1,20 @@
 Interface TrackingManager {
-   public Point p getCurrentPosition() {
+   //get the current location of the device
+   public Location p getCurrentPosition() {
       ensures iff lockCustomPos
          p == customPos;
       else
          p == currentPosition;
    }
 
-   //set a custom position that will overwrite the real position
+   //set a custom location to overwrite real device location
    //(for testing purposes)
-   public void setCustomPosition(integer newPos) {
-      ensures customPos == newPos;
+   public void setCustomPosition(Location newCustomPos) {
+      ensures customPos == newCustomPos;
       ensures lockCustomPos == true;
    }
 
+   //clear location overwrite
    public void clearCustomPosition() {
       ensures lockCustomPos == false;
    }

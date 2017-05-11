@@ -1,30 +1,44 @@
 \section{Purpose}
-The software project module in 2017 at the University of Constance focuses on the development of an app for mobile devices. \\
-Especially, this Pflichtenheft intends to describe the structure of an implementation of a virtual reality representation of BLE sensor feedback.
+
+The software project in the summer term 2017 at the University of Constance focuses on the development of apps for mobile devices.
+
+In the course of the project an Android app is being developed which allows the user to explore sensor data in virtual reality.
+
+Especially, this Software Requirements document intends to describe the functionality and requirements of the app being developed. Furthermore, the internal structure of the app as well as some test cases are specified.
 
 \subsection{Product Idea and Goal}
-The general goal of the app consists of two parts: \\
-First, the user shall be able to record data with a sensor connected to the user`s smartphone via Bluetooth and save the data as a function of the respective location. \\
-As the second part, the gathered data shall be displayed in a 3D environment which the user can explore in Virtual Reality. By displaying the data in regard to the location where it was recorded, it can be expierienced like a three-dimensional function where the user can navigate using a joystick. \\
-If possible, it would be nice to be able to watch the graphs visualising the data change over a period of time. This would be like watching the data in a video while being able to navigate through the graph.
+
+The general idea of the product is to allow the user to record data about their environment and later explore the data in a three-dimensional scene via virtual reality. Therefore, the developed product will consist of two parts:
+
+Firstly, the app itself. It's main goal is to connect to an external sensor via Bluetooth and to process and save the data collected by the sensor. \\
+In order to view the saved data, the second part consists of a web site where a virtual reality scene is generated and the stored data are visualized. 
+
+These two parts will be connected in such a way that the user can open the browser with the according web site from within the app.
+
+
+
+%The general goal of the app consists of two parts: \\
+%First, the user shall be able to record data with a sensor connected to the user`s smartphone via Bluetooth and save the data as a function of the respective location. \\
+%As the second part, the gathered data shall be displayed in a 3D environment which the user can explore in Virtual Reality. By displaying the data in regard to the location where it was recorded, it can be expierienced like a three-dimensional function where the user can navigate using a joystick. \\
+%If possible, it would be nice to be able to watch the graphs visualising the data change over a period of time. This would be like watching the data in a video while being able to navigate through the graph.
 
 
 \subsection{Mandatory Criteria}
 
 \begin{description}
-  \item[M1] The app shall use the Bluetooth adapter of the smartphone to connect to a TI SimpleLink SensorTag device.
-  \item[M2] The app shall track the position of a TI SimpleLink SensorTag device with up to 30m tolerance.
-  \item[M3] The app shall visualize the sensors' data and its position using 3D/stereoscopy, more concrete the WebVR framework.
-  \item[M4] The visualization mentioned in M3 shall be explorable by tilting the joystick of a bluetooth controller.
-  \item[M5] The VR-World shall consists of at least two different rooms.
-  \item[M7] The app shall display the stored data inside the VR-World.
-  \item[M8] The data from the sensor shall have two different representations in the VR-World.
+	\item[M1] The app shall use the Bluetooth adapter of the smartphone to connect to the sensor.
+	\item[M2] The app shall track the position of the sensor with up to 30m tolerance.
+	\item[M3] The app shall store the data retrieved from the sensor.
+	\item[M4] The web site shall display a virtual reality scene using the WebVR framework.
+	\item[M5] The web site shall display the stored data within the virtual reality scene.
+	\item[M6] The virtual reality scene in M4 shall be explorable for the user by using an external controller.
+	
 \end{description}
 
 \subsection{Desired Criteria}
 
 \begin{description}
-  \item[A1] The app could visualize the sensors' data and its position using augmented reality.
-  \item[A2] The VR-World could represent a whole corridor with more than two rooms.
-  \item[A3] The app could give a time lapse of the data inside the VR-World.
+  \item[D1] There could be a visualization of the stored data in augmented reality in the product.
+  \item[D2] The virtual reality world could represent more than a single scene.
+  \item[D3] The product could contain the functionality to view not only one set of data at a time but to gerenerate a time lapse of the data that can be experienced like an interactive video where the user can move around and change the camera perpective.
 \end{description}

@@ -1,4 +1,4 @@
-package kn.uni.inf.tracking;
+package kn.uni.inf.sensortagvr.tracking;
 
 import android.app.Service;
 import android.content.Context;

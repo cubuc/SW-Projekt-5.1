@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 
+/* Local Broadcast Manager <= inner app broadcast handler */
 import android.support.v4.content.LocalBroadcastManager;
 
 /**

@@ -7,31 +7,33 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.*;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import java.util.LinkedList;
 import java.util.List;
-
-
-
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.*;
 
 public class BluetoothLowEnergyService extends Service {
     private final static String TAG = BluetoothLowEnergyService.class.getSimpleName();
-    /* Constants & Intent Codes */
-    private static final long SCAN_PERIOD = 5000;
+   
+    public BluetoothLowEnergyService() {
+    }
 
+     /*  I/O   */
 
+    /**
+     *  Intent Codes
+     */
     public final static String ACTION_GATT_CONNECTED =
             "kn.uni.inf.sensortagvr.ble.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
@@ -48,25 +50,90 @@ public class BluetoothLowEnergyService extends Service {
             "kn.uni.inf.sensortagvr.ble.EXTRA_STATUS";
     public final static String EXTRA_UUID =
             "kn.uni.inf.sensortagvr.ble.EXTRA_UUID";
+    public final static String EXTRA_RSSI =
+            "kn.uni.inf.sensortagvr.ble.EXTRA_RSSI";
 
-    /* Variable initialization */
-    private final IBinder binder = new LocalBinder();
-    LocalBroadcastManager lBcastManager =
+    LocalBroadcastManager mLocalBroadcastManager =
             LocalBroadcastManager.getInstance(this);
+    private final IBinder binder = new LocalBinder();
+
+
+    private void broadcastUpdate(String action, int rssi, int status) {
+        if (action.equals("EXTRA_RSSI")){
+            final Intent intent = new Intent(action);
+            intent.putExtra(EXTRA_RSSI, rssi);
+            intent.putExtra(EXTRA_STATUS, status);
+            mLocalBroadcastManager.sendBroadcast(intent);
+        }
+    }
+
+    private void broadcastUpdate(String action,
+                                 BluetoothGattCharacteristic characteristic,
+                                 int status) {
+        final Intent intent = new Intent(action);
+        intent.putExtra(EXTRA_UUID, characteristic.getUuid().toString());
+        // TODO Parsing here w switch case
+        intent.putExtra(EXTRA_DATA, characteristic.getValue());
+        intent.putExtra(EXTRA_STATUS, status);
+        mLocalBroadcastManager.sendBroadcast(intent);
+    }
+
+    private void broadcastUpdate(String action, String address, int status) {
+        final Intent intent = new Intent(action);
+        intent.putExtra(EXTRA_ADDRESS, address);
+        intent.putExtra(EXTRA_STATUS, status);
+        mLocalBroadcastManager.sendBroadcast(intent);
+    }
+
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+
+        return binder;
+    }
+
+    private class LocalBinder extends Binder {
+        public BluetoothLowEnergyService getService() {
+            return BluetoothLowEnergyService.this;
+        }
+    }
+
+    /* Control flow */
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mBtManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBtAdapter = mBtManager.getAdapter();
+        /* Bluetooth enabled? If not enable */
+        if (!mBtAdapter.isEnabled()) {
+            mBtAdapter.enable();
+        }
+        //initThreadQueue();
+
+        return START_NOT_STICKY;
+    }
+
+    // TODO
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    /* Bluetooth Variable initialization */
+    private static final long SCAN_PERIOD = 5000;
     BluetoothManager mBtManager;
     private BluetoothAdapter mBtAdapter;
     private BluetoothLeScanner mBleScanner;
     private BluetoothGatt mBtGatt = null;
     private boolean mScanning = false;
     private Handler mHandler;
-    private volatile LinkedList<bleRequest> blockQueue;
-    private volatile LinkedList<bleRequest> nonBlockQueue;
 
-    public BluetoothLowEnergyService() {
-    }
+    /*
+     * BLE Scan
+     */
 
-
-    /* BLE Scan */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
              mBleScanner = mBtAdapter.getBluetoothLeScanner();
@@ -108,14 +175,15 @@ public class BluetoothLowEnergyService extends Service {
         }
     };
 
-
-
-    /* Connecting to Gatt server */
     private void connectToDevice(BluetoothDevice mBtDevice) {
         mBtGatt = mBtDevice.connectGatt(this, true, mGattCallback);
         mBtGatt.discoverServices();
     }
-    
+
+    /*
+    * Connecting to Gatt server
+    */
+
     private BluetoothGattCallback mGattCallback =
             new BluetoothGattCallback() {
         @Override
@@ -137,153 +205,48 @@ public class BluetoothLowEnergyService extends Service {
             }
         }
 
-        // TODO
+
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             BluetoothDevice mBtDevice = gatt.getDevice();
             broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED, mBtDevice.getAddress(),
                     status);
+            /* Subscribe to the notifications */
+            for ( BluetoothGattService mBtGattSvc : gatt.getServices() ) {
+                if (mBtGattSvc != null) {
+                    for (BluetoothGattCharacteristic ch : mBtGattSvc.getCharacteristics()) {
+                        if (ch != null) {
+                            gatt.setCharacteristicNotification(ch, true);
+                            BluetoothGattDescriptor descriptor = ch.getDescriptor(UUID_CCC);
+                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                            gatt.writeDescriptor(descriptor);
+                        }
+                    }
+                }
+            }
         }
 
         // TODO
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            super.onCharacteristicRead(gatt, characteristic, status);
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic, status);
+            }
         }
 
-        // TODO
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            super.onCharacteristicChanged(gatt, characteristic);
+            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic,0);
         }
 
-        // TODO
-        @Override
-        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            super.onDescriptorRead(gatt, descriptor, status);
-        }
-
-        // TODO
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            super.onReadRemoteRssi(gatt, rssi, status);
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, rssi, status);
+            }
         }
     };
 
-    // I/O
-
-    private void broadcastUpdate(String action,
-                                 BluetoothGattCharacteristic characteristic,
-                                 int status) {
-        final Intent intent = new Intent(action);
-        intent.putExtra(EXTRA_UUID, characteristic.getUuid().toString());
-        intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        intent.putExtra(EXTRA_STATUS, status);
-        lBcastManager.sendBroadcast(intent);
-    }
-
-    private void broadcastUpdate(String action, String address, int status) {
-        final Intent intent = new Intent(action);
-        intent.putExtra(EXTRA_ADDRESS, address);
-        intent.putExtra(EXTRA_STATUS, status);
-        lBcastManager.sendBroadcast(intent);
-    }
-
-    /* Binding and control flow */
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-
-        return binder;
-    }
-
-    public class LocalBinder extends Binder {
-        public BluetoothLowEnergyService getService() {
-            return BluetoothLowEnergyService.this;
-        }
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        mBtManager =
-        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-         mBtAdapter = mBtManager.getAdapter();
-        /* Bluetooth enabled? If not enable */
-        if (!mBtAdapter.isEnabled()) {
-            mBtAdapter.enable();
-        }
-        initThreadQueue();
-        return START_NOT_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
 
 
-    /* (Multi-)Threadding-Queue */
-
-    /**
-     * All operations are blocking because we are using bluetooth connection
-     * wr = write (for calibration purposes)
-     * rd = read
-     * ns = Notification set
-     */
-    public enum bleRequestOperation {
-        wr,
-        rd,
-        ns,
-    }
-
-    public enum bleRequestStatus {
-        not_queued,
-        queued,
-        processing,
-        timeout,
-        done,
-        no_such_request,
-        failed,
-    }
-
-    public class bleRequest {
-        public int id;
-        public BluetoothGattCharacteristic characteristic;
-        public bleRequestOperation operation;
-        public volatile bleRequestStatus status;
-        public int timeout;
-        public int curTimeout;
-        public boolean notifyenable;
-    }
-
-    private void initThreadQueue(){
-
-        nonBlockQueue = new LinkedList<bleRequest>();
-        blockQueue = new LinkedList<bleRequest>();
-        Thread queueThread = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    // TODO
-                    executeQueue();
-                    try {
-                        Thread.sleep(0,100000);
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        queueThread.start();
-    }
-
-
-
-}
+   }

@@ -23,7 +23,7 @@
 
 \begin{description}
   \item[/T0310/]
-    \textit{Move inside VR-World:} While in normal 3D mode the tester shall tilt the joystick on the controller forward and the camera shall move forward.
+    \textit{Move inside the virtual reality scene:} While in normal 3D mode the tester shall tilt the joystick on the controller forward and the camera shall move forward.
     By tilting the joystick backward the camera shall move back, by tilting left the camera shall move left and by tilting right it shall move right.
     The camera shall allways follow the view point, so forward is allways in the center of the camera.
 
@@ -32,13 +32,18 @@
 
 \begin{description}
 	\item[/T0320/]
-	\textit{Searching, connecting and disconnecting devices:} While on the TISettingsActivity the tester shall search a TI SimpleLink SensorTag device by pressing the "Scann" button. All devices nearby shall be shown in a list with distinguishable entries. By tapping on a list entry a connection to the device shall be established.
+	\textit{Searching, connecting and disconnecting devices:} The tester shall search a sensor device by pressing the "scan" button in the settings menu. All devices nearby shall be shown in a list with distinguishable entries. By tapping on a list entry a connection to the device shall be established.
 	By tapping again on the list entry the connection shall be terminated.
 \end{description}
 
 \begin{description}
 	\item[/T0330/]
-	\textit{Displaying temperature:} While in normal 3D Mode and a established connection to a TI SimpleLink SensorTag device the tester shall look around. At the position of the device a glowing shere shall be displayed.
+	\textit{Displaying temperature:} While in normal 3D mode and with a established connection to a sensor device the tester shall look around. At the position of the device a glowing sphere shall be displayed.
 	
 	This test shall be again repeated in stereoscopic 3D view and shall work the same.
+\end{description}
+
+\begin{description}
+	\item[/T0340/]
+	\textit{Trensferring Bluetooth data:} When the connection to a sensor device is established, the tester shall enter the data view wihin the app and see some representation of the transmitted data which allows him to check the connectivity and functionality to/ of the sensor device.
 \end{description}

@@ -2,7 +2,7 @@
 * @author Alexej Gluschkow
 */
 
-var gamePad = navigator.getGamepads()[0];
+
 var lookDir = new THREE.Vector3();
 
 moveCon = function(body,camera){
@@ -28,20 +28,18 @@ moveCon = function(body,camera){
 
   };
   this.update = function() {
-    if(gamePad != null && gamePad.connected){
-      //gamePad.update();
-    //  console.log(gamePad.id);
-      if(gamePad.axes[0] != 0) {
-        updateLookDir();
-        body.translateZ(lookDir.z);
-        body.translateX(lookDir.x);
-      } else if(gamePad.axes[2] != 0) {
-        updateLookDir();
+    var gamePad = navigator.getGamepads()[0];
+    if(gamePad != null){
+      updateLookDir();
+      lookDir.multiplyScalar(0.2)
+      if(gamePad.axes[1] > 0.05) {
         body.translateZ(-lookDir.z);
         body.translateX(-lookDir.x);
+      }else if(gamePad.axes[1] < -0.05){
+        body.translateZ(lookDir.z);
+        body.translateX(lookDir.x);
 
       }
-
 
     }
   };

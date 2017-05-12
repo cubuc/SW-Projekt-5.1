@@ -25,7 +25,7 @@
   \item[/T0310/]
     \textit{Move inside the virtual reality scene:} While in normal 3D mode the tester shall tilt the joystick on the controller forward and the camera shall move forward.
     By tilting the joystick backward the camera shall move back, by tilting left the camera shall move left and by tilting right it shall move right.
-    The camera shall allways follow the view point, so forward is allways in the center of the camera.
+    The camera shall always follow the view point, so forward is always in the center of the camera.
 
     This test shall be again repeated in stereoscopic 3D view and all functions shall work the same.
 \end{description}
@@ -38,12 +38,24 @@
 
 \begin{description}
 	\item[/T0330/]
-	\textit{Displaying temperature:} While in normal 3D mode and with a established connection to a sensor device the tester shall look around. At the position of the device a glowing sphere shall be displayed.
-	
-	This test shall be again repeated in stereoscopic 3D view and shall work the same.
+	\textit{Displaying Data:} While in normal 3d mode the tester shall be able to see the data collected from the sensor. The tester shall be able to see
+  the date relative to its stored position. \\
+  The test shall be again repeated in stereoscopic 3D view and shall work the same.
 \end{description}
 
 \begin{description}
 	\item[/T0340/]
-	\textit{Trensferring Bluetooth data:} When the connection to a sensor device is established, the tester shall enter the data view wihin the app and see some representation of the transmitted data which allows him to check the connectivity and functionality to/ of the sensor device.
+	\textit{Transferring Bluetooth data:} When the connection to a sensor device is established, the tester shall enter the data view wihin the app and see some representation of the transmitted data which allows him to check the connectivity and functionality to/ of the sensor device.
+\end{description}
+
+\begin{description}
+  \item[/T0350]
+  \textit{Storing Sensor data:} The tester shall be able to connect to a sensor and while connected the data received from the sensor shall be stored together with its current position,
+  on the local file system. The tester shall open this file and check if the new data is in it.
+\end{description}
+
+\begin{description}
+  \item[/T0360]
+  \textit{Transferring sensor data to the Web Application:} The tester shall check if the data is transfered to the web application and shall check
+  if the data is corresponds to the collected sensor data.
 \end{description}

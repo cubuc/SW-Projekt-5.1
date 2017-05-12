@@ -9,7 +9,7 @@ Especially, this Software Requirements document intends to describe the function
 The general idea of the product is to allow the user to record data about their environment and later explore the data in a three-dimensional scene via virtual reality. Therefore, the developed product will consist of two parts:
 
 Firstly, the app itself. It's main goal is to connect to an external sensor device via Bluetooth and to process and save the data collected by the sensor (referred to as ``app''). \\
-In order to view the saved data, the second part consists of a web application where a virtual reality scene is generated and the stored data are visualized (referred to as ``web application''). 
+In order to view the saved data, the second part consists of a web application where a virtual reality scene is generated and the stored data are visualized (referred to as ``web application'').
 
 These two parts will be connected in such a way that the user can open a browser with the according web application from within the app.
 
@@ -26,10 +26,10 @@ These two parts will be connected in such a way that the user can open a browser
 \begin{description}
 	\item[App] When the app itself is mentioned, we refer to the application running on the smartphone that, as stated above, handles the recording of data and invokes a web browser with the web application.
 	\item[Web application] This term refers to the web site that can be invoked by the app, runs in a web browser, and provides the virtual reality display of the data gathered by the app.
-	\item[Sensor (device)] When referring to the sensor, we're talking about the sensor device (more clearly spezified in section 2) containing several sensors. 
+	\item[Sensor (device)] When referring to the sensor, we're talking about the sensor device (more clearly specified in section 2) containing several sensors.
 	\item[Data] With data we generally mean information that has been gathered by the sensor.
-	\item[Virtual Reality (scene)] This term describes the three-dimensional world in which the data will be displayed. 
-	
+	\item[Virtual Reality (scene)] This term describes the three-dimensional world in which the data will be displayed.
+
 \end{description}
 
 
@@ -64,10 +64,10 @@ These two parts will be connected in such a way that the user can open a browser
 	\item[M1] The app shall use the Bluetooth adapter of the smartphone to connect to the sensor.
 	\item[M2] The app shall track the position of the sensor with up to 10m tolerance.
 	\item[M3] The app shall store the data retrieved from the sensor.
-	\item[M4] The web appliaction shall display a virtual reality scene using the WebVR framework.
+	\item[M4] The web application shall display a virtual reality scene using the WebVR framework.
 	\item[M5] The web application shall display the stored data within the virtual reality scene depending of their respective location.
 	\item[M6] The virtual reality scene in M4 shall be explorable for the user by using an external controller.
-	
+
 \end{description}
 
 \subsection{Desired Criteria}
@@ -75,7 +75,7 @@ These two parts will be connected in such a way that the user can open a browser
 \begin{description}
   \item[D1] The product could contain a visualization of the stored data in augmented reality.
   \item[D2] The virtual reality world could represent more than a single scene.
-  \item[D3] The product could contain the functionality to view not only one set of data at a time but to gerenerate a time lapse of the data that can be experienced like an interactive video where the user can move around and change the camera perpective.
+  \item[D3] The product could contain the functionality to view not only one set of data at a time but to generate a time lapse of the data that can be experienced like an interactive video where the user can move around and change the camera perpective.
   \item[D4] The product could provide functionalities to interact with more than one sensor.
   \item[D5] The app could provide an advanced way to determine the location where the data are recorded in order to improve the display of the data.
 \end{description}

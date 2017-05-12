@@ -1,8 +1,6 @@
 \section{Purpose}
 
-The software project in the summer term 2017 at the University of Constance focuses on the development of apps for mobile devices.
-
-In the course of the project an Android app is being developed which allows the user to explore sensor data in virtual reality.
+The software project in the summer term 2017 at the University of Constance focuses on the development of apps for mobile devices. In the course of the project an Android app is being developed which allows the user to explore sensor data in virtual reality.
 
 Especially, this Software Requirements document intends to describe the functionality and requirements of the app being developed. Furthermore, the internal structure of the app as well as some test cases are specified.
 
@@ -10,10 +8,10 @@ Especially, this Software Requirements document intends to describe the function
 
 The general idea of the product is to allow the user to record data about their environment and later explore the data in a three-dimensional scene via virtual reality. Therefore, the developed product will consist of two parts:
 
-Firstly, the app itself. It's main goal is to connect to an external sensor via Bluetooth and to process and save the data collected by the sensor. \\
-In order to view the saved data, the second part consists of a web site where a virtual reality scene is generated and the stored data are visualized. 
+Firstly, the app itself. It's main goal is to connect to an external sensor via Bluetooth and to process and save the data collected by the sensor (referred to as ``app''). \\
+In order to view the saved data, the second part consists of a web application where a virtual reality scene is generated and the stored data are visualized (referred to as ``web application''). 
 
-These two parts will be connected in such a way that the user can open the browser with the according web site from within the app.
+These two parts will be connected in such a way that the user can open the browser with the according web application from within the app.
 
 
 
@@ -29,8 +27,8 @@ These two parts will be connected in such a way that the user can open the brows
 	\item[M1] The app shall use the Bluetooth adapter of the smartphone to connect to the sensor.
 	\item[M2] The app shall track the position of the sensor with up to 30m tolerance.
 	\item[M3] The app shall store the data retrieved from the sensor.
-	\item[M4] The web site shall display a virtual reality scene using the WebVR framework.
-	\item[M5] The web site shall display the stored data within the virtual reality scene.
+	\item[M4] The web appliaction shall display a virtual reality scene using the WebVR framework.
+	\item[M5] The web application shall display the stored data within the virtual reality scene.
 	\item[M6] The virtual reality scene in M4 shall be explorable for the user by using an external controller.
 	
 \end{description}
@@ -38,7 +36,8 @@ These two parts will be connected in such a way that the user can open the brows
 \subsection{Desired Criteria}
 
 \begin{description}
-  \item[D1] There could be a visualization of the stored data in augmented reality in the product.
+  \item[D1] The product could contain a visualization of the stored data in augmented reality.
   \item[D2] The virtual reality world could represent more than a single scene.
   \item[D3] The product could contain the functionality to view not only one set of data at a time but to gerenerate a time lapse of the data that can be experienced like an interactive video where the user can move around and change the camera perpective.
+  \item[D4] The product could provide functionalities to interact with more than one sensor.
 \end{description}

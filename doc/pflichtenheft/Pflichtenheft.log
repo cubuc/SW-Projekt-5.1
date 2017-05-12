@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.3)  11 MAY 2017 11:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.3)  12 MAY 2017 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -586,25 +586,20 @@ Overfull \hbox (77.09128pt too wide) in paragraph at lines 21--21
 [1
 
 {/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(./Pflichtenheft.toc)
-\tf@toc=\write5
-\openout5 = `Pflichtenheft.toc'.
-
-
+(./Pflichtenheft.toc
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2] [3] (./PH01-purpose.tex) [4] (./PH02-env.tex) [5] (./PH03-functions.tex
-Overfull \hbox (16.03055pt too wide) in paragraph at lines 7--9
-[]\OT1/cmr/m/n/10.95 The app shall use the Blue-tooth adapter of the smart-phon
-e and the An-droid.bluetooth
- []
+[2])
+\tf@toc=\write5
+\openout5 = `Pflichtenheft.toc'.
 
-[6]) [7] (./PH04-proparchi.tex
-<pics/composite_app.png, id=219, 1284.8pt x 511.9125pt>
+ [3] (./PH01-purpose.tex [4]) [5] (./PH02-env.tex) [6]
+(./PH03-functions.tex [7]) [8] (./PH04-proparchi.tex
+<pics/composite_app.png, id=233, 1284.8pt x 511.9125pt>
 File: pics/composite_app.png Graphic file (type png)
 
 <use pics/composite_app.png>
@@ -615,7 +610,7 @@ Overfull \hbox (32.78123pt too wide) in paragraph at lines 5--6
 [] 
  []
 
-<pics/bt_state.png, id=222, 1806.75pt x 662.475pt>
+<pics/bt_state.png, id=236, 1806.75pt x 662.475pt>
 File: pics/bt_state.png Graphic file (type png)
  <use pics/bt_state.png>
 Package pdftex.def Info: pics/bt_state.png used on input line 14.
@@ -626,15 +621,15 @@ Overfull \hbox (33.64119pt too wide) in paragraph at lines 13--15
 uetooth and es-pe-cially the an-droid.bluetooth.le
  []
 
-<pics/TrackingManager_Composition.png, id=223, 431.6125pt x 250.9375pt>
+<pics/TrackingManager_Composition.png, id=237, 431.6125pt x 250.9375pt>
 File: pics/TrackingManager_Composition.png Graphic file (type png)
 
 <use pics/TrackingManager_Composition.png>
 Package pdftex.def Info: pics/TrackingManager_Composition.png used on input lin
 e 17.
 (pdftex.def)             Requested size: 172.64194pt x 100.37321pt.
- [8 <./pics/composite_app.png> <./pics/bt_state.png>]
-<pics/StorageMgr_Composition.png, id=230, 602.25pt x 411.5375pt>
+ [9 <./pics/composite_app.png> <./pics/bt_state.png>]
+<pics/StorageMgr_Composition.png, id=244, 602.25pt x 411.5375pt>
 File: pics/StorageMgr_Composition.png Graphic file (type png)
 
 <use pics/StorageMgr_Composition.png>
@@ -642,7 +637,7 @@ Package pdftex.def Info: pics/StorageMgr_Composition.png used on input line 22.
 
 (pdftex.def)             Requested size: 240.89572pt x 164.61208pt.
 
-<pics/WebVRManager.png, id=231, 662.475pt x 391.4625pt>
+<pics/WebVRManager.png, id=245, 662.475pt x 391.4625pt>
 File: pics/WebVRManager.png Graphic file (type png)
 
 <use pics/WebVRManager.png>
@@ -653,41 +648,41 @@ Underfull \hbox (badness 10000) in paragraph at lines 33--35
 
  []
 
-<pics/GUI.png, id=233, 782.925pt x 401.5pt>
+<pics/GUI.png, id=247, 782.925pt x 401.5pt>
 File: pics/GUI.png Graphic file (type png)
  <use pics/GUI.png>
 Package pdftex.def Info: pics/GUI.png used on input line 37.
 (pdftex.def)             Requested size: 274.02785pt x 140.5271pt.
- [9 <./pics/TrackingManager_Composition.png> <./pics/StorageMgr_Composition.png
-> <./pics/WebVRManager.png>]) [10 <./pics/GUI.png>] (./PH05-data.tex [11]) [12]
- (./PH06-ui.tex
-<pics/startscreen.jpg, id=254, 467.7475pt x 179.67125pt>
+ [10 <./pics/TrackingManager_Composition.png> <./pics/StorageMgr_Composition.pn
+g> <./pics/WebVRManager.png>]) [11 <./pics/GUI.png>] (./PH05-data.tex [12]) [13
+] (./PH06-ui.tex
+<pics/startscreen.jpg, id=269, 467.7475pt x 179.67125pt>
 File: pics/startscreen.jpg Graphic file (type jpg)
 
 <use pics/startscreen.jpg>
 Package pdftex.def Info: pics/startscreen.jpg used on input line 10.
 (pdftex.def)             Requested size: 233.87317pt x 89.83539pt.
 
-<pics/Vr-Mode.jpg, id=255, 482.80376pt x 179.67125pt>
+<pics/Vr-Mode.jpg, id=270, 482.80376pt x 179.67125pt>
 File: pics/Vr-Mode.jpg Graphic file (type jpg)
  <use pics/Vr-Mode.jpg>
 Package pdftex.def Info: pics/Vr-Mode.jpg used on input line 16.
 (pdftex.def)             Requested size: 241.40129pt x 89.83539pt.
 
-<pics/Live_Data.jpg, id=256, 293.095pt x 131.49126pt>
+<pics/Live_Data.jpg, id=271, 293.095pt x 131.49126pt>
 File: pics/Live_Data.jpg Graphic file (type jpg)
  <use pics/Live_Data.jpg>
 Package pdftex.def Info: pics/Live_Data.jpg used on input line 22.
 (pdftex.def)             Requested size: 146.54713pt x 65.74545pt.
 
-[13 <./pics/startscreen.jpg> <./pics/Vr-Mode.jpg> <./pics/Live_Data.jpg>]
-<pics/Settings.jpg, id=262, 292.09125pt x 77.28876pt>
+[14 <./pics/startscreen.jpg> <./pics/Vr-Mode.jpg> <./pics/Live_Data.jpg>]
+<pics/Settings.jpg, id=276, 292.09125pt x 77.28876pt>
 File: pics/Settings.jpg Graphic file (type jpg)
  <use pics/Settings.jpg>
 Package pdftex.def Info: pics/Settings.jpg used on input line 31.
 (pdftex.def)             Requested size: 146.04526pt x 38.64427pt.
 
-<pics/startScreen_mockup.jpg, id=263, 201.75375pt x 392.46625pt>
+<pics/startScreen_mockup.jpg, id=277, 201.75375pt x 392.46625pt>
 File: pics/startScreen_mockup.jpg Graphic file (type jpg)
 
 <use pics/startScreen_mockup.jpg>
@@ -703,7 +698,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 35--40
 
  []
 
-<pics/VRView_mockup.jpg, id=264, 393.47pt x 201.75375pt>
+<pics/VRView_mockup.jpg, id=278, 393.47pt x 201.75375pt>
 File: pics/VRView_mockup.jpg Graphic file (type jpg)
 
 <use pics/VRView_mockup.jpg>
@@ -714,13 +709,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 41--28
 
  []
 
-[14 <./pics/Settings.jpg> <./pics/startScreen_mockup.jpg> <./pics/VRView_mockup
+[15 <./pics/Settings.jpg> <./pics/startScreen_mockup.jpg> <./pics/VRView_mockup
 .jpg>] (./PH07-quality.tex
 Overfull \hbox (15.62994pt too wide) in paragraph at lines 6--31
  [] 
  []
 
-) [15] (./PH08-tests.tex) [16] (./PH09-devenv.tex) [17] (./PH10-projectplan.tex
+) [16] (./PH08-tests.tex) [17] (./PH09-devenv.tex) [18] (./PH10-projectplan.tex
 
 Overfull \hbox (52.05759pt too wide) in paragraph at lines 4--28
 [] 
@@ -731,8 +726,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--28
 
  []
 
-) [18] (./PH11-glossary.tex)
-Overfull \hbox (42.28911pt too wide) in paragraph at lines 15--33
+) [19] (./PH11-glossary.tex)
+Overfull \hbox (12.69366pt too wide) in paragraph at lines 15--33
 []
  []
 
@@ -741,24 +736,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 15--33
 
  []
 
-[19]
+[20]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 34.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 34.
  (./Pflichtenheft.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 34.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 34.
 Package rerunfilecheck Info: File `Pflichtenheft.out' has not changed.
-(rerunfilecheck)             Checksum: 32C0AD97A18625B5F48465AD2FD70398;2088.
+(rerunfilecheck)             Checksum: 831A6CCD196904740299058130FF0740;2276.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 34.
  ) 
 Here is how much of TeX's memory you used:
- 6444 strings out of 493089
- 93179 string characters out of 6134842
- 193514 words of memory out of 5000000
- 9738 multiletter control sequences out of 15000+600000
+ 6449 strings out of 493089
+ 93276 string characters out of 6134842
+ 194517 words of memory out of 5000000
+ 9740 multiletter control sequences out of 15000+600000
  9191 words of font info for 32 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,11n,43p,398b,472s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 32i,11n,43p,398b,472s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb>
@@ -768,10 +763,10 @@ usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on Pflichtenheft.pdf (19 pages, 340429 bytes).
+Output written on Pflichtenheft.pdf (20 pages, 340316 bytes).
 PDF statistics:
- 340 PDF objects out of 1000 (max. 8388607)
- 289 compressed objects within 3 object streams
- 56 named destinations out of 1000 (max. 500000)
- 341 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 355 PDF objects out of 1000 (max. 8388607)
+ 302 compressed objects within 4 object streams
+ 59 named destinations out of 1000 (max. 500000)
+ 357 words of extra memory for PDF output out of 10000 (max. 10000000)
 

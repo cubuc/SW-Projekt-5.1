@@ -1,45 +1,54 @@
 \section{Product Functions}
 
 %\comment{functional Requirements}
+In the following, the required functionalities of the product are stated.
 
-\subsection{General Features}
+\subsection{Features of the App}
+
+The app itself provides functionalities to interact with the sensor (such as to connect and retrieve data), to handle the data (process and store them in a way the web apliccation can acces them) and to invoke the web application.
+
+\subsubsection{General Features}
+
 \begin{description}
-  \item[F1.1] The app shall use the Bluetooth adapter of the smartphone and the Android.bluetooth library to connect to a TI SimpleLink SensorTag device.
-%  \item[F1.2] The app shall provide a live data view of the sensor feedback in human readable form.
-  \item[F1.2] The app shall be able the record data from a connected sensor.
-  \item[F1.3] The app shall display recorded data in a VR-World
-  \item[F1.4] The app shall track connected TI SimpleLink SensorTag devices by tracking the position of the cellphone.
+  \item[F1.1] The app shall be able to connect to a sensor.
+  \item[F1.2] The app shall be able to store information about the location where a set of data is recorded.
+  \item[F1.3] The app shall provide a live data view of the sensor feedback in human readable form.
+  \item[F1.4] The app shall be able to save the data transferred from a connected sensor.
+  \item[F1.5] The app shall be able to invoke the web application inside a browser.
 \end{description}
 
-\subsection{VR-World}
-  The VR-Mode is a 3D view of the world. When entering VR-Mode the user will see a fullscreen 3D world and by pressing the button in the lower right corner he can enter the  stereoscopic view of the World.
-  The VR-World is a 3D representation of a real series of rooms.
+\subsubsection{Settings}
+
+\begin{description}
+      \item[F2.1] The app shall be able to show information about the sensor (such as settings and state).
+      \item[F2.2] The app shall list the connected devices (such as sensor, headset, controller). 
+      \item[F2.3] The app shall present an user interface for controlling the connection of the sensor. 
+    \end{description}
+
+\subsection{Features of the Web Application}
+
+The web application handles the visualization of the stored data. By using the webVR framework, virtual reality scenes can be created as web sites and therefore be displayed using a browser like Google Chrome.
+
+The web application can be invoked via the app and needs to access the data to generate the virtual reality scene. 
+
+\subsubsection{General Features}
+ 
   \begin{description}
-    \item[F2.1] The VR-World shall be able to be viewed inside a web browser and from within the app.
-    \item[F2.2] While viewing the VR-World the user shall be able to look around using the gyro sensor of his phone to pan the camera around.
-    \item[F2.3] While the app is not in stereoscopic 3D mode the user shall be able to click and drag to pan the camera around.
-    \item[F2.4] The app shall be able to move the camera inside the VR-World by using a bluetooth controller.
-    \item[F2.5] The data fechted from the sensors shall be displayed inside the VR-World.
-    \item[F2.6] When in VR-Mode, the app shall be in fullscreen mode.
-    \item[F2.7] The app shall exit the VR-Mode if the user is pressing the ``x'' in the top right corner of the screen.
-    \item[F2.8] The app shall be able to switch between stereoscopic 3D and normal 3D mode.
-    \item[F2.9] The app shall be able to switch from fullscreen VR-Mode to stereoscopic by pressing the button in the lower right corner or by pressing the A-Button on his controller.
-    \item[F2.10] The app shall be able to exit by pressing the back button on his device or by touching the back button in the top left corner.
-    \item[F2.11] The app shall be able to switch to the settings screen, while it's in normal 3D mode.
-    \item[F2.12] The app shall be able to switch rooms if the user pushes the B-Button on his controller.
-    \item[F2.13] The app shall visualize the position of stored data from the TI SimpleLink SensorTag device.
-    \item[F2.14] The app shall visualize the given data by the Ti SimpleLink SensorTag, by displaying a point approximately at the sensors stored location, with a number for the value of the the data.
-    \item[F2.15] The app shall visualize the data by spanning a mesh over all recorded points from the sensor, while the height is the value of the given data.
-    \item[F2.16] The User shall be able to switch between the two representation by pressing the X-Button on his controller.
+    \item[F3.1] The web application shall be able to access the stored data.
+    \item[F3.2] The web application shall be able to display the stored data at the respective position. 
+    
+	\item[F3.3] The web application shall allow the user to switch between stereoscopic and normal 3D view.
+    
+	\item[F3.4] The web application shall allow the user to exit the 3D view and return to the app.
+    
+	\item[F3.5] The web application shall offer a settings menu where the user can choose which data shall be displayed.    
+    
+    \item[F3.6] The web application shall contain a visualization of the data which consists of a mesh over all recorded points from the sensor, while the height is the value of the given data.
+    
+    \item[F3.7] The user shall be able to move the camera around in the virtual reality scene. 
+    
+    
+    
   \end{description}
 
 
-
-  \subsection{Settings}
-    The user can set the following options:
-
-    \begin{description}
-      \item[F3.1] The app shall be configuarable so that the user may choose wich data shall be displayed in the VR-World (temperature, etc.).
-      \item[F3.2] The app shall list the connected devices and a short info about the current setting and state of the TI SimpleLink SensorTag device.
-      \item[F3.4] The app shall list the results of a Bluetooth scan and present an user interface for controlling the connection of TI SimpleLink SensorTag devices.
-    \end{description}

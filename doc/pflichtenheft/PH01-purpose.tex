@@ -8,24 +8,58 @@ Especially, this Software Requirements document intends to describe the function
 
 The general idea of the product is to allow the user to record data about their environment and later explore the data in a three-dimensional scene via virtual reality. Therefore, the developed product will consist of two parts:
 
-Firstly, the app itself. It's main goal is to connect to an external sensor via Bluetooth and to process and save the data collected by the sensor (referred to as ``app''). \\
+Firstly, the app itself. It's main goal is to connect to an external sensor device via Bluetooth and to process and save the data collected by the sensor (referred to as ``app''). \\
 In order to view the saved data, the second part consists of a web application where a virtual reality scene is generated and the stored data are visualized (referred to as ``web application''). 
 
-These two parts will be connected in such a way that the user can open the browser with the according web application from within the app.
+These two parts will be connected in such a way that the user can open a browser with the according web application from within the app.
 
 
 
 %The general goal of the app consists of two parts: \\
-%First, the user shall be able to record data with a sensor connected to the user`s smartphone via Bluetooth and save the data as a function of the respective location. \\
+%First, the user shall be able to record data with a sensor connected to the user's smartphone via Bluetooth and save the data as a function of the respective location. \\
 %As the second part, the gathered data shall be displayed in a 3D environment which the user can explore in Virtual Reality. By displaying the data in regard to the location where it was recorded, it can be expierienced like a three-dimensional function where the user can navigate using a joystick. \\
 %If possible, it would be nice to be able to watch the graphs visualising the data change over a period of time. This would be like watching the data in a video while being able to navigate through the graph.
 
+
+\subsection{Definitions}
+
+\begin{description}
+	\item[App] When the app itself is mentioned, we refer to the application running on the smartphone that, as stated above, handles the recording of data and invokes a web browser with the web application.
+	\item[Web application] This term refers to the web site that can be invoked by the app, runs in a web browser, and provides the virtual reality display of the data gathered by the app.
+	\item[Sensor (device)] When referring to the sensor, we're talking about the sensor device (more clearly spezified in section 2) containing several sensors. 
+	\item[Data] With data we generally mean information that has been gathered by the sensor.
+	\item[Virtual Reality (scene)] This term describes the three-dimensional world in which the data will be displayed. 
+\end{description}
+
+
+\subsubsection{Abbreviations}
+
+\begin{description}
+	\item[TI] Texas Instruments
+	\item[VR] Virtual Reality
+	\item[3D] three-dimensional
+	\item[DB] Database
+	\item[App] Application
+	\item[BLE] Bluetooth Low Energy
+\end{description}
+
+\subsubsection{Glossary}
+
+\begin{description}
+	\item[Stereoscopic 3D] The impression of 3D is created by rendering different pictures for every eye of the viewer.
+	\item[Virtual reality] By using a headset in which the smart phone can be integrated, the user can view the three-dimensional world in stereoscopic 3D and thereby experiences the feeling of being fully immerged in the scene.
+	\item[Augmented reality] Displaying 3D objects in a real-world surrounding while providing an immersive experience like virtual reality.
+	\item[Gyroscope sensor] Sensor for measuring orientation in space.
+	\item[Web application] Web site that offers functionalities similar to those of ``normal'' desktop or mobile applications but runs in a web browser.
+\end{description}
+
+\bigskip
 
 \subsection{Mandatory Criteria}
 
 \begin{description}
 	\item[M1] The app shall use the Bluetooth adapter of the smartphone to connect to the sensor.
-	\item[M2] The app shall track the position of the sensor with up to 30m tolerance.
+	\item[M2] The app shall track the position of the sensor with up to 10m tolerance.
 	\item[M3] The app shall store the data retrieved from the sensor.
 	\item[M4] The web appliaction shall display a virtual reality scene using the WebVR framework.
 	\item[M5] The web application shall display the stored data within the virtual reality scene.

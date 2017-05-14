@@ -1,4 +1,4 @@
-A hosted version available [here](alexejgithub.github.io)  
+A hosted version available [here](https://alexejgithub.github.io/)
 
 A small WebVR test. To use it on localhost use:
 

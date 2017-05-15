@@ -1,0 +1,27 @@
+\documentclass[a4paper, 11pt, ngerman, fleqn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman, english]{babel}
+\usepackage{coordsys,logsys,color}
+\usepackage{hyperref}
+\usepackage{texdraw}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\input{txdtools}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hyperref}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\hypersetup{pdftex=false, colorlinks=true, breaklinks=true, linkcolor=black, menucolor=darkblue, urlcolor=darkblue, citecolor=darkblue}
+
+\pagestyle{fancy}
+
+\input{_SDD.tex}
+
+\begin{document}
+  \input{SDD00-title} \newpage
+  \tableofcontents \newpage
+  \input{SDD01-purpose} \newpage
+  \input{SDD02-proparchi} \newpage
+  \input{SDD03-ui} \newpage
+  \input{SDD04-tests} \newpage
+\end{document}

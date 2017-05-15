@@ -4,8 +4,8 @@
 
 
 var lookDir = new THREE.Vector3();
-
-moveCon = function(body,camera){
+var visibleOne = true;
+moveCon = function(body,camera,dataOne,dataTwo){
 
   function updateLookDir(){
     camera.getWorldDirection(lookDir);
@@ -24,9 +24,13 @@ moveCon = function(body,camera){
       updateLookDir();
       body.translateZ(-lookDir.z);
       body.translateX(-lookDir.x);
+    }else if(e.keyCode == 77) { //m
+      visibleOne = !visibleOne;
+      dataOne.traverse( function ( object ) { object.visible = visibleOne; } );
+      dataTwo.traverse( function ( object ) { object.visible = !visibleOne; } );
     }
-
   };
+
   this.update = function() {
     var gamePad = navigator.getGamepads()[0];
     if(gamePad != null){
@@ -38,7 +42,11 @@ moveCon = function(body,camera){
       }else if(gamePad.axes[1] < -0.05){
         body.translateZ(lookDir.z);
         body.translateX(lookDir.x);
-
+      }
+      if(gamePad.buttons[0].value > 0 || gamePad.buttons[0].pressed == true) {
+        visibleOne = !visibleOne;
+        dataOne.traverse( function ( object ) { object.visible = visibleOne; } );
+        dataTwo.traverse( function ( object ) { object.visible = !visibleOne; } );
       }
 
     }

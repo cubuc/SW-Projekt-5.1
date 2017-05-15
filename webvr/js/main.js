@@ -29,7 +29,6 @@ function init(){
   dollyCam.add(camera);
   scene.add(dollyCam);
   // enable gamepad controlls
-  movecon = new moveCon(dollyCam,camera);
 
   // Apply VR stereo rendering to renderer.
   effect = new THREE.VREffect(renderer);
@@ -39,7 +38,11 @@ function init(){
   //load the data
   loadData();
   //display the data
-  displayData(scene);
+  var dataVis = displayData();
+  scene.add(dataVis[0]);
+  scene.add(dataVis[1]);
+
+  moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
 
   // Request animation frame loop function
   lastRender = 0;
@@ -62,7 +65,7 @@ function animate(timestamp) {
   // Update VR headset position and apply to camera.
   controls.update();
 
-  movecon.update();
+  moveCon.update();
 
   // Render the scene.
   effect.render(scene, camera);

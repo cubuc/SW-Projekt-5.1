@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.*;
 import static kn.uni.inf.sensortagvr.ble.Sensor.*;
@@ -281,13 +283,21 @@ public class BluetoothLowEnergyService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             BluetoothDevice mBtDevice = gatt.getDevice();
             broadcastServices(ACTION_GATT_SERVICES_DISCOVERED, gatt.getServices());
+
         }
 
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                // add gatt server
                 broadcastCharacteristic(ACTION_DATA_AVAILABLE, characteristic);
+                bleRequest charRead = new bleRequest();
+                charRead.address = gatt.getDevice().getAddress();
+                charRead.charac = characteristic;
+                charRead.op = bleReqOp.readCharac;
+                charRead.stat = bleRequestStat.not_queued;
+                reqQueue.offer(charRead);
             }
         }
 
@@ -309,7 +319,7 @@ public class BluetoothLowEnergyService extends Service {
     /*
     * Queueing & Threading
      */
-    private enum bleReqOp {
+    private static enum bleReqOp {
         startScan,
         connect,
         disconnect,
@@ -339,7 +349,7 @@ public class BluetoothLowEnergyService extends Service {
     }
 
     LinkedBlockingQueue<bleRequest> reqQueue;
-    bleRequest currRequest = null;
+    volatile bleRequest curRequest = null;
 
     private void initThreadQueue() {
 
@@ -364,7 +374,7 @@ public class BluetoothLowEnergyService extends Service {
     }
 
     private void executeQueue(){
-        if (currRequest == null) {
+        if (curRequest == null) {
             bleRequest mbleReq = reqQueue.peek();
             switch (mbleReq.op){
 
@@ -393,6 +403,7 @@ public class BluetoothLowEnergyService extends Service {
                 case notify:
 
             /* Subscribe to the notifications */
+
                     for ( BluetoothGattService mBtGattSvc : gatt.getServices() ) {
                         if (mBtGattSvc != null) {
                             for (BluetoothGattCharacteristic ch : mBtGattSvc.getCharacteristics()) {

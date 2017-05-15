@@ -1,0 +1,20 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>110</x><y>120</y><w>950</w><h>340</h></coordinates><panel_attributes>title=StartVR
+autoTick=false
+obj=User~a 
+obj=GUI~b 
+obj=Chrome~c
+tick=
+a-&gt;&gt;&gt;b: clickButton(startVR); 
+on=b;
+tick=
+b-&gt;b+: Intend: openChrome();
+tick=
+on=b;
+tick=
+b-&gt;c: openChrome(localhost:8080);on=c;off=b; 
+tick=
+b-&gt;a :switchtoChrome();
+off=b;
+tick=
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

@@ -1,0 +1,37 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>90</x><y>137</y><w>1160</w><h>580</h></coordinates><panel_attributes>title=VRBox:\nSwitch data Visualization
+autoTick=false
+obj=User~a 
+obj=Chrome~b 
+obj=VRBox~c
+
+tick=
+a-&gt;&gt;&gt;b: clickGamepadButton(0); 
+on=b;
+tick=
+b-&gt;c: switchVisualization();on=c;
+tick=
+c-&gt;c+:hideOldVisual();
+tick=
+on=c;
+tick=
+off=c;
+tick=
+c-&gt;&gt;&gt;c+:showOtherVusial();
+tick=
+on=c;
+tick=
+c-&gt;c+:VisualizationShown();
+off=c;
+tick=
+tick=
+c-&gt;c+:renderWorld();
+tick=
+on=c;
+tick=
+c-&gt;b:showWorld();
+tick=
+b-&gt;a:displayVRWorld();
+tick=
+
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

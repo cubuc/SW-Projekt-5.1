@@ -1,0 +1,39 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>117</y><w>1550</w><h>540</h></coordinates><panel_attributes>title=Scan:\nRecord datapoint
+autoTick=false
+obj=User~a 
+obj=GUI~b 
+obj=StorManager~c
+obj=TrackingManager~d
+
+
+tick=
+a-&gt;&gt;&gt;b: clickButton(recordData); 
+on=b;
+tick=
+b-&gt;c: recordData();on=c;off=b; 
+tick=
+c-&gt;&gt;&gt;c+:getCurrentDataset();
+tick=
+on=c;
+tick=
+off=c;
+c-&gt;c+ :currentDataset();
+tick=
+tick=
+c-&gt;&gt;&gt;d:getLocation();on=d;
+tick=
+d-&gt;c:returnLocation();off=d;
+tick=
+c-&gt;&gt;&gt;c+:getMostRecentData();
+tick=
+on=c;
+tick=
+off=c;
+c-&gt;c+ :storeData();
+tick=
+tick=
+c-&gt;a: dataStored();
+off=c;
+
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

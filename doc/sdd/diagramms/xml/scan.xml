@@ -1,0 +1,26 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>92</x><y>140</y><w>940</w><h>380</h></coordinates><panel_attributes>title=Open Scan
+autoTick=false
+obj=User~a 
+obj=GUI~b 
+obj=StorManager~c
+tick=
+a-&gt;&gt;&gt;b: clickButton(scan); on=b;
+tick=
+b-&gt;&gt;&gt;b+: displayScan();
+tick=
+on=b;
+tick=
+b-&gt;&gt;&gt;c: ACTOIN_GET_DATA;
+on=c;
+tick=
+off=c;
+c-&gt;b: ACTION_RETURN_DATA;
+tick= 
+off=b;
+b-&gt;b+ :displayData();
+tick=
+tick=
+b-&gt;a :displayScanScreen();
+
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

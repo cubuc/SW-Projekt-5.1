@@ -1,0 +1,29 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>122</x><y>150</y><w>1090</w><h>390</h></coordinates><panel_attributes>title=Settings: \nScan for Sensor
+autoTick=false
+obj=User~a 
+obj=GUI~b 
+obj=BTManager~c
+on=a; 
+a-&gt;&gt;&gt;b: clickButton(scan); 
+on=b;
+tick=
+off=a
+b-&gt;&gt;&gt;c: ACTION_START_SCAN;on=c;
+tick=
+c-&gt;&gt;&gt;c+: scanForSensor();
+tick=
+on=c;
+tick=
+off=c;
+
+c-&gt;c+: ACTION\n_DEVICE_FOUND;
+tick= 
+tick=
+c-&gt;b :ACTION_DEVICE_FOUND;
+off=c;
+tick=
+off=b
+b-&gt;a :returnSensor();
+
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

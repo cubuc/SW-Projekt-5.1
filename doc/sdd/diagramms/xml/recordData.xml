@@ -1,0 +1,12 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>92</x><y>140</y><w>400</w><h>250</h></coordinates><panel_attributes>title=Scan:\nButton record Data
+autoTick=false
+obj=User~a 
+obj=GUI~b 
+tick=
+a-&gt;&gt;&gt;b: clickButton(recordData); on=b;
+tick=
+tick=
+b-&gt;a :displayRecordScreen();
+
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

@@ -1,0 +1,28 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>20</y><w>1170</w><h>420</h></coordinates><panel_attributes>title=Settings: \nConnect to Sensor
+autoTick=false
+obj=User~a 
+obj=GUI~b 
+obj=BTManager~c
+tick=
+a-&gt;&gt;&gt;b: clickButton(connect); 
+on=b;
+tick=
+b-&gt;&gt;&gt;c: ACTION_DEVICE_CONNECT;on=c;
+tick=
+c-&gt;&gt;&gt;c+: connectDevice();
+tick=
+on=c;
+tick=
+off=c;
+
+c-&gt;c+: ACTION_\nGATT_CONNECTED;
+tick= 
+tick=
+c-&gt;b :ACTION_GATT_CONNECTED;
+off=c;
+tick=
+off=b
+b-&gt;a :connected();
+
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

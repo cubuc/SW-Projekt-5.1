@@ -1,0 +1,15 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>100</x><y>20</y><w>390</w><h>230</h></coordinates><panel_attributes>title=Open Settings
+autoTick=false
+obj=User~a 
+obj=App~b 
+tick=
+on=a; 
+a-&gt;&gt;&gt;b: clickButton(Settings); 
+on=b;
+tick=
+b-&gt;a :displaySettings();
+off=b;
+off=a;
+tick=
+
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

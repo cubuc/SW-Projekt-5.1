@@ -28,7 +28,7 @@ InterfaceStorageManager {
 	}
 
 
-	// Upload the data set to a webserver a .csv file from time till now.
+	// Upload the data set to a webserver a .json file from time till now.
 	public void uploadData(int time) {
 		//upload the data to a server so webvr can later use it.
 	}

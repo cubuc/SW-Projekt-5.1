@@ -34,5 +34,5 @@
      dataVis[0] = dataVisOne;
      dataVis[1] = dataVisTwo;
 
-   return dataVis;
+     return dataVis;
  };

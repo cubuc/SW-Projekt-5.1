@@ -21,7 +21,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,7 +31,7 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.*;
 
 public class BluetoothLowEnergyService extends Service {
     private final static String TAG = BluetoothLowEnergyService.class.getSimpleName();
-   
+
     public BluetoothLowEnergyService() {
     }
     // TODO: Queueing & Threading, LocBroadcastListener, Parsing & Profiles
@@ -202,11 +201,19 @@ public class BluetoothLowEnergyService extends Service {
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBtAdapter = mBtManager.getAdapter();
         /* Bluetooth enabled? If not enable */
+        if (mBtAdapter == null ) {
+            Log.e(TAG, "No BluetoothAdapter detected");
+        }
+
         if (!mBtAdapter.isEnabled()) {
             mBtAdapter.enable();
         }
-        initThreadQueue();
-
+        try {
+            initThreadQueue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "OnStart finished");
         return START_NOT_STICKY;
     }
 
@@ -225,7 +232,7 @@ public class BluetoothLowEnergyService extends Service {
     private BluetoothLeScanner mBleScanner;
     private BluetoothGatt mBtGatt = null;
     private boolean mScanning = false;
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
 
     /*
      * BLE Scan
@@ -385,7 +392,7 @@ public class BluetoothLowEnergyService extends Service {
     /*
     * Queueing & Threading
      */
-    private static enum bleReqOp {
+    private enum bleReqOp {
         startScan,
         connect,
         disconnect,
@@ -395,20 +402,31 @@ public class BluetoothLowEnergyService extends Service {
         notify
     }
 
+    private enum reqStatus {
+        not_queued,
+        queued,
+        executing,
+        done,
+        timeout
+    }
+
     private static class bleRequest {
+        int id;
         String address;
         BluetoothGattCharacteristic charac;
         bleReqOp op;
+        reqStatus status;
+        int curTimeout;
         boolean notify;
     }
 
     LinkedBlockingQueue<bleRequest> reqQueue;
     volatile bleRequest curRequest = null;
+    int TIMEOUT = 150;
 
     private void initThreadQueue() {
-
         reqQueue = new LinkedBlockingQueue<>();
-
+        Log.i(TAG, "init Blocking Queue");
         Thread queueThread = new Thread() {
             @Override
             public void run() {
@@ -428,38 +446,59 @@ public class BluetoothLowEnergyService extends Service {
     }
 
     private void executeQueue(){
-        if (curRequest == null) {
-            bleRequest mbleReq = reqQueue.peek();
-            switch (mbleReq.op){
+        if (curRequest != null && curRequest.op != bleReqOp.startScan) {
+            Log.d(TAG, "executeQueue, curBleRequest running");
+            try {
+                curRequest.curTimeout++;
+                if (curRequest.curTimeout > TIMEOUT) {
+                    curRequest.status = reqStatus.timeout;
+                    curRequest = null;
+                }
+                Thread.sleep(10, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        if (reqQueue == null || reqQueue.size() == 0) {
+            return;
+        }
 
-                case startScan:
-                    scanLeDevice();
-                    break;
+        else if(curRequest == null) {
 
-                case connect:
-                    connect(mBtAdapter.getRemoteDevice(mbleReq.address));
-                    break;
+            if(reqQueue.size() > 0) {
+                curRequest = reqQueue.peek();
+                switch (curRequest.op) {
 
-                case disconnect:
-                    disconnect(mBtAdapter.getRemoteDevice(mbleReq.address));
-                    break;
+                    case startScan:
+                        scanLeDevice();
+                        break;
 
-                case readCharac:
+                    case connect:
+                        connect(mBtAdapter.getRemoteDevice(curRequest.address));
+                        break;
 
-                case readConfig:
+                    case disconnect:
+                        disconnect(mBtAdapter.getRemoteDevice(curRequest.address));
+                        break;
 
-                case writeConfig:
+                    case readCharac:
 
-                case notify:
+                    case readConfig:
+
+                    case writeConfig:
+
+                    case notify:
 
                     /* Subscribe to the notifications */
 
 
-                    break;
+                        break;
 
-                default:
-                    Log.e(TAG, "No vaild operation in request" + mbleReq.op);
+                    default:
+                        Log.i(TAG, "No request in the queue");
 
+                }
             }
         }
     }

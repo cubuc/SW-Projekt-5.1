@@ -1,38 +1,32 @@
 /**
- * @author Alexej Gluschkow
- */
+* @author Alexej Gluschkow
+*/
 
- displayData = function(){
-    //some tests for the conrtols
-    var dataVisOne = new THREE.Mesh();
+displayData = function(){
 
-     var geometry = new THREE.BoxGeometry( 2, 2, 2 );
-     var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 , side:THREE.DoubleSide} );
-     var cube = new THREE.Mesh( geometry, material );
-     cube.position.z = -5;
-     cube.position.x = -2;
+  //load the data
+  var vert = loadData();
+  //the plane is created
+  var geometry = new THREE.Geometry();
+  var matOne = new THREE.MeshBasicMaterial({side:THREE.DoubleSide ,transparent: true});
+  matOne.opacity = 0.5;
+  console.log(geometry.vertices);
+  var triangles = THREE.ShapeUtils.triangulateShape(vert,[]);
+  geometry.vertices = vert;
+  for( var i = 0; i < triangles.length; i++ ){
+    geometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][1], triangles[i][2]));
+  }
+  geometry.rotateX( - Math.PI / 2 );
+  //the lines just for testing
+  var geo = new THREE.Geometry();
+  geo.vertices = vert
+  var material = new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5 } );
+  var dataVisOne = new THREE.Mesh(geometry, matOne);
+  var dataVisTwo = new THREE.Line( geo, material);
+  dataVisTwo.traverse( function ( object ) { object.visible = false; } );
 
-     var dataVisTwo = new THREE.Mesh();
-
-     var geometrys = new THREE.SphereGeometry( 0.2, 64, 64 );
-     var materials = new THREE.MeshBasicMaterial( { color: 0xffffff , side:THREE.DoubleSide} );
-     var sphere = new THREE.Mesh( geometrys, materials );
-     sphere.position.z= -5;
-
-     var gs2 = new THREE.SphereGeometry( 0.2, 64, 64 );
-     var ms2 = new THREE.MeshBasicMaterial( { color: 0xfff000 , side:THREE.DoubleSide} );
-     var s2 = new THREE.Mesh( gs2, ms2 );
-     s2.position.z= -5;
-     s2.position.x = 2;
-
-     dataVisTwo.add(sphere);
-     dataVisTwo.add(s2);
-     dataVisOne.add(cube);
-     dataVisTwo.traverse( function ( object ) { object.visible = false; } );
-
-     var dataVis = new Array();
-     dataVis[0] = dataVisOne;
-     dataVis[1] = dataVisTwo;
-
-     return dataVis;
- };
+  var dataVis = new Array();
+  dataVis[0] = dataVisOne;
+  dataVis[1] = dataVisTwo;
+  return dataVis;
+};

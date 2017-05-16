@@ -35,8 +35,6 @@ function init(){
   effect.setSize(window.innerWidth, window.innerHeight);
   // load the whole scene
   createRoom(scene);
-  //load the data
-  loadData();
   //display the data
   var dataVis = displayData();
   scene.add(dataVis[0]);

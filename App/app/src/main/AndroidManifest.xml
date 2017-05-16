@@ -35,6 +35,10 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BLUETOOTH" />
+
+        <activity
+            android:name="kn.uni.inf.sensortagvr.ble.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

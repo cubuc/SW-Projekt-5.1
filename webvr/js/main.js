@@ -41,7 +41,7 @@ function init(){
   scene.add(dataVis[1]);
 
   moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
-
+  
   // Request animation frame loop function
   lastRender = 0;
 

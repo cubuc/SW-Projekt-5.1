@@ -10,7 +10,6 @@ displayData = function(){
   var geometry = new THREE.Geometry();
   var matOne = new THREE.MeshBasicMaterial({side:THREE.DoubleSide ,transparent: true});
   matOne.opacity = 0.5;
-  console.log(geometry.vertices);
   var triangles = THREE.ShapeUtils.triangulateShape(vert,[]);
   geometry.vertices = vert;
   for( var i = 0; i < triangles.length; i++ ){

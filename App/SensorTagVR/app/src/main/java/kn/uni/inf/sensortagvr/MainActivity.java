@@ -1,5 +1,8 @@
 package kn.uni.inf.sensortagvr;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +20,9 @@ import kn.uni.inf.sensortagvr.ble.BluetoothLowEnergyService;
 public class MainActivity extends AppCompatActivity {
     LocalBroadcastManager mLBM;
     Context con;
+    private BluetoothAdapter mBluetoothAdapter;
+    int REQUEST_ENABLE_BT=1;
+
     BroadcastReceiver scanAndConnectTest = new BroadcastReceiver() {
 
         @Override
@@ -33,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent mIntent = new Intent(BluetoothLowEnergyService.ACTION_DEVICE_CONNECT);
                     mIntent.putExtra(BluetoothLowEnergyService.EXTRA_ADDRESS,
-                            intent.getStringExtra(BluetoothLowEnergyService.EXTRA_ADDRESS));
+                            (BluetoothDevice) intent.getExtras().get("EXTRA_ADDRESS"));
                     mLBM.sendBroadcast(intent);
                     break;
                 case BluetoothLowEnergyService.ACTION_GATT_CONNECTED:
@@ -63,11 +69,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         con = getApplicationContext();
         mLBM = LocalBroadcastManager.getInstance(this);
-        super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        //startService(new Intent(this, BluetoothLowEnergyService.class));
+
+
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+        startService(new Intent(this, BluetoothLowEnergyService.class));
 
         mLBM.registerReceiver(scanAndConnectTest, makeFilter());
 

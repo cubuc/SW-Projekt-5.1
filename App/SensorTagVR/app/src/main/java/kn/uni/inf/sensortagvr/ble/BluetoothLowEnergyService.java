@@ -11,6 +11,8 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,14 +29,7 @@ import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_CCC;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_GYR_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_HUM_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.*;
 
 public class BluetoothLowEnergyService extends Service {
     /*
@@ -47,7 +42,7 @@ public class BluetoothLowEnergyService extends Service {
     // .putExtra(EXTRA_ADDRESS, from Intent received address);
     public final static String ACTION_DEVICE_CONNECT =
             "kn.uni.inf.sensortagvr.ble.ACTION_DEVICE_CONNECT";
-    // TODO: Queueing & Threading, LocBroadcastListener, Profiles
+    // TODO: Implement LeScan for API18, !Clean! Queueing & Threading, (Profiles)
      /*  I/O   */
     // .putExtra(EXTRA_ADDRESS, from Intent received address);
     public final static String ACTION_DEVICE_DISCONNECT =
@@ -87,6 +82,7 @@ public class BluetoothLowEnergyService extends Service {
             "kn.uni.inf.sensortagvr.ble.EXTRA_SERVICES";
     public final static String EXTRA_STATUS =
             "kn.uni.inf.sensortagvr.ble.EXTRA_STATUS";
+
     private final static String TAG = BluetoothLowEnergyService.class.getSimpleName();
     /* Bluetooth Variable initialization */
     private static final long SCAN_PERIOD = 5000;
@@ -95,24 +91,30 @@ public class BluetoothLowEnergyService extends Service {
             LocalBroadcastManager.getInstance(this);
     BluetoothManager mBtManager;
     LinkedBlockingQueue<bleRequest> reqQueue;
+
+
     BroadcastReceiver scanAndConnectTest = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case BluetoothLowEnergyService.ACTION_START_SCAN:
-                    bleRequest rq = new bleRequest();
-                    rq.op = bleReqOp.startScan;
-                    reqQueue.offer(rq);
+//                    bleRequest rq = new bleRequest();
+//                    rq.op = bleReqOp.startScan;
+//                    reqQueue.offer(rq);
+                    scanLeDevice(true);
                     break;
                 case BluetoothLowEnergyService.ACTION_DEVICE_CONNECT:
-                    bleRequest req = new bleRequest();
-                    req.address = intent.getStringExtra(EXTRA_ADDRESS);
-                    req.op = bleReqOp.connect;
-                    reqQueue.offer(req);
+//                    bleRequest req = new bleRequest();
+//                    req.address = intent.getStringExtra(EXTRA_ADDRESS);
+//                    req.op = bleReqOp.connect;
+//                    reqQueue.offer(req);
+                    connect((BluetoothDevice) intent.getExtras().get("EXTRA_ADDRESS"));
+
                     break;
             }
         }
     };
+
     volatile bleRequest curRequest = null;
     int TIMEOUT = 150;
     private BluetoothAdapter mBtAdapter;
@@ -123,6 +125,7 @@ public class BluetoothLowEnergyService extends Service {
     private BluetoothGatt mBtGatt = null;
     private boolean mScanning = false;
     private Handler mHandler = new Handler();
+
     private BluetoothGattCallback mGattCallback =
             new BluetoothGattCallback() {
                 @Override
@@ -295,7 +298,53 @@ public class BluetoothLowEnergyService extends Service {
         super.onDestroy();
     }
 
-    private void scanLeDevice() {
+    private void scanLeDevice(boolean enable) {
+        final BluetoothLeScanner bluetoothLeScanner = mBtAdapter.getBluetoothLeScanner();
+
+        final ScanCallback mLeScanCallback = new ScanCallback() {
+
+            @Override
+            public void onScanResult(int callbackType, ScanResult result) {
+
+                super.onScanResult(callbackType, result);
+
+                BluetoothDevice mBtDevice = result.getDevice();
+                final Intent intent = new Intent(ACTION_DEVICE_FOUND);
+                intent.putExtra(EXTRA_ADDRESS, mBtDevice);
+                mLocalBroadcastManager.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onBatchScanResults(List<ScanResult> results) {
+                super.onBatchScanResults(results);
+
+            }
+
+            @Override
+            public void onScanFailed(int errorCode) {
+                super.onScanFailed(errorCode);
+            }
+        };
+        if (enable) {
+            // Stops scanning after a pre-defined scan period.
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    bluetoothLeScanner.stopScan(mLeScanCallback);
+
+                }
+
+
+            }, SCAN_PERIOD);
+
+            mScanning = true;
+            bluetoothLeScanner.startScan( mLeScanCallback);
+        } else {
+            mScanning = false;
+            bluetoothLeScanner.stopScan(mLeScanCallback);
+        }
+
 
         final Intent intent = new Intent(ACTION_SCAN_STARTED);
         mLocalBroadcastManager.sendBroadcast(intent);
@@ -367,13 +416,13 @@ public class BluetoothLowEnergyService extends Service {
         if (reqQueue == null || reqQueue.size() == 0) {
             return;
         } else if (curRequest == null) {
-
+            Log.d(TAG, "new ble request");
             if (reqQueue.size() > 0) {
                 curRequest = reqQueue.peek();
                 switch (curRequest.op) {
 
                     case startScan:
-                        scanLeDevice();
+                        scanLeDevice(true);
                         break;
 
                     case connect:

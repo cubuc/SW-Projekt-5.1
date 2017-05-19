@@ -1,9 +1,14 @@
 package kn.uni.inf.sensortagvr.ble;
 
-public class TIUUIDs {
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.UUID;
+
+class TIUUIDs {
     //TODO LEDs
 
-    public final static String
+    final static String
             UUID_DEVINFO_SERV = "0000180a-0000-1000-8000-00805f9b34fb",
             UUID_DEVINFO_FWREV = "00002A26-0000-1000-8000-00805f9b34fb",
             UUID_CCC = "00002902-0000-1000-8000-00805f9b34fb",
@@ -54,6 +59,85 @@ public class TIUUIDs {
 
     UUID_KEY_SERV = "0000ffe0-0000-1000-8000-00805f9b34fb",
             UUID_KEY_DATA = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    static HashSet<UUID> config = new HashSet<>();
+    static HashSet<UUID> data = new HashSet<>();
+    private static HashMap<String, String> attributes = new HashMap<>();
 
-    public static final String[] UUID_DATA = {UUID_IRT_DATA, UUID_ACC_DATA, UUID_HUM_DATA, UUID_MAG_DATA, UUID_OPT_DATA, UUID_BAR_DATA, UUID_GYR_DATA, UUID_MOV_DATA};
+    static {
+        // Services
+        attributes.put(UUID_DEVINFO_SERV, "Device Info Service");
+        attributes.put(UUID_IRT_SERV, "Temperature Sensor Service");
+        attributes.put(UUID_ACC_SERV, "Accelerometer Service");
+        attributes.put(UUID_HUM_SERV, "Humidity Sensor Service");
+        attributes.put(UUID_MAG_SERV, "Magnetometer Service");
+        attributes.put(UUID_OPT_SERV, "Luxmeter Service");
+        attributes.put(UUID_BAR_SERV, "Barometer Service");
+        attributes.put(UUID_GYR_SERV, "Gyrometer Service");
+        attributes.put(UUID_MOV_SERV, "Movement Sensor Service");
+        attributes.put(UUID_TST_SERV, "Test Service");
+        attributes.put(UUID_KEY_SERV, "Key ? Service");
+
+        // Characteristics
+        // Data
+        attributes.put(UUID_DEVINFO_FWREV, "Firmware Revision");
+        attributes.put(UUID_IRT_DATA, "Temperature Sensor Data");
+        attributes.put(UUID_ACC_DATA, "Accelerometer Data");
+        attributes.put(UUID_HUM_DATA, "Humidity Sensor Data");
+        attributes.put(UUID_MAG_DATA, "Magnetometer Data");
+        attributes.put(UUID_OPT_DATA, "Luxmeter Data");
+        attributes.put(UUID_BAR_DATA, "Barometer Data");
+        attributes.put(UUID_GYR_DATA, "Gyrometer Data");
+        attributes.put(UUID_MOV_DATA, "Movement Sensor Data");
+        attributes.put(UUID_TST_DATA, "Test Data");
+        attributes.put(UUID_KEY_DATA, " Key Data?");
+
+        // Update intervals
+        attributes.put(UUID_IRT_PERI, "Temperature Sensor Update Interval");
+        attributes.put(UUID_ACC_PERI, "Accelerometer Update Interval");
+        attributes.put(UUID_HUM_PERI, "Humidity Sensor Update Interval");
+        attributes.put(UUID_MAG_PERI, "Magnetometer Update Interval");
+        attributes.put(UUID_OPT_PERI, "Luxmeter Update Interval");
+        attributes.put(UUID_BAR_PERI, "Barometer Update Interval");
+        attributes.put(UUID_GYR_PERI, "Gyrometer Update Interval");
+        attributes.put(UUID_MOV_PERI, "Movement Sensor Update Interval");
+
+        // Conf
+        attributes.put(UUID_CCC, "Client Characteristics Config");
+        attributes.put(UUID_IRT_CONF, "Temperature Sensor Config");
+        attributes.put(UUID_ACC_CONF, "Accelerometer Config");
+        attributes.put(UUID_HUM_CONF, "Humidity Config");
+        attributes.put(UUID_MAG_CONF, "Magnetometer Config");
+        attributes.put(UUID_OPT_CONF, "Luxmeter Config");
+        attributes.put(UUID_BAR_CONF, "Barometer Config");
+        attributes.put(UUID_BAR_CALI, "Barometer Calibration");
+        attributes.put(UUID_GYR_CONF, "Gyrometer Config");
+        attributes.put(UUID_MOV_CONF, "Movement Sensor Config");
+    }
+
+    static {
+        config.add(UUID.fromString(UUID_IRT_CONF));
+        config.add(UUID.fromString(UUID_ACC_CONF));
+        config.add(UUID.fromString(UUID_HUM_CONF));
+        config.add(UUID.fromString(UUID_MAG_CONF));
+        config.add(UUID.fromString(UUID_OPT_CONF));
+        config.add(UUID.fromString(UUID_BAR_CONF));
+        config.add(UUID.fromString(UUID_GYR_CONF));
+        config.add(UUID.fromString(UUID_MOV_CONF));
+    }
+
+    static {
+        data.add(UUID.fromString(UUID_IRT_DATA));
+        data.add(UUID.fromString(UUID_ACC_DATA));
+        data.add(UUID.fromString(UUID_HUM_DATA));
+        data.add(UUID.fromString(UUID_MAG_DATA));
+        data.add(UUID.fromString(UUID_OPT_DATA));
+        data.add(UUID.fromString(UUID_BAR_DATA));
+        data.add(UUID.fromString(UUID_GYR_DATA));
+        data.add(UUID.fromString(UUID_MOV_DATA));
+    }
+
+    static String lookup(String uuid, String defaultName) {
+        String name = attributes.get(uuid);
+        return name == null ? defaultName : name;
+    }
 }

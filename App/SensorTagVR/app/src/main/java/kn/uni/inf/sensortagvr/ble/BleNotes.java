@@ -29,9 +29,16 @@ import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.*;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_CCC;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_GYR_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_HUM_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
 
-public class BluetoothLowEnergyService extends Service {
+public class BleNotes extends Service {
     /*
      *  Intent Codes
      */
@@ -83,7 +90,7 @@ public class BluetoothLowEnergyService extends Service {
     public final static String EXTRA_STATUS =
             "kn.uni.inf.sensortagvr.ble.EXTRA_STATUS";
 
-    private final static String TAG = BluetoothLowEnergyService.class.getSimpleName();
+    private final static String TAG = BleNotes.class.getSimpleName();
     /* Bluetooth Variable initialization */
     private static final long SCAN_PERIOD = 5000;
     private final IBinder binder = new LocalBinder();
@@ -91,41 +98,14 @@ public class BluetoothLowEnergyService extends Service {
             LocalBroadcastManager.getInstance(this);
     BluetoothManager mBtManager;
     LinkedBlockingQueue<bleRequest> reqQueue;
-
-
-    BroadcastReceiver scanAndConnectTest = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()) {
-                case BluetoothLowEnergyService.ACTION_START_SCAN:
-//                    bleRequest rq = new bleRequest();
-//                    rq.op = bleReqOp.startScan;
-//                    reqQueue.offer(rq);
-                    scanLeDevice(true);
-                    break;
-                case BluetoothLowEnergyService.ACTION_DEVICE_CONNECT:
-//                    bleRequest req = new bleRequest();
-//                    req.address = intent.getStringExtra(EXTRA_ADDRESS);
-//                    req.op = bleReqOp.connect;
-//                    reqQueue.offer(req);
-                    connect((BluetoothDevice) intent.getExtras().get("EXTRA_ADDRESS"));
-
-                    break;
-            }
-        }
-    };
-
     volatile bleRequest curRequest = null;
     int TIMEOUT = 150;
     private BluetoothAdapter mBtAdapter;
     private BluetoothLeScanner mBleScanner;
-
-
     /* Control flow */
     private BluetoothGatt mBtGatt = null;
     private boolean mScanning = false;
     private Handler mHandler = new Handler();
-
     private BluetoothGattCallback mGattCallback =
             new BluetoothGattCallback() {
                 @Override
@@ -193,14 +173,35 @@ public class BluetoothLowEnergyService extends Service {
                 }
 
             };
+    BroadcastReceiver scanAndConnectTest = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case BleNotes.ACTION_START_SCAN:
+//                    bleRequest rq = new bleRequest();
+//                    rq.op = bleReqOp.startScan;
+//                    reqQueue.offer(rq);
+                    scanLeDevice(true);
+                    break;
+                case BleNotes.ACTION_DEVICE_CONNECT:
+//                    bleRequest req = new bleRequest();
+//                    req.address = intent.getStringExtra(EXTRA_ADDRESS);
+//                    req.op = bleReqOp.connect;
+//                    reqQueue.offer(req);
+                    connect((BluetoothDevice) intent.getExtras().get("EXTRA_ADDRESS"));
 
-    public BluetoothLowEnergyService() {
+                    break;
+            }
+        }
+    };
+
+    public BleNotes() {
     }
 
     private static IntentFilter makeFilter() {
         final IntentFilter fi = new IntentFilter();
-        fi.addAction(BluetoothLowEnergyService.ACTION_START_SCAN);
-        fi.addAction(BluetoothLowEnergyService.ACTION_DEVICE_CONNECT);
+        fi.addAction(BleNotes.ACTION_START_SCAN);
+        fi.addAction(BleNotes.ACTION_DEVICE_CONNECT);
         return fi;
     }
 
@@ -339,7 +340,7 @@ public class BluetoothLowEnergyService extends Service {
             }, SCAN_PERIOD);
 
             mScanning = true;
-            bluetoothLeScanner.startScan( mLeScanCallback);
+            bluetoothLeScanner.startScan(mLeScanCallback);
         } else {
             mScanning = false;
             bluetoothLeScanner.stopScan(mLeScanCallback);
@@ -486,8 +487,8 @@ public class BluetoothLowEnergyService extends Service {
     }
 
     private class LocalBinder extends Binder {
-        public BluetoothLowEnergyService getService() {
-            return BluetoothLowEnergyService.this;
+        public BleNotes getService() {
+            return BleNotes.this;
         }
     }
 

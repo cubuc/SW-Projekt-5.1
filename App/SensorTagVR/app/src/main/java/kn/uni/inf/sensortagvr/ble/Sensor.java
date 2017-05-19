@@ -1,5 +1,6 @@
 package kn.uni.inf.sensortagvr.ble;
 
+
 import java.util.UUID;
 
 import static java.lang.Math.pow;
@@ -226,9 +227,8 @@ enum Sensor {
     public static final byte ENABLE_SENSOR_CODE = 1;
     public static final byte CALIBRATE_SENSOR_CODE = 2;
     public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, ACCELEROMETER, MAGNETOMETER, LUXMETER, GYROSCOPE, HUMIDITY, BAROMETER};
-    private final UUID service, data, config;
+    public final UUID service, data, config;
     private byte enableCode; // See getEnableSensorCode for explanation.
-
     /**
      * Constructor called by the Gyroscope and Accelerometer because it more than a boolean enable
      * code.
@@ -239,10 +239,9 @@ enum Sensor {
         this.config = config;
         this.enableCode = enableCode;
     }
-
     /**
      * Constructor called by all the sensors except Gyroscope
-     */
+     * */
     Sensor(UUID service, UUID data, UUID config) {
         this.service = service;
         this.data = data;
@@ -253,9 +252,9 @@ enum Sensor {
     /**
      * Gyroscope, Magnetometer, Barometer, IR temperature all store 16 bit two's complement values as LSB MSB, which cannot be directly parsed
      * as getIntValue(FORMAT_SINT16, offset) because the bytes are stored as little-endian.
-     * <p>
+     *
      * This function extracts these 16 bit two's complement values.
-     */
+     * */
     private static Integer shortSignedAtOffset(byte[] c, int offset) {
         Integer lowerByte = (int) c[offset] & 0xFF;
         Integer upperByte = (int) c[offset + 1]; // // Interpret MSB as signed

@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">SensorTagVR</string>
-    <string name="settings" />Settings>
     <string name="scan">Scan</string>
     <string name="start_vr">Start VR</string>
+
+    <string name="unknown_device">Unknown Device</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+    <string name="menu_scan">Scan</string>
+    <string name="refresh_button">Refresh Button</string>
+    <string name="menu_stop">Stop</string>
+    <string name="Services">Services</string>
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="no_data">No data</string>
+    <string name="label_data">Data:</string>
+    <string name="label_state">State:</string>
+    <string name="label_device_address">Device adress:</string>
+    <string name="title_devices">TI CC2650 Scan</string>
+    <string name="settings">Settings</string>
 </resources>

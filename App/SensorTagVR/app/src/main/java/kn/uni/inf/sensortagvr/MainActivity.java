@@ -1,93 +1,23 @@
 package kn.uni.inf.sensortagvr;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import kn.uni.inf.sensortagvr.ble.BluetoothLowEnergyService;
+import kn.uni.inf.sensortagvr.ble.ScanListActivity;
 
 public class MainActivity extends AppCompatActivity {
-    LocalBroadcastManager mLBM;
-    Context con;
-    private BluetoothAdapter mBluetoothAdapter;
-    int REQUEST_ENABLE_BT=1;
-
-    BroadcastReceiver scanAndConnectTest = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()) {
-                case BluetoothLowEnergyService.ACTION_SCAN_STARTED:
-
-                    Toast.makeText(con, "The scan has started", Toast.LENGTH_SHORT).show();
-
-                    break;
-                case BluetoothLowEnergyService.ACTION_DEVICE_FOUND:
-
-                    Toast.makeText(con, "Found Device", Toast.LENGTH_SHORT).show();
-
-                    Intent mIntent = new Intent(BluetoothLowEnergyService.ACTION_DEVICE_CONNECT);
-                    mIntent.putExtra(BluetoothLowEnergyService.EXTRA_ADDRESS,
-                            (BluetoothDevice) intent.getExtras().get("EXTRA_ADDRESS"));
-                    mLBM.sendBroadcast(intent);
-                    break;
-                case BluetoothLowEnergyService.ACTION_GATT_CONNECTED:
-                    final Context con = getApplicationContext();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(con, "Connection established", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    break;
-                case BluetoothLowEnergyService.ACTION_GATT_DISCONNECTED:
-                case BluetoothLowEnergyService.ACTION_GATT_SERVICES_DISCOVERED:
-                case BluetoothLowEnergyService.ACTION_DATA_AVAILABLE:
-                    break;
-            }
-        }
-    };
-
-    private static IntentFilter makeFilter() {
-        final IntentFilter fi = new IntentFilter();
-        fi.addAction(BluetoothLowEnergyService.ACTION_SCAN_STARTED);
-        fi.addAction(BluetoothLowEnergyService.ACTION_DEVICE_FOUND);
-        fi.addAction(BluetoothLowEnergyService.ACTION_GATT_CONNECTED);
-        return fi;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        con = getApplicationContext();
-        mLBM = LocalBroadcastManager.getInstance(this);
-
         setContentView(R.layout.activity_main);
+        final Context con = getApplicationContext();
 
-
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-        startService(new Intent(this, BluetoothLowEnergyService.class));
-
-        mLBM.registerReceiver(scanAndConnectTest, makeFilter());
 
         final Button button = (Button) findViewById(R.id.startVR);
         button.setOnClickListener(new View.OnClickListener() {
@@ -101,15 +31,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Button mButton = (Button) findViewById(R.id.settings);
-        mButton.setOnClickListener(new View.OnClickListener() {
+
+        final Button settingsButton = (Button) findViewById(R.id.settings);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(con, "Req Sent", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(BluetoothLowEnergyService.ACTION_START_SCAN);
-                mLBM.sendBroadcast(intent);
+            public void onClick(View v) {
+                startActivity(new Intent(con, ScanListActivity.class));
             }
         });
     }
 }
-

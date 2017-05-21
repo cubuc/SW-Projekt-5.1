@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.3)  22 MAY 2017 00:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.3)  22 MAY 2017 00:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -625,7 +625,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [2] (./SDD01-purpose.tex [3]) [4] (./SDD02-proparchi.tex
-<pics/composite_app.png, id=151, 1284.8pt x 511.9125pt>
+<pics/composite_app.png, id=146, 1284.8pt x 511.9125pt>
 File: pics/composite_app.png Graphic file (type png)
 
 <use pics/composite_app.png>
@@ -647,7 +647,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--14
 
  []
 
-<pics/bt_state.png, id=153, 1806.75pt x 662.475pt>
+<pics/bt_state.png, id=148, 1806.75pt x 662.475pt>
 File: pics/bt_state.png Graphic file (type png)
  <use pics/bt_state.png>
 Package pdftex.def Info: pics/bt_state.png used on input line 15.
@@ -658,7 +658,7 @@ Overfull \hbox (82.75702pt too wide) in paragraph at lines 15--16
  []
 
 [5 <./pics/composite_app.png>]
-<pics/TrackingManager_Composition.png, id=161, 431.6125pt x 250.9375pt>
+<pics/TrackingManager_Composition.png, id=155, 431.6125pt x 250.9375pt>
 File: pics/TrackingManager_Composition.png Graphic file (type png)
 
 <use pics/TrackingManager_Composition.png>
@@ -666,7 +666,7 @@ Package pdftex.def Info: pics/TrackingManager_Composition.png used on input lin
 e 19.
 (pdftex.def)             Requested size: 333.52567pt x 193.91551pt.
 
-<pics/StorageMgr_Composition.png, id=162, 602.25pt x 411.5375pt>
+<pics/StorageMgr_Composition.png, id=156, 602.25pt x 411.5375pt>
 File: pics/StorageMgr_Composition.png Graphic file (type png)
 
 <use pics/StorageMgr_Composition.png>
@@ -674,13 +674,13 @@ Package pdftex.def Info: pics/StorageMgr_Composition.png used on input line 23.
 
 (pdftex.def)             Requested size: 333.52567pt x 227.91621pt.
  [6 <./pics/bt_state.png> <./pics/TrackingManager_Composition.png>]
-<pics/WebVRManager.png, id=169, 662.475pt x 391.4625pt>
+<pics/WebVRManager.png, id=164, 662.475pt x 391.4625pt>
 File: pics/WebVRManager.png Graphic file (type png)
 
 <use pics/WebVRManager.png>
 Package pdftex.def Info: pics/WebVRManager.png used on input line 27.
 (pdftex.def)             Requested size: 333.52567pt x 197.0807pt.
- <pics/GUI.png, id=170, 782.925pt x 401.5pt>
+ <pics/GUI.png, id=165, 782.925pt x 401.5pt>
 File: pics/GUI.png Graphic file (type png)
 
 <use pics/GUI.png>
@@ -723,28 +723,28 @@ Overfull \hbox (16.71901pt too wide) in paragraph at lines 96--97
 [][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[9] <diagramms/startVR.png, id=216, 973.6375pt x 361.35pt>
+[9] <diagramms/startVR.png, id=211, 973.6375pt x 361.35pt>
 File: diagramms/startVR.png Graphic file (type png)
 
 <use diagramms/startVR.png>
 Package pdftex.def Info: diagramms/startVR.png used on input line 142.
 (pdftex.def)             Requested size: 333.52567pt x 123.78368pt.
 
-<diagramms/stereo.png, id=217, 1043.9pt x 521.95pt>
+<diagramms/stereo.png, id=212, 1043.9pt x 521.95pt>
 File: diagramms/stereo.png Graphic file (type png)
  <use diagramms/stereo.png>
 Package pdftex.def Info: diagramms/stereo.png used on input line 145.
 (pdftex.def)             Requested size: 333.52567pt x 166.76459pt.
 
 [10 <./diagramms/startVR.png>]
-<diagramms/switchVisual.png, id=243, 1184.425pt x 602.25pt>
+<diagramms/switchVisual.png, id=238, 1184.425pt x 602.25pt>
 File: diagramms/switchVisual.png Graphic file (type png)
 
 <use diagramms/switchVisual.png>
 Package pdftex.def Info: diagramms/switchVisual.png used on input line 148.
 (pdftex.def)             Requested size: 333.52567pt x 169.58456pt.
 
-<diagramms/settingsScanForSensor.png, id=244, 1114.1625pt x 411.5375pt>
+<diagramms/settingsScanForSensor.png, id=239, 1114.1625pt x 411.5375pt>
 File: diagramms/settingsScanForSensor.png Graphic file (type png)
 
 <use diagramms/settingsScanForSensor.png>
@@ -752,7 +752,7 @@ Package pdftex.def Info: diagramms/settingsScanForSensor.png used on input line
  151.
 (pdftex.def)             Requested size: 333.52567pt x 123.19218pt.
 
-<diagramms/connectSensor.png, id=245, 1194.4625pt x 441.65pt>
+<diagramms/connectSensor.png, id=240, 1194.4625pt x 441.65pt>
 File: diagramms/connectSensor.png Graphic file (type png)
 
 <use diagramms/connectSensor.png>
@@ -760,96 +760,42 @@ Package pdftex.def Info: diagramms/connectSensor.png used on input line 154.
 (pdftex.def)             Requested size: 333.52567pt x 123.31746pt.
  [11 <./diagramms/stereo.png> <./diagramms/switchVisual.png> <./diagramms/setti
 ngsScanForSensor.png>]
-<diagramms/scan.png, id=253, 963.6pt x 401.5pt>
+<diagramms/scan.png, id=248, 963.6pt x 401.5pt>
 File: diagramms/scan.png Graphic file (type png)
  <use diagramms/scan.png>
 Package pdftex.def Info: diagramms/scan.png used on input line 157.
 (pdftex.def)             Requested size: 333.52567pt x 138.96487pt.
 
-<diagramms/newDataset.png, id=254, 1575.8875pt x 562.1pt>
+<diagramms/newDataset.png, id=249, 1575.8875pt x 562.1pt>
 File: diagramms/newDataset.png Graphic file (type png)
 
 <use diagramms/newDataset.png>
 Package pdftex.def Info: diagramms/newDataset.png used on input line 160.
 (pdftex.def)             Requested size: 333.52567pt x 118.96222pt.
 
-<diagramms/recordDatapoint.png, id=255, 1575.8875pt x 562.1pt>
+<diagramms/recordDatapoint.png, id=250, 1575.8875pt x 562.1pt>
 File: diagramms/recordDatapoint.png Graphic file (type png)
 
 <use diagramms/recordDatapoint.png>
 Package pdftex.def Info: diagramms/recordDatapoint.png used on input line 163.
 (pdftex.def)             Requested size: 333.52567pt x 118.96222pt.
  [12 <./diagramms/connectSensor.png> <./diagramms/scan.png> <./diagramms/newDat
-aset.png>]) [13 <./diagramms/recordDatapoint.png>] (./SDD03-ui.tex
-<pics/startscreen.jpg, id=269, 467.7475pt x 179.67125pt>
-File: pics/startscreen.jpg Graphic file (type jpg)
-
-<use pics/startscreen.jpg>
-Package pdftex.def Info: pics/startscreen.jpg used on input line 12.
-(pdftex.def)             Requested size: 233.87317pt x 89.83539pt.
-
-<pics/Vr-Mode.jpg, id=270, 482.80376pt x 179.67125pt>
-File: pics/Vr-Mode.jpg Graphic file (type jpg)
- <use pics/Vr-Mode.jpg>
-Package pdftex.def Info: pics/Vr-Mode.jpg used on input line 18.
-(pdftex.def)             Requested size: 241.40129pt x 89.83539pt.
-
-<pics/Live_Data.jpg, id=271, 293.095pt x 131.49126pt>
-File: pics/Live_Data.jpg Graphic file (type jpg)
- <use pics/Live_Data.jpg>
-Package pdftex.def Info: pics/Live_Data.jpg used on input line 24.
-(pdftex.def)             Requested size: 146.54713pt x 65.74545pt.
-
-[14 <./pics/startscreen.jpg> <./pics/Vr-Mode.jpg> <./pics/Live_Data.jpg>]
-<pics/Settings.jpg, id=276, 292.09125pt x 77.28876pt>
-File: pics/Settings.jpg Graphic file (type jpg)
- <use pics/Settings.jpg>
-Package pdftex.def Info: pics/Settings.jpg used on input line 33.
-(pdftex.def)             Requested size: 146.04526pt x 38.64427pt.
-
-<pics/startScreen_mockup.jpg, id=277, 201.75375pt x 392.46625pt>
-File: pics/startScreen_mockup.jpg Graphic file (type jpg)
-
-<use pics/startScreen_mockup.jpg>
-Package pdftex.def Info: pics/startScreen_mockup.jpg used on input line 40.
-(pdftex.def)             Requested size: 100.87662pt x 196.23264pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--42
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--42
-
- []
-
-<pics/VRView_mockup.jpg, id=278, 393.47pt x 201.75375pt>
-File: pics/VRView_mockup.jpg Graphic file (type jpg)
-
-<use pics/VRView_mockup.jpg>
-Package pdftex.def Info: pics/VRView_mockup.jpg used on input line 46.
-(pdftex.def)             Requested size: 196.73451pt x 100.87662pt.
-)
-Underfull \hbox (badness 10000) in paragraph at lines 43--27
-
- []
-
-[15 <./pics/Settings.jpg> <./pics/startScreen_mockup.jpg> <./pics/VRView_mockup
-.jpg>] (./SDD04-tests.tex) [16]
+aset.png>]) [13 <./diagramms/recordDatapoint.png>] (./SDD03-ui.tex) [14] (./SDD
+04-tests.tex) [15]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 29.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 29.
  (./SDD.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 29.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 29.
 Package rerunfilecheck Info: File `SDD.out' has not changed.
-(rerunfilecheck)             Checksum: A123DD3A62A6E93413C4A7AA952F76CD;1549.
+(rerunfilecheck)             Checksum: 489A3CA540DEDBF1D7F3C5D5E865DEDB;1495.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 29.
  ) 
 Here is how much of TeX's memory you used:
- 8093 strings out of 493089
- 115415 string characters out of 6134842
- 231000 words of memory out of 5000000
- 11349 multiletter control sequences out of 15000+600000
+ 8059 strings out of 493089
+ 114690 string characters out of 6134842
+ 230000 words of memory out of 5000000
+ 11324 multiletter control sequences out of 15000+600000
  9191 words of font info for 32 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  33i,12n,43p,377b,1746s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -862,10 +808,10 @@ usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
 local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on SDD.pdf (16 pages, 501296 bytes).
+Output written on SDD.pdf (15 pages, 416672 bytes).
 PDF statistics:
- 341 PDF objects out of 1000 (max. 8388607)
- 277 compressed objects within 3 object streams
- 91 named destinations out of 1000 (max. 500000)
- 293 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 325 PDF objects out of 1000 (max. 8388607)
+ 268 compressed objects within 3 object streams
+ 89 named destinations out of 1000 (max. 500000)
+ 255 words of extra memory for PDF output out of 10000 (max. 10000000)
 

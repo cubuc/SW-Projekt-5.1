@@ -51,28 +51,28 @@ A better zoomable representation of these diagrams can be found in the github re
   \item \textbf{Parser Functions} because the BLE protocol implemented in the TI CC2650 delivers raw sensor output
 \end{itemize}
 
-\subsection{Hardware/ Software mapping}
+\%subsection{Hardware/ Software mapping}
+%TO DO ???
 
-TO DO ???
-\subsection{Persistent data management}
-TO DO
+%\subsection{Persistent data management}
+%TO DO
 
 \subsection{Global software control}
 \subsubsection{Startup behavior}
-\textbf{User:} The user can start the App by pressing the icon on his screen.
-The App will show a startup screen and then transition after a short time into the main menu, from where
-the user can start the other functions of the App.
-\subsubsection{Interfaces}
-The \textbf{BluetoothManager} provides a possibility to connect to a sensor and then read out
-the data. It ensures that a connection is established and that the data is broad casted via a local BroadcastManager.
-\\
-\begin{lstlisting}
-TODO pls add interfaces!
-\end{lstlisting}
+\textbf{User:} The user can start the app by pressing the icon on his screen.
+The app will show a startup screen and then transition after a short time into the main menu, from where the user can start the other functions of the app.
 
-The \textbf{StorageManager} provides a possibility to store the data from the sensor together with th current position.
-It also can store the data in a .json file an upload the data to a webserver.
+\subsubsection{Interfaces}
+The \textbf{BluetoothManager} provides a possibility to connect to a sensor and then record
+the data. It ensures that a connection is established and that the data are broadcasted via a local BroadcastManager.
 \\
+%\begin{lstlisting}
+%TODO pls add interfaces!
+%\end{lstlisting}
+
+\noindent The \textbf{StorageManager} provides a possibility to store the data from the sensor together with the current position.
+It also can store the data in a .json file and upload them to a webserver.
+
 \begin{lstlisting}
 InterfaceStorageManager {
   public void setSensor(integer internalSensorID){
@@ -105,9 +105,11 @@ InterfaceStorageManager {
   }
 }
 \end{lstlisting}
+
+
 The \textbf{TrackingManager} gets the current location of the smartphone and provides it to the rest of
 the App.
-\\
+
 \begin{lstlisting}
 Interface TrackingManager {
   //get the current location of the device
@@ -120,8 +122,9 @@ Interface TrackingManager {
 }
 \end{lstlisting}
 
+
 The \textbf{VRBox} gets the data from a webserver and loads it into the VR-World.
-\\
+
 \begin{lstlisting}
 Interface WebVR {
   //Load the data from the webserver to display in VR.
@@ -134,18 +137,47 @@ Interface WebVR {
 
 \subsubsection{Sequences}
 
-\includegraphics[width=0.8\textwidth]{diagramms/startVR.png}
+\begin{description}
+	\item[1) Start VR view:] When the user clicks a button to start the VR view, a web browser is opened via an intent.  \\
+	\includegraphics[width=0.8\textwidth]{diagramms/startVR.png}
+	
+	\item[2) Switch to stereoscopic 3D: ] When the user enters the VR view, he can choose to switch the view and thereby switch to a stereoscopic view or switch back to non-stereoscopic view, respectively. \\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/stereo.png}
+	
+	\item[3) Switch data visualization: ] When the user opens the web site with the VR view, he  can switch the visualization. Then, the data will be visualized in another way.  \\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/switchVisual.png}
+	
+	\item[4) Scan for sensor: ] When the user clicks the scan button in the settings menu, the BluetoothManager will start scanning for connectable sensor devices. \\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/settingsScanForSensor.png}
+	
+	\item[5) Connect to sensor: ] When the user clicks the connect button in the settings menu, a connectin will be established to the chosen sensor device by the BluetoothManager. \\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/connectSensor.png}
+	
+	\item[6) Open scan: ] ??? \\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/scan.png}
+	
+	\item[7) Record new data set: ] When the user clicks the button to record a new data set, the StorageManager will provie the data and get the repective location from the TrackingManager to calibrate the initial location for the recording session. \\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/newDataset.png}
+	
+	\item[8) Record data point: ] When the user clicks the button to record new data, the StorageManager will provie the data and get the repective location from the TrackingManager.\\ 
+	\includegraphics[width=0.8\textwidth]{diagramms/recordDatapoint.png}
 
-\includegraphics[width=0.8\textwidth]{diagramms/stereo.png}
 
-\includegraphics[width=0.8\textwidth]{diagramms/switchVisual.png}
 
-\includegraphics[width=0.8\textwidth]{diagramms/settingsScanForSensor.png}
+\end{description}
 
-\includegraphics[width=0.8\textwidth]{diagramms/connectSensor.png}
 
-\includegraphics[width=0.8\textwidth]{diagramms/scan.png}
 
-\includegraphics[width=0.8\textwidth]{diagramms/newDataset.png}
 
-\includegraphics[width=0.8\textwidth]{diagramms/recordDatapoint.png}
+
+
+
+
+
+
+
+
+
+
+
+

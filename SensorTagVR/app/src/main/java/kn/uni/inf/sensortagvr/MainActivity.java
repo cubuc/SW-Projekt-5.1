@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import kn.uni.inf.sensortagvr.ble.ScanListActivity;
+import kn.uni.inf.sensortagvr.VRActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,15 +20,20 @@ public class MainActivity extends AppCompatActivity {
         final Context con = getApplicationContext();
 
 
-        final Button button = (Button) findViewById(R.id.startVR);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button VRbutton = (Button) findViewById(R.id.startVR);
+        VRbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "http://localhost:12345";
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.setPackage("com.android.chrome");
-                startActivity(i);
+                startActivity(new Intent(con, VRActivity.class));
+            }
+        });
+
+
+        final Button recordButton = (Button) findViewById(R.id.record);
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(con, RecordActivity.class));
             }
         });
 

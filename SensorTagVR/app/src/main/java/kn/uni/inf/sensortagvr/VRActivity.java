@@ -25,7 +25,7 @@ public class VRActivity extends AppCompatActivity {
         final Context con = getApplicationContext();
 
 
-        final Button VRbutton = (Button) findViewById(R.id.startVR);
+        final Button VRbutton = (Button) findViewById(R.id.start_VR);
         VRbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

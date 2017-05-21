@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SensorTagVR</string>
-    <string name="scan">Record</string>
+    <string name="scan">Record Data</string>
     <string name="vr_view">VR View</string>
     <string name="start_vr">Open VR view in browser...</string>
 

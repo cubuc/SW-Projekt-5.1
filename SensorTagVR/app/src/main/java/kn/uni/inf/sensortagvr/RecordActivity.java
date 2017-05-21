@@ -5,4 +5,7 @@ package kn.uni.inf.sensortagvr;
  */
 
 public class RecordActivity {
+
+
+
 }

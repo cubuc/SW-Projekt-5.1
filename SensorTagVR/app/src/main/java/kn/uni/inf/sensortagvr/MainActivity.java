@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         final Context con = getApplicationContext();
 
 
-        final Button VRbutton = (Button) findViewById(R.id.startVR);
-        VRbutton.setOnClickListener(new View.OnClickListener() {
+        final Button VRButton = (Button) findViewById(R.id.vr_view);
+        VRButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(con, VRActivity.class));

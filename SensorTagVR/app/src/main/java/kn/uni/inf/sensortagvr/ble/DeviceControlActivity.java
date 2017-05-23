@@ -57,7 +57,8 @@ public class DeviceControlActivity extends Activity {
             mBluetoothLEService = ((BluetoothLEService.LocalBinder) service).getService();
             Log.i(TAG, "onServiceConnected");
             // Automatically connects to the device upon successful start-up initialization.
-            mBluetoothLEService.connect(mDeviceAddress);
+            final boolean result = mBluetoothLEService.connect(mDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
         }
 
         @Override
@@ -123,6 +124,7 @@ public class DeviceControlActivity extends Activity {
                 Log.i(TAG, "received GATT Services Discovered");
                 // Show all the supported services and characteristics on the user interface.
                 displayGattServices(mBluetoothLEService.getSupportedGattServices());
+                enableSensors();
             } else if (BluetoothLEService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
             }
@@ -183,12 +185,12 @@ public class DeviceControlActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mLocalBroadcastManager.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLEService != null) {
-            final boolean result = mBluetoothLEService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
-            bindService(new Intent(this, BluetoothLEService.class),
-                    mServiceConnection, BIND_AUTO_CREATE);
+        if (mBluetoothLEService == null) {
+            startService(new Intent(this, BluetoothLEService.class));
         }
+
+        bindService(new Intent(this, BluetoothLEService.class),
+                mServiceConnection, BIND_AUTO_CREATE);
     }
 
     @Override

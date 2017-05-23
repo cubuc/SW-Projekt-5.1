@@ -249,6 +249,32 @@ enum Sensor {
         this.enableCode = ENABLE_SENSOR_CODE; // This is the sensor enable code for all sensors except the gyroscope
     }
 
+    public byte getEnableSensorCode() {
+        return enableCode;
+    }
+
+    public UUID getService() {
+        return service;
+    }
+
+    public UUID getData() {
+        return data;
+    }
+
+    public UUID getConfig() {
+        return config;
+    }
+
+    public static Sensor getSensorFromUuid(UUID uuid) {
+        for (Sensor s : Sensor.values()) {
+            if (s.getData().equals(uuid) || s.getService().equals(uuid) ||
+                    s.getConfig().equals(uuid)) {
+                return s;
+            }
+        }
+        throw new RuntimeException("unable to find UUID.");
+    }
+
     /**
      * Gyroscope, Magnetometer, Barometer, IR temperature all store 16 bit two's complement values as LSB MSB, which cannot be directly parsed
      * as getIntValue(FORMAT_SINT16, offset) because the bytes are stored as little-endian.

@@ -54,8 +54,6 @@ public class ScanListActivity extends ListActivity {
                     mLeDeviceListAdapter.notifyDataSetChanged();
                 }
             });
-            // TODO Intent connect to device(device)
-
         }
 
         @Override
@@ -217,7 +215,7 @@ public class ScanListActivity extends ListActivity {
 
         LeDeviceListAdapter() {
             super();
-            mLeDevices = new ArrayList<BluetoothDevice>();
+            mLeDevices = new ArrayList<>();
             mInflator = ScanListActivity.this.getLayoutInflater();
         }
 

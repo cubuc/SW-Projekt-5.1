@@ -32,9 +32,10 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_HUM_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.config;
 
 public class BluetoothLEService extends Service {
-    /* Answers */
+
     public final static String ACTION_GATT_CONNECTED =
             "kn.uni.inf.sensortagvr.ble.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
@@ -51,9 +52,7 @@ public class BluetoothLEService extends Service {
     private final IBinder mBinder = new LocalBinder();
     public boolean bound = false;
 
-    /*
-     *  Intent Codes
-     */
+
     LocalBroadcastManager mLocalBroadcastManager;
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
@@ -62,10 +61,12 @@ public class BluetoothLEService extends Service {
             switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
                     Log.i("gattCallback", "STATE_CONNECTED");
+                    mLocalBroadcastManager.sendBroadcast(new Intent(ACTION_GATT_CONNECTED));
                     gatt.discoverServices();
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     Log.e("gattCallback", "STATE_DISCONNECTED");
+                    mLocalBroadcastManager.sendBroadcast(new Intent(ACTION_GATT_DISCONNECTED));
                     stopSelf();
                     break;
                 default:
@@ -87,7 +88,7 @@ public class BluetoothLEService extends Service {
                                          BluetoothGattCharacteristic
                                                  characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS)
-                broadcastCharacteristic(ACTION_DATA_AVAILABLE, characteristic);
+                broadcastCharacteristic(characteristic);
 
             Log.i("onCharacteristicRead", Arrays.toString(characteristic.getValue()));
         }
@@ -101,7 +102,7 @@ public class BluetoothLEService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-            broadcastCharacteristic(ACTION_DATA_AVAILABLE, characteristic);
+            broadcastCharacteristic(characteristic);
             Log.i("onCharacteristicChanged", "Sent ACTION_DATA_AVAILABLE");
         }
 
@@ -109,7 +110,7 @@ public class BluetoothLEService extends Service {
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
             intent.putExtra(EXTRA_SENSOR, "RSSI");
-            intent.putExtra(EXTRA_DATA, rssi);
+            intent.putExtra(EXTRA_DATA, new float[] {rssi,0,0});
             mLocalBroadcastManager.sendBroadcast(intent);
         }
 
@@ -123,9 +124,8 @@ public class BluetoothLEService extends Service {
     public BluetoothLEService() {
     }
 
-    private void broadcastCharacteristic(String action,
-                                         BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
+    private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
+        final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
         switch (characteristic.getUuid().toString()) {
             /* IRT */
             case UUID_IRT_DATA:
@@ -283,11 +283,13 @@ public class BluetoothLEService extends Service {
     }
 
     public void enableSensor(BluetoothGattCharacteristic c) {
-        writeConfigCharacteristic(c, (byte) 0x01);
+        if (config.contains(c.getUuid()))
+            writeConfigCharacteristic(c, (byte) 0x01);
     }
 
     public void disableSensor(BluetoothGattCharacteristic c) {
-        writeConfigCharacteristic(c, (byte) 0x00);
+        if (config.contains(c.getUuid()))
+            writeConfigCharacteristic(c, (byte) 0x00);
     }
 
     public void writeConfigCharacteristic(
@@ -295,6 +297,7 @@ public class BluetoothLEService extends Service {
         byte[] val = new byte[1];
         val[0] = b;
         configCharacteristic.setValue(val);
+        Log.i(TAG, "wrote Config Characteristic" + configCharacteristic.getService().toString());
         mGatt.writeCharacteristic(configCharacteristic);
     }
 
@@ -314,6 +317,7 @@ public class BluetoothLEService extends Service {
 
         BluetoothGattDescriptor clientConfig = characteristic.getDescriptor(
                 UUID.fromString(TIUUIDs.UUID_CCC));
+        Log.i(TAG, "got descriptor of "+ characteristic.getService().toString() + "named" + clientConfig.toString());
         if (enabled) {
             clientConfig.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         } else {

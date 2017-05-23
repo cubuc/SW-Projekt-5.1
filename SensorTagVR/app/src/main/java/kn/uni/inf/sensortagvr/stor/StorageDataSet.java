@@ -1,5 +1,7 @@
 package kn.uni.inf.sensortagvr.stor;
 
+import android.location.Location;
+
 /**
  * Basic data type to combine the sensor data with the tracking data
  * <p>
@@ -7,6 +9,8 @@ package kn.uni.inf.sensortagvr.stor;
  */
 
 public class StorageDataSet {
+
+    public Location location;
 
     /* Position */
     public int xPos;
@@ -27,6 +31,7 @@ public class StorageDataSet {
         this.timestamp = ts.toString();
     }
 
+
     /**
      * Creates a proper data set to work with
      *
@@ -42,6 +47,17 @@ public class StorageDataSet {
     }
 
     /**
+     * Different approach to location storing
+     * @param loc
+     * @param data
+     */
+    public StorageDataSet(Location loc, int data) {
+        this();
+        this.location = loc;
+        this.sensorData = data;
+    }
+
+    /**
      * Factory method to create data sets
      *
      * @param xPos
@@ -51,6 +67,10 @@ public class StorageDataSet {
      */
     public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(int xPos, int yPos, int data) {
         return new kn.uni.inf.sensortagvr.stor.StorageDataSet(xPos, yPos, data);
+    }
+
+    public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(Location loc, int data) {
+        return new StorageDataSet(loc,data);
     }
 }
 

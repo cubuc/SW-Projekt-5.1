@@ -35,5 +35,5 @@
 
 ## File-based project format:
 *.iws
-app.iml
-build/
+.idea/
+gen/

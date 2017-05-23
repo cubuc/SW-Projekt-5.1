@@ -1,29 +1,28 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-# User-specific stuff:
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/dictionaries
+# Settings
+# Please reimport your project to make the IDE generate all files, if problems occur
+.idea/
+*.iml
+*.iws
 /local.properties
 .DS_Store
 /captures
 .externalNativeBuild
+.navigation/
 
-# Sensitive or high-churn files:
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.xml
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-
-# Gradle:
-.idea/**/gradle.xml
-.idea/**/libraries
+# Gradle Temp:
 .gradle
+build/
+*.dex
+*.class
+bin/
+gen/
+out/
 
+# Keystore files
+*.jks
 
 #Latex
 *.toc
@@ -33,5 +32,5 @@
 *.aux
 *.out
 
-## File-based project format:
-*.iws
+# VCS exlusion
+!/.idea/vcs.xml

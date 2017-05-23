@@ -17,6 +17,7 @@ displayData = function(){
   }
   geometry.rotateX( - Math.PI / 2 );
   //the lines just for testing
+  
   var geo = new THREE.Geometry();
   geo.vertices = vert
   var material = new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5 } );

@@ -4,7 +4,6 @@ var scene,camera,controls,effect,renderer;
 var vrDisplay = null;
 var lastRender;
 var dollyCam;
-
 init();
 
 //setup the renderer, camera und loads the scene and data
@@ -41,7 +40,7 @@ function init(){
   scene.add(dataVis[1]);
 
   moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
-  
+
   // Request animation frame loop function
   lastRender = 0;
 
@@ -63,7 +62,7 @@ function animate(timestamp) {
   // Update VR headset position and apply to camera.
   controls.update();
 
-  moveCon.update();
+  moveCon.update(vrDisplay);
 
   // Render the scene.
   effect.render(scene, camera);

@@ -8,13 +8,16 @@ loadData = function(){
   var vertices = new Array();
   vertices[0] = new THREE.Vector3(0,0,-0.5);
   vertices[1] = new THREE.Vector3(4,0,-0.5);
-  vertices[2] = new THREE.Vector3(4,5,-0.5);
-  vertices[3] = new THREE.Vector3(0,5,-0.5);
+  vertices[2] = new THREE.Vector3(0,5,-0.5);
+  vertices[4] = new THREE.Vector3(0,7,-0.5);
+  vertices[3] = new THREE.Vector3(4,7,-0.5);
+  vertices[5] = new THREE.Vector3(4,5,-0.5);
 
   var sorted = vertices.sort(function (a, b) {  return a.x - b.x;  });
   var [first,next] = getFirstRow(sorted);
   var [second,next] = getNextRow(sorted,next);
-  second = second.reverse();
+  first = first.sort(function (a, b) {  return a.y - b.y;  });
+  second = second.sort(function (a, b) {  return b.y - a.y  });
   vertices = first.concat(second);
   return vertices;
 };
@@ -45,7 +48,6 @@ function getFirstRow(data){
   var curr = data[0].x;
   var i=0;
   while( Math.abs(curr - data[i].x) < eps){
-    console.log(data[0]);
     first = first.concat([data[i]]);
     i = i+1;
   }

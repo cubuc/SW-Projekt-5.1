@@ -13,12 +13,12 @@ public class StorageDataSet {
     public Location location;
 
     /* Position */
-    public int xPos;
-    public int yPos;
-    public final int[] position = {xPos, yPos};
+    public double xPos;
+    public double yPos;
+    public final double[] position = {xPos, yPos};
 
     /* Sensor Data, will be expanded */
-    public int sensorData;
+    public float[] sensorData;
 
     /* Timestamp */
     public String timestamp;
@@ -39,7 +39,7 @@ public class StorageDataSet {
      * @param yPos location data
      * @param data sensor data
      */
-    public StorageDataSet(int xPos, int yPos, int data) {
+    public StorageDataSet(double xPos, double yPos, float[] data) {
         this();
         this.xPos = xPos;
         this.yPos = yPos;
@@ -51,7 +51,7 @@ public class StorageDataSet {
      * @param loc
      * @param data
      */
-    public StorageDataSet(Location loc, int data) {
+    public StorageDataSet(Location loc, float[] data) {
         this();
         this.location = loc;
         this.sensorData = data;
@@ -65,11 +65,11 @@ public class StorageDataSet {
      * @param data
      * @return
      */
-    public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(int xPos, int yPos, int data) {
+    public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(double xPos, double yPos, float[] data) {
         return new kn.uni.inf.sensortagvr.stor.StorageDataSet(xPos, yPos, data);
     }
 
-    public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(Location loc, int data) {
+    public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(Location loc, float[] data) {
         return new StorageDataSet(loc,data);
     }
 }

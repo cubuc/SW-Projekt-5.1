@@ -52,6 +52,8 @@ public class LiveDataActivity extends Activity {
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
         /**
+         * connects to the tapped device when the service connection is established.
+         *
          * @param componentName not used
          * @param service       The service that is bound through this service connection.
          */
@@ -65,6 +67,8 @@ public class LiveDataActivity extends Activity {
         }
 
         /**
+         *  set the current {@link BluetoothLEService} instance to null if the service connection
+         *  is shutdown
          *
          * @param componentName not used
          */
@@ -114,12 +118,14 @@ public class LiveDataActivity extends Activity {
             };
 
     private boolean mConnected = false;
-    // Handles various events fired by the Service.
-    // ACTION_GATT_CONNECTED: connected to a GATT server.
-    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
-    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
-    // ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
-    //                        or notification operations.
+    /**
+     * Handles various events fired by the Service.
+     * ACTION_GATT_CONNECTED: connected to a GATT server.
+     * ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
+     * ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
+     * ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
+     * or notification operations.
+     */
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         /**
          *
@@ -129,26 +135,30 @@ public class LiveDataActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (BluetoothLEService.ACTION_GATT_CONNECTED.equals(action)) {
-                mConnected = true;
-                updateConnectionState(R.string.connected);
-                invalidateOptionsMenu();
-            } else if (BluetoothLEService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                mConnected = false;
-                updateConnectionState(R.string.disconnected);
-                invalidateOptionsMenu();
-                clearUI();
-            } else if (BluetoothLEService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                Log.i(TAG, "received GATT Services Discovered");
-                // Show all the supported services and characteristics on the user interface.
-                displayGattServices(mBluetoothLEService.getSupportedGattServices());
-                if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
-                        (mDeviceName.equals("CC2650 SensorTag")))) {
-                    for (Sensor s : Sensor.SENSOR_LIST)
-                        mBluetoothLEService.controlSensor(s, true, true);
-                }
-            } else if (BluetoothLEService.ACTION_DATA_AVAILABLE.equals(action)) {
-                displayData(intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
+            switch (action) {
+                case BluetoothLEService.ACTION_GATT_CONNECTED:
+                    mConnected = true;
+                    updateConnectionState(R.string.connected);
+                    invalidateOptionsMenu();
+                    break;
+                case BluetoothLEService.ACTION_GATT_DISCONNECTED:
+                    mConnected = false;
+                    updateConnectionState(R.string.disconnected);
+                    invalidateOptionsMenu();
+                    clearUI();
+                    break;
+                case BluetoothLEService.ACTION_GATT_SERVICES_DISCOVERED:
+                    Log.i(TAG, "received GATT Services Discovered");
+                    // Show all the supported services and characteristics on the user interface.
+                    displayGattServices(mBluetoothLEService.getSupportedGattServices());
+                    if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
+                            (mDeviceName.equals("CC2650 SensorTag")))) {
+                        for (Sensor s : Sensor.SENSOR_LIST)
+                            mBluetoothLEService.controlSensor(s, true, true);
+                    }
+                    break;
+                case BluetoothLEService.ACTION_DATA_AVAILABLE:
+                    displayData(intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
             }
         }
     };

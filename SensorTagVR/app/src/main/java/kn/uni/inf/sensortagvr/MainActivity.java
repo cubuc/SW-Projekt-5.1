@@ -9,14 +9,10 @@ import android.widget.Button;
 
 import kn.uni.inf.sensortagvr.ble.ScanListActivity;
 
-/**
- *
- */
+
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * @param savedInstanceState
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

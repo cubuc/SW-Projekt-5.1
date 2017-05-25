@@ -69,8 +69,14 @@ public class StorageDataSet {
         return new kn.uni.inf.sensortagvr.stor.StorageDataSet(xPos, yPos, data);
     }
 
+    /**
+     * @param loc
+     * @param data
+     */
     public static kn.uni.inf.sensortagvr.stor.StorageDataSet createSet(Location loc, float[] data) {
         return new StorageDataSet(loc,data);
     }
 }
+
+
 

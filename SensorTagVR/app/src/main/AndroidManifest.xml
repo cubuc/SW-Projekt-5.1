@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ble.ScanListActivity" />
-        <activity android:name="kn.uni.inf.sensortagvr.ble.DeviceControlActivity" />
+        <activity android:name="kn.uni.inf.sensortagvr.ble.LiveDataActivity" />
         <service
             android:name=".ble.BluetoothLEService"
             android:enabled="true"

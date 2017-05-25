@@ -1,7 +1,6 @@
 package kn.uni.inf.sensortagvr.stor;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +40,7 @@ public class StorageMainService extends IntentService {
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
 
     // Create a custom broadcast receiver for the bluetooth broadcast
-    public final StorageBroadcastReceiver bleReceiver  = new StorageBroadcastReceiver(StorageMainService.this);;
+    public final StorageBroadcastReceiver bleReceiver = new StorageBroadcastReceiver(StorageMainService.this);
 
     // Creates a Binder, look at the onBind() method for more information
     private final IBinder binder = new StorageBinder();
@@ -61,11 +60,40 @@ public class StorageMainService extends IntentService {
     /* Create a path to the public directory of the app. Thereby the webVR process can access it. */
     private File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
     private File jsonFile = new File(dir, "data.JSON");
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
 
+        /**
+         * @param className
+         * @param service
+         */
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
+            trackingService = binder.getService();
+            mBound = true;
+        }
+
+        /**
+         * @param arg0
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+
+    /**
+     *
+     */
     public StorageMainService() {
         super("StorageMainService");
     }
-
 
     /**
      * On Creating the service, the broadcast receiver will registered with an proper intent filter
@@ -89,6 +117,10 @@ public class StorageMainService extends IntentService {
         Toast.makeText(getApplicationContext(), "StorageMainService created", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     *
+     * @param intent
+     */
     @Override
     public void onHandleIntent(Intent intent) {
 
@@ -158,42 +190,32 @@ public class StorageMainService extends IntentService {
         return binder;
     }
 
-    /**
-     *
-     * For more detailed info look at  https://developer.android.com/guide/components/bound-services.html
-     */
-    public class StorageBinder extends Binder {
-        StorageMainService getService() {
-            return StorageMainService.this;
-        }
-    }
-
 
     // Copied from the android dev guide for bound services
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
 
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
-            trackingService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-
-
+    /**
+     *
+     */
     public void callibrate() {
         nullPoint = trackingService.getCurrentPosition();
         // Testing
         Toast.makeText(getApplicationContext(), "StorageMainService callibrated", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     *
+     * For more detailed info look at  https://developer.android.com/guide/components/bound-services.html
+     */
+    public class StorageBinder extends Binder {
+        /**
+         *
+         */
+        StorageMainService getService() {
+            return StorageMainService.this;
+        }
+    }
+
 }
+
+
 

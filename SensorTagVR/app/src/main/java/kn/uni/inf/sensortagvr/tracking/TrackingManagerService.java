@@ -23,20 +23,41 @@ public class TrackingManagerService extends Service {
 
     private LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     private LocationListener locationListener = new LocationListener() {
+        /**
+         * @param location
+         */
         public void onLocationChanged(Location location) {
             lastPosition = location;
         }
 
+        /**
+         *
+         * @param provider
+         * @param status
+         * @param extras
+         */
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
 
+        /**
+         *
+         * @param provider
+         */
         public void onProviderEnabled(String provider) {
         }
 
+        /**
+         *
+         * @param provider
+         */
         public void onProviderDisabled(String provider) {
         }
     };
 
+    /**
+     *
+     * @param intent
+     */
     @Override
     public IBinder onBind(Intent intent) {
         try {
@@ -48,6 +69,10 @@ public class TrackingManagerService extends Service {
         return binder;
     }
 
+    /**
+     *
+     * @param intent
+     */
     @Override
     public boolean onUnbind(Intent intent) {
         locationManager.removeUpdates(locationListener);
@@ -56,6 +81,10 @@ public class TrackingManagerService extends Service {
 
     //INTERFACE PROVIDED BY SERVICE:
     //get the current location of the device
+
+    /**
+     *
+     */
     public Location getCurrentPosition() {
         if (customPosition != null)
             return customPosition;
@@ -64,18 +93,35 @@ public class TrackingManagerService extends Service {
     }
 
     //set a custom location to overwrite real device location
+
+    /**
+     *
+     * @param newCustomPos
+     */
     public void setCustomPosition(Location newCustomPos) {
         customPosition = newCustomPos;
     }
 
     //clear location overwrite
+
+    /**
+     *
+     */
     public void clearCustomPosition() {
         customPosition = null;
     }
 
+    /**
+     *
+     */
     public class TrackingBinder extends Binder {
+        /**
+         *
+         */
         public TrackingManagerService getService() {
             return TrackingManagerService.this;
         }
     }
 }
+
+

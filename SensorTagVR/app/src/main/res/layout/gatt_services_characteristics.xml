@@ -69,7 +69,7 @@
 
         <TextView
             android:id="@+id/data_value_0"
-            android:layout_width="match_parent"
+            android:layout_width="79dp"
             android:layout_height="wrap_content"
             android:textSize="18sp" />
 
@@ -79,7 +79,7 @@
 
         <TextView
             android:id="@+id/data_value_1"
-            android:layout_width="match_parent"
+            android:layout_width="118dp"
             android:layout_height="wrap_content"
             android:textSize="18sp" />
 

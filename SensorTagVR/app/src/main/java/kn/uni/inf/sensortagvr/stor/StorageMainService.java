@@ -36,6 +36,9 @@ public class StorageMainService extends IntentService {
     // Action performed by the GUI. May be changed.
     public final static String ACTION_MEASURE_DATA =
             "kn.uni.inf.sensortagvr.stor.ACTION_MEASURE_DATA";
+    // From the
+    public final static String EXTRA_SENSOR =
+            "kn.uni.inf.sensortagvr.ble.EXTRA_SENSOR";
     public final static String EXTRA_DATA =
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
 
@@ -47,7 +50,7 @@ public class StorageMainService extends IntentService {
 
     // Copied from the android dev guide for bound services
     TrackingManagerService trackingService = null;
-    boolean mBound = false;
+    boolean trackingServiceBound = false;
 
     //
     private Location nullPoint = null;
@@ -75,7 +78,7 @@ public class StorageMainService extends IntentService {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
             trackingService = binder.getService();
-            mBound = true;
+            trackingServiceBound = true;
         }
 
         /**
@@ -83,7 +86,7 @@ public class StorageMainService extends IntentService {
          */
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
+            trackingServiceBound = false;
         }
     };
 
@@ -110,8 +113,8 @@ public class StorageMainService extends IntentService {
         // Register the bleReceiver
         this.registerReceiver(bleReceiver, intentFilter);
 
-        Intent test = new Intent(this, TrackingManagerService.class);
-        bindService(test, mConnection, Context.BIND_AUTO_CREATE);
+        Intent bindTrackService = new Intent(this, TrackingManagerService.class);
+        bindService(bindTrackService, mConnection, Context.BIND_AUTO_CREATE);
 
         // Testing
         Toast.makeText(getApplicationContext(), "StorageMainService created", Toast.LENGTH_SHORT).show();
@@ -165,6 +168,37 @@ public class StorageMainService extends IntentService {
         Toast.makeText(getApplicationContext(), "Intend handled by StorageMainService", Toast.LENGTH_SHORT).show();
     }
 
+    public void measureData() {
+        // get data from 'lastReceived'
+        float[] receivedData = {0};
+        if (lastReceivedData != null)
+            receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
+
+        // Data received?
+        Toast.makeText(getApplicationContext(), "Data: " + receivedData, Toast.LENGTH_SHORT);
+
+        // get Data from tracking module
+        Location loc = trackingService.getCurrentPosition();
+
+        // Location received?
+        Toast.makeText(getApplicationContext(), "Location: " + loc.toString(), Toast.LENGTH_SHORT);
+
+        // create new StorageDataSet
+        StorageDataSet.createSet(loc, receivedData);
+
+        double x = 0,y = 0;
+        if(nullPoint != null) {
+            x = loc.getLatitude() - nullPoint.getLatitude();
+            y = loc.getLongitude() - nullPoint.getLongitude();
+        }
+
+        StorageDataSet combinedData = StorageDataSet.createSet(x, y, receivedData);
+
+        // What dataset was made?
+        Toast.makeText(getApplicationContext(), "StorageSet: " + combinedData.toString(), Toast.LENGTH_SHORT);
+    }
+
+
     /**
      * Unregisters the bleReceiver and unbind trackingmngrService when the Service gets DESTROYED
      */
@@ -172,12 +206,22 @@ public class StorageMainService extends IntentService {
     public void onDestroy() {
         this.unregisterReceiver(bleReceiver);
 
-        if (mBound) {
+        if (trackingServiceBound) {
             unbindService(mConnection);
-            mBound = false;
+            trackingServiceBound = false;
         }
         // Testing
         Toast.makeText(getApplicationContext(), "StorageMainService destroyed", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * This sets the surface zero to the current Location
+     * (Should be called at the start of the measurement)
+     */
+    public void callibrate() {
+        nullPoint = trackingService.getCurrentPosition();
+        // Testing
+        Toast.makeText(getApplicationContext(), "StorageMainService callibrated: " + nullPoint.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -195,22 +239,14 @@ public class StorageMainService extends IntentService {
 
     /**
      *
-     */
-    public void callibrate() {
-        nullPoint = trackingService.getCurrentPosition();
-        // Testing
-        Toast.makeText(getApplicationContext(), "StorageMainService callibrated", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     *
      * For more detailed info look at  https://developer.android.com/guide/components/bound-services.html
      */
     public class StorageBinder extends Binder {
         /**
          *
+         * @return
          */
-        StorageMainService getService() {
+        public StorageMainService getService() {
             return StorageMainService.this;
         }
     }

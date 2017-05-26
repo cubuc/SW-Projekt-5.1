@@ -21,7 +21,7 @@ public class TrackingManagerService extends Service {
     private Location customPosition = null;
     private Location lastPosition = new Location("TRACKING_MANAGER");
 
-    private LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    private LocationManager locationManager;
     private LocationListener locationListener = new LocationListener() {
         /**
          * @param location
@@ -56,8 +56,12 @@ public class TrackingManagerService extends Service {
 
     /**
      *
-     * @param intent
      */
+    @Override
+    public void onCreate(){
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         try {

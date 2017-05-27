@@ -56,4 +56,14 @@
         tools:layout_editor_absoluteX="-354dp"
         tools:layout_editor_absoluteY="612dp" />
 
+    <Button
+        android:id="@+id/location"
+        android:layout_width="94dp"
+        android:layout_height="41dp"
+        android:text="Location"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp" />
+
 </android.support.constraint.ConstraintLayout>

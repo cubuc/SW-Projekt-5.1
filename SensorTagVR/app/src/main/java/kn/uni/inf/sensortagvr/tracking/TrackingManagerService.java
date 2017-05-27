@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 /**
  * Created by ojo on 09.05.17.
@@ -21,7 +22,7 @@ public class TrackingManagerService extends Service {
     private Location customPosition = null;
     private Location lastPosition = new Location("TRACKING_MANAGER");
 
-    private LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    private LocationManager locationManager = null;
     private LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
             lastPosition = location;
@@ -40,9 +41,17 @@ public class TrackingManagerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         try {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        } catch (SecurityException e) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
+            if(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null)
+                lastPosition = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            else
+                Log.e("TrackingManager", "No last location!");
+        } catch (SecurityException e) {
+            Log.e("TrackingManager", "Error creating location manager: " + e.getLocalizedMessage());
+            stopSelf();
         }
 
         return binder;
@@ -50,7 +59,10 @@ public class TrackingManagerService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        locationManager.removeUpdates(locationListener);
+        if(locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+        }
+
         return false;
     }
 

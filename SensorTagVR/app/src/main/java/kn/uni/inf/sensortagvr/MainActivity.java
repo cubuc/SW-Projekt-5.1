@@ -2,14 +2,13 @@ package kn.uni.inf.sensortagvr;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import kn.uni.inf.sensortagvr.ble.ScanListActivity;
-import kn.uni.inf.sensortagvr.VRActivity;
+import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(con, ScanListActivity.class));
+            }
+        });
+
+        final Button locationButton = (Button) findViewById(R.id.location);
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(con, TrackingTestActivity.class));
             }
         });
     }

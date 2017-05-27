@@ -2,7 +2,7 @@
     <string name="app_name">SensorTagVR</string>
     <string name="scan">Record Data</string>
     <string name="vr_view">VR View</string>
-    <string name="start_vr">Open VR view in browser...</string>
+    <string name="start_vr">Open VR view in browser…</string>
 
     <string name="unknown_device">Unknown Device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>
@@ -19,7 +19,9 @@
     <string name="no_data">No data</string>
     <string name="label_data">Data:</string>
     <string name="label_state">State:</string>
-    <string name="label_device_address">Device adress:</string>
+    <string name="label_device_address">Device address:</string>
     <string name="title_devices">TI CC2650 Scan</string>
     <string name="settings">Settings</string>
+    <string name="callibrate">Callibrate</string>
+    <string name="record">Record Data</string>
 </resources>

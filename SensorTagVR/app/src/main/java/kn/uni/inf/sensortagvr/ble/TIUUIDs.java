@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+/**
+ *
+ */
 class TIUUIDs {
     //TODO LEDs
 
@@ -136,8 +139,14 @@ class TIUUIDs {
         data.add(UUID.fromString(UUID_MOV_DATA));
     }
 
+    /**
+     * @param uuid
+     * @param defaultName
+     */
     static String lookup(String uuid, String defaultName) {
         String name = attributes.get(uuid);
         return name == null ? defaultName : name;
     }
 }
+
+

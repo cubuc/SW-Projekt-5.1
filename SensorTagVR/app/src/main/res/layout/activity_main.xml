@@ -10,51 +10,43 @@
         android:id="@+id/vr_view"
         android:layout_width="170dp"
         android:layout_height="100dp"
+        android:layout_marginBottom="54dp"
         android:text="@string/vr_view"
+        app:layout_constraintBottom_toTopOf="@+id/record"
+        app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintHorizontal_bias="0.547"
-        app:layout_constraintBottom_toTopOf="@+id/record"
-        android:layout_marginBottom="54dp" />
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:id="@+id/record"
         android:layout_width="170dp"
         android:layout_height="100dp"
+        android:layout_marginBottom="54dp"
         android:layout_marginTop="251dp"
         android:text="@string/scan"
+        app:layout_constraintBottom_toTopOf="@+id/settings"
+        app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/settings"
-        android:layout_marginBottom="54dp"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:id="@+id/settings"
         android:layout_width="170dp"
         android:layout_height="100dp"
+        android:layout_marginBottom="115dp"
         android:text="@string/settings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.547"
-        android:layout_marginBottom="115dp" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="-354dp"
-        tools:layout_editor_absoluteY="612dp" />
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:id="@+id/location"

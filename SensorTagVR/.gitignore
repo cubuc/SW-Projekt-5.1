@@ -15,8 +15,6 @@
 # Gradle Temp:
 .gradle
 build/
-*.dex
-*.class
 bin/
 gen/
 out/

@@ -16,6 +16,9 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    /**
+     *
+     */
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
@@ -24,3 +27,4 @@ public class ExampleInstrumentedTest {
         assertEquals("kn.uni.inf.sensortagvr", appContext.getPackageName());
     }
 }
+

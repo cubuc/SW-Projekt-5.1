@@ -12,6 +12,7 @@ import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Button VRButton = (Button) findViewById(R.id.vr_view);
         VRButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(con, VRActivity.class));
@@ -30,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         final Button recordButton = (Button) findViewById(R.id.record);
         recordButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(con, RecordActivity.class));
@@ -39,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         final Button settingsButton = (Button) findViewById(R.id.settings);
         settingsButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(con, ScanListActivity.class));
@@ -54,3 +66,5 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+
+

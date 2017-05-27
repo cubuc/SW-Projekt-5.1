@@ -23,20 +23,46 @@ public class TrackingManagerService extends Service {
     private Location lastPosition = new Location("TRACKING_MANAGER");
 
     private LocationManager locationManager = null;
+
     private LocationListener locationListener = new LocationListener() {
+        /**
+         * @param location
+         */
         public void onLocationChanged(Location location) {
             lastPosition = location;
         }
 
+        /**
+         *
+         * @param provider
+         * @param status
+         * @param extras
+         */
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
 
+        /**
+         *
+         * @param provider
+         */
         public void onProviderEnabled(String provider) {
         }
 
+        /**
+         *
+         * @param provider
+         */
         public void onProviderDisabled(String provider) {
         }
     };
+
+    /**
+     *
+     */
+    @Override
+    public void onCreate(){
+        //locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -57,6 +83,10 @@ public class TrackingManagerService extends Service {
         return binder;
     }
 
+    /**
+     *
+     * @param intent
+     */
     @Override
     public boolean onUnbind(Intent intent) {
         if(locationManager != null) {
@@ -68,6 +98,10 @@ public class TrackingManagerService extends Service {
 
     //INTERFACE PROVIDED BY SERVICE:
     //get the current location of the device
+
+    /**
+     *
+     */
     public Location getCurrentPosition() {
         if (customPosition != null)
             return customPosition;
@@ -76,16 +110,31 @@ public class TrackingManagerService extends Service {
     }
 
     //set a custom location to overwrite real device location
+
+    /**
+     *
+     * @param newCustomPos
+     */
     public void setCustomPosition(Location newCustomPos) {
         customPosition = newCustomPos;
     }
 
     //clear location overwrite
+
+    /**
+     *
+     */
     public void clearCustomPosition() {
         customPosition = null;
     }
 
+    /**
+     *
+     */
     public class TrackingBinder extends Binder {
+        /**
+         *
+         */
         public TrackingManagerService getService() {
             return TrackingManagerService.this;
         }

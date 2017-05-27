@@ -1,15 +1,11 @@
 package kn.uni.inf.sensortagvr;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
-import kn.uni.inf.sensortagvr.ble.ScanListActivity;
-import kn.uni.inf.sensortagvr.MainActivity;
 
 
 /**
@@ -18,15 +14,20 @@ import kn.uni.inf.sensortagvr.MainActivity;
 
 public class VRActivity extends AppCompatActivity {
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vr_view);
-        final Context con = getApplicationContext();
 
 
         final Button VRbutton = (Button) findViewById(R.id.start_VR);
         VRbutton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 String url = "http://localhost:12345";
@@ -40,3 +41,4 @@ public class VRActivity extends AppCompatActivity {
 
     }
 }
+

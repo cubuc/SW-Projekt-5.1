@@ -1,7 +1,6 @@
 package kn.uni.inf.sensortagvr.stor;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +10,13 @@ import android.location.Location;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import java.io.File;
 
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
+
+
 
 
 /**
@@ -34,26 +36,64 @@ public class StorageMainService extends IntentService {
     // Action performed by the GUI. May be changed.
     public final static String ACTION_MEASURE_DATA =
             "kn.uni.inf.sensortagvr.stor.ACTION_MEASURE_DATA";
+    // From the
+    public final static String EXTRA_SENSOR =
+            "kn.uni.inf.sensortagvr.ble.EXTRA_SENSOR";
+    public final static String EXTRA_DATA =
+            "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
 
     // Create a custom broadcast receiver for the bluetooth broadcast
-    public final StorageBroadcastReceiver bleReceiver  = new StorageBroadcastReceiver(StorageMainService.this);;
+    public final StorageBroadcastReceiver bleReceiver = new StorageBroadcastReceiver(StorageMainService.this);
 
     // Creates a Binder, look at the onBind() method for more information
     private final IBinder binder = new StorageBinder();
 
     // Copied from the android dev guide for bound services
-    TrackingManagerService mService;
-    boolean mBound = false;
+    TrackingManagerService trackingService = null;
+    boolean trackingServiceBound = false;
+
+    //
+    private Location nullPoint = null;
 
     /**
      * stores data received from the bleReceiver
      */
     private Intent lastReceivedData;
 
-    // Create a path to the public directory of the app. Thereby the webVR process can access it.
-    private File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);;
+    /* Create a path to the public directory of the app. Thereby the webVR process can access it. */
+    private File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+    private File jsonFile = new File(dir, "data.JSON");
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        /**
+         * @param className
+         * @param service
+         */
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
+            trackingService = binder.getService();
+            trackingServiceBound = true;
+        }
+
+        /**
+         * @param arg0
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            trackingServiceBound = false;
+        }
+    };
 
 
+    /**
+     *
+     */
     public StorageMainService() {
         super("StorageMainService");
     }
@@ -73,32 +113,91 @@ public class StorageMainService extends IntentService {
         // Register the bleReceiver
         this.registerReceiver(bleReceiver, intentFilter);
 
-        Intent test = new Intent(this, TrackingManagerService.class);
-        bindService(test, mConnection, Context.BIND_AUTO_CREATE);
+        Intent bindTrackService = new Intent(this, TrackingManagerService.class);
+        bindService(bindTrackService, mConnection, Context.BIND_AUTO_CREATE);
 
+        // Testing
+        Toast.makeText(getApplicationContext(), "StorageMainService created", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     *
+     * @param intent
+     */
     @Override
     public void onHandleIntent(Intent intent) {
+
+        // Location not callibrated
+        if (nullPoint == null)
+            throw new NullPointerException();
+
+        // TODO Make Location relative, thus the webVR application can access it properly
 
         // When started by StorageBroadcastReceiver
         if (intent.getAction() == ACTION_DATA_AVAILABLE)
             this.lastReceivedData = intent;
 
-            // When started by GUI
-        else if (intent.getAction() == ACTION_MEASURE_DATA) {
+        else if (intent.getAction() == ACTION_MEASURE_DATA) { // When started by GUI
             // get data from 'lastReceived'
-            //      Uri data = lastReceivedData.getData();
+            float[] receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
+
+            // Data received?
+            Toast.makeText(getApplicationContext(), "Data: " + receivedData, Toast.LENGTH_SHORT);
 
             // get Data from tracking module
-            Location loc = mService.getCurrentPosition();
+            Location loc = trackingService.getCurrentPosition();
+
+            // Location received?
+            Toast.makeText(getApplicationContext(), "Location: " + loc.toString(), Toast.LENGTH_SHORT);
 
             // create new StorageDataSet
-            //      StorageDataSet.createSet(xPos, yPos, data);
+            StorageDataSet.createSet(loc, receivedData);
+
+            double x = loc.getLatitude() - nullPoint.getLatitude();
+            double y = loc.getLongitude() - nullPoint.getLongitude();
+
+            StorageDataSet combinedData = StorageDataSet.createSet(x, y, receivedData);
+
+            // What dataset was made?
+            Toast.makeText(getApplicationContext(), "StorageSet: " + combinedData.toString(), Toast.LENGTH_SHORT);
 
             // save the data set in the .json-file
         }
+
+        // Testing
+        Toast.makeText(getApplicationContext(), "Intend handled by StorageMainService", Toast.LENGTH_SHORT).show();
     }
+
+    public void measureData() {
+        // get data from 'lastReceived'
+        float[] receivedData = {0};
+        if (lastReceivedData != null)
+            receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
+
+        // Data received?
+        Toast.makeText(getApplicationContext(), "Data: " + receivedData, Toast.LENGTH_SHORT);
+
+        // get Data from tracking module
+        Location loc = trackingService.getCurrentPosition();
+
+        // Location received?
+        Toast.makeText(getApplicationContext(), "Location: " + loc.toString(), Toast.LENGTH_SHORT);
+
+        // create new StorageDataSet
+        StorageDataSet.createSet(loc, receivedData);
+
+        double x = 0,y = 0;
+        if(nullPoint != null) {
+            x = loc.getLatitude() - nullPoint.getLatitude();
+            y = loc.getLongitude() - nullPoint.getLongitude();
+        }
+
+        StorageDataSet combinedData = StorageDataSet.createSet(x, y, receivedData);
+
+        // What dataset was made?
+        Toast.makeText(getApplicationContext(), "StorageSet: " + combinedData.toString(), Toast.LENGTH_SHORT);
+    }
+
 
     /**
      * Unregisters the bleReceiver and unbind trackingmngrService when the Service gets DESTROYED
@@ -107,11 +206,22 @@ public class StorageMainService extends IntentService {
     public void onDestroy() {
         this.unregisterReceiver(bleReceiver);
 
-        if (mBound) {
+        if (trackingServiceBound) {
             unbindService(mConnection);
-            mBound = false;
+            trackingServiceBound = false;
         }
+        // Testing
+        Toast.makeText(getApplicationContext(), "StorageMainService destroyed", Toast.LENGTH_SHORT).show();
+    }
 
+    /**
+     * This sets the surface zero to the current Location
+     * (Should be called at the start of the measurement)
+     */
+    public void callibrate() {
+        nullPoint = trackingService.getCurrentPosition();
+        // Testing
+        Toast.makeText(getApplicationContext(), "StorageMainService callibrated: " + nullPoint.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -124,35 +234,24 @@ public class StorageMainService extends IntentService {
         return binder;
     }
 
+
+    // Copied from the android dev guide for bound services
+
     /**
      *
      * For more detailed info look at  https://developer.android.com/guide/components/bound-services.html
      */
     public class StorageBinder extends Binder {
-        StorageMainService getService() {
+        /**
+         *
+         * @return
+         */
+        public StorageMainService getService() {
             return StorageMainService.this;
         }
     }
 
-
-    // Copied from the android dev guide for bound services
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-
 }
+
+
 

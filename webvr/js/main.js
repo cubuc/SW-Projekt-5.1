@@ -34,24 +34,37 @@ function init(){
   effect.setSize(window.innerWidth, window.innerHeight);
   // load the whole scene
   createRoom(scene);
-  //display the data
-  var dataVis = displayData();
-  scene.add(dataVis[0]);
-  scene.add(dataVis[1]);
+  //load the data from file
+  var loading = $.getJSON("data/test.json");
+  loading.done(function(loaded){
+    var dataVis = loadData(loaded);
+    scene.add(dataVis[0]);
+    scene.add(dataVis[1]);
+    moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
 
-  moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
+    // Request animation frame loop function
+    lastRender = 0;
 
-  // Request animation frame loop function
-  lastRender = 0;
+    //the the vrDisplay and kick of render loop
+    navigator.getVRDisplays().then(function(displays) {
+      if (displays.length > 0) {
+        vrDisplay = displays[0];
+        // Kick off the render loop.
+        vrDisplay.requestAnimationFrame(animate);
+      }
+    });
 
-  //the the vrDisplay and kick of render loop
-  navigator.getVRDisplays().then(function(displays) {
-    if (displays.length > 0) {
-      vrDisplay = displays[0];
-      // Kick off the render loop.
-      vrDisplay.requestAnimationFrame(animate);
-    }
+
+
+
+
+
   });
+  //display the data
+
+
+
+
 }
 
 
@@ -63,6 +76,7 @@ function animate(timestamp) {
   controls.update();
 
   moveCon.update(vrDisplay);
+
 
   // Render the scene.
   effect.render(scene, camera);

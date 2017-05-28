@@ -41,7 +41,7 @@ moveCon = function(body,camera,dataOne,dataTwo){
     updateLookDir();
     }
     if(gamePad != null){
-      //lookDir.multiplyScalar(0.2)
+      lookDir.multiplyScalar(0.2)
       if(gamePad.axes[1] > 0.05) {
         body.translateZ(-lookDir.z);
         body.translateX(-lookDir.x);
@@ -58,8 +58,6 @@ moveCon = function(body,camera,dataOne,dataTwo){
       else if(gamePad.buttons[0].value == 0 && pressed) {
         pressed = false;
       }
-
-
     }
   };
 

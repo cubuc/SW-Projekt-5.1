@@ -14,7 +14,6 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -29,7 +28,6 @@
         android:roundIcon="@mipmap/vr_app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,10 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
- 		<activity android:name=".RecordActivity" />
+        <activity android:name=".RecordActivity" />
         <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />
-        <activity android:name="kn.uni.inf.sensortagvr.ble.LiveDataActivity" />
+        <activity android:name=".ble.LiveDataActivity" />
+        <activity android:name=".tracking.APSettingsActivity"></activity>
 
         <service
             android:name=".ble.BluetoothLEService"

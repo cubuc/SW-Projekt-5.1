@@ -54,17 +54,7 @@ function init(){
       }
     });
 
-
-
-
-
-
   });
-  //display the data
-
-
-
-
 }
 
 

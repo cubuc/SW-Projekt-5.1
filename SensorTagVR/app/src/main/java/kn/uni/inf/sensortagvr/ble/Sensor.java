@@ -32,7 +32,7 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_SERV;
 
 enum Sensor {
 
-    IR_TEMPERATURE(UUID.fromString(UUID_IRT_SERV), UUID.fromString(UUID_IRT_DATA), UUID.fromString(UUID_IRT_CONF)) {
+    IR_TEMPERATURE("IR_Temperature", UUID.fromString(UUID_IRT_SERV), UUID.fromString(UUID_IRT_DATA), UUID.fromString(UUID_IRT_CONF)) {
         /**
          * converts the raw data to a float[3]
          *
@@ -90,7 +90,7 @@ enum Sensor {
         }
     },
 
-    MOVEMENT_ACC(UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
+    MOVEMENT_ACC("MOV_Accelerometer", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
 
         public float[] convert(final byte[] value) {
             // Range 8G
@@ -102,7 +102,7 @@ enum Sensor {
             return new float[]{((x / SCALE) * -1), y / SCALE, ((z / SCALE) * -1)};
         }
     },
-    MOVEMENT_GYRO(UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
+    MOVEMENT_GYRO("MOV_Gyroscope", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
 
         @Override
         public float[] convert(final byte[] value) {
@@ -115,7 +115,7 @@ enum Sensor {
             return new float[]{x / SCALE, y / SCALE, z / SCALE};
         }
     },
-    MOVEMENT_MAG(UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
+    MOVEMENT_MAG("MOV_Magmetometer", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
 
         @Override
         public float[] convert(final byte[] value) {
@@ -128,7 +128,7 @@ enum Sensor {
             } else return new float[]{0, 0, 0};
         }
     },
-    ACCELEROMETER(UUID.fromString(UUID_ACC_SERV), UUID.fromString(UUID_ACC_DATA), UUID.fromString(UUID_ACC_CONF), (byte) 3) {
+    ACCELEROMETER("Accelerometer", UUID.fromString(UUID_ACC_SERV), UUID.fromString(UUID_ACC_DATA), UUID.fromString(UUID_ACC_CONF), (byte) 3) {
 
         @Override
         public float[] convert(final byte[] value) {
@@ -150,7 +150,7 @@ enum Sensor {
         }
     },
 
-    HUMIDITY(UUID.fromString(UUID_HUM_SERV), UUID.fromString(UUID_HUM_DATA), UUID.fromString(UUID_HUM_CONF)) {
+    HUMIDITY("Humidity Sensor", UUID.fromString(UUID_HUM_SERV), UUID.fromString(UUID_HUM_DATA), UUID.fromString(UUID_HUM_CONF)) {
 
         @Override
         public float[] convert(final byte[] value) {
@@ -163,7 +163,7 @@ enum Sensor {
             return new float[]{(-6f) + 125f * (a / 65535f), 0, 0};
         }
     },
-    HUMIDITY2(UUID.fromString(UUID_HUM_SERV), UUID.fromString(UUID_HUM_DATA), UUID.fromString(UUID_HUM_CONF)) {
+    HUMIDITY2("Humidity Sensor 2", UUID.fromString(UUID_HUM_SERV), UUID.fromString(UUID_HUM_DATA), UUID.fromString(UUID_HUM_CONF)) {
 
         @Override
         public float[] convert(final byte[] value) {
@@ -172,7 +172,7 @@ enum Sensor {
             return new float[]{100f * (a / 65535f), 0, 0};
         }
     },
-    MAGNETOMETER(UUID.fromString(UUID_MAG_SERV), UUID.fromString(UUID_MAG_DATA), UUID.fromString(UUID_MAG_CONF)) {
+    MAGNETOMETER("Magnetometer", UUID.fromString(UUID_MAG_SERV), UUID.fromString(UUID_MAG_DATA), UUID.fromString(UUID_MAG_CONF)) {
         @Override
         public float[] convert(final byte[] value) {
             // Multiply x and y with -1 so that the values correspond with the image in the app
@@ -184,7 +184,7 @@ enum Sensor {
         }
     },
 
-    LUXMETER(UUID.fromString(UUID_OPT_SERV), UUID.fromString(UUID_OPT_DATA), UUID.fromString(UUID_OPT_CONF)) {
+    LUXMETER("Luxmeter", UUID.fromString(UUID_OPT_SERV), UUID.fromString(UUID_OPT_DATA), UUID.fromString(UUID_OPT_CONF)) {
         @Override
         public float[] convert(final byte[] value) {
             int mantissa;
@@ -202,7 +202,7 @@ enum Sensor {
         }
     },
 
-    GYROSCOPE(UUID.fromString(UUID_GYR_SERV), UUID.fromString(UUID_GYR_DATA), UUID.fromString(UUID_GYR_CONF), (byte) 7) {
+    GYROSCOPE("Gyroscope", UUID.fromString(UUID_GYR_SERV), UUID.fromString(UUID_GYR_DATA), UUID.fromString(UUID_GYR_CONF), (byte) 7) {
         @Override
         public float[] convert(final byte[] value) {
 
@@ -214,7 +214,7 @@ enum Sensor {
         }
     },
 
-    BAROMETER(UUID.fromString(UUID_BAR_SERV), UUID.fromString(UUID_BAR_DATA), UUID.fromString(UUID_BAR_CONF)) {
+    BAROMETER("Barometer", UUID.fromString(UUID_BAR_SERV), UUID.fromString(UUID_BAR_DATA), UUID.fromString(UUID_BAR_CONF)) {
         @Override
         public float[] convert(final byte[] value) {
 
@@ -239,6 +239,7 @@ enum Sensor {
 
     public static final byte ENABLE_SENSOR_CODE = 1;
     public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, ACCELEROMETER, MAGNETOMETER, LUXMETER, GYROSCOPE, HUMIDITY, BAROMETER};
+    public final String name;
     public final UUID service, data, config;
     private byte enableCode; // See getEnableSensorCode for explanation.
     /**
@@ -250,7 +251,8 @@ enum Sensor {
      * @param enableCode The byte code, that needs to be written to the config UUID to enable the
      *                   sensor
      */
-    Sensor(UUID service, UUID data, UUID config, byte enableCode) {
+    Sensor(String name, UUID service, UUID data, UUID config, byte enableCode) {
+        this.name = name;
         this.service = service;
         this.data = data;
         this.config = config;
@@ -262,7 +264,8 @@ enum Sensor {
      * @param data The UUID of the Characteristic of the sensor data
      * @param config The UUID of the configuration characteristic
      */
-    Sensor(UUID service, UUID data, UUID config) {
+    Sensor(String name, UUID service, UUID data, UUID config) {
+        this.name = name;
         this.service = service;
         this.data = data;
         this.config = config;
@@ -324,6 +327,10 @@ enum Sensor {
 
     public UUID getConfigUUID() {
         return config;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

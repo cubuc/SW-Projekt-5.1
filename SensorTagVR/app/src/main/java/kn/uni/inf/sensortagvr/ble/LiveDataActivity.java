@@ -1,7 +1,6 @@
 package kn.uni.inf.sensortagvr.ble;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -13,12 +12,11 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ExpandableListView;
-import android.widget.SimpleExpandableListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -33,18 +31,15 @@ import kn.uni.inf.sensortagvr.R;
  * communicates with {@code BluetoothLEService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class LiveDataActivity extends Activity {
+public class LiveDataActivity extends AppCompatActivity {
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private final static String TAG = LiveDataActivity.class.getSimpleName();
     LocalBroadcastManager mLocalBroadcastManager;
     private TextView mConnectionState;
-    private TextView mDataField0;
-    private TextView mDataField1;
-    private TextView mDataField2;
     private String mDeviceName;
     private String mDeviceAddress;
-    private ExpandableListView mGattServicesList;
+    private ListView mLiveDataList;
     private BluetoothLEService mBluetoothLEService;
     /**
      * Handles the connection with the BluetoothLEService
@@ -79,43 +74,7 @@ public class LiveDataActivity extends Activity {
     };
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics;
-    private final ExpandableListView.OnChildClickListener servicesListClickListner =
-            new ExpandableListView.OnChildClickListener() {
-                /**
-                 *
-                 * @param parent
-                 * @param v
-                 * @param groupPosition
-                 * @param childPosition
-                 * @param id
-                 */
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
-                                            int childPosition, long id) {
-                    if (mGattCharacteristics != null) {
-                        final BluetoothGattCharacteristic characteristic =
-                                mGattCharacteristics.get(groupPosition).get(childPosition);
-                        final int charaProp = characteristic.getProperties();
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-                            // If there is an active notification on a characteristic, clear
-                            // it first so it doesn't update the data field on the user interface.
-                            if (mNotifyCharacteristic != null) {
-                                mBluetoothLEService.controlSensor(Sensor.getSensorFromUuid(
-                                        mNotifyCharacteristic.getUuid()), true, false);
-                                mNotifyCharacteristic = null;
-                            }
-                        mBluetoothLEService.readCharacteristic(characteristic);
-                        }
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                            mNotifyCharacteristic = characteristic;
-                            mBluetoothLEService.controlSensor(Sensor.getSensorFromUuid(
-                                    mNotifyCharacteristic.getUuid()), true, true);
-                        }
-                        return true;
-                    }
-                    return false;
-                }
-            };
+
 
     private boolean mConnected = false;
     /**
@@ -158,14 +117,17 @@ public class LiveDataActivity extends Activity {
                     }
                     break;
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
-                    displayData(intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
+                    mData.add(intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
+                    break;
+                default:
+                    Log.e(TAG, "invalid broadcast received");
             }
         }
     };
 
 
     /**
-     * 
+     *
      */
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -177,24 +139,22 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     * 
+     *
      */
     private void clearUI() {
-        mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
+        mLiveDataList.setAdapter(null);
         mDataField0.setText(R.string.no_data);
         mDataField1.setText(R.string.no_data);
         mDataField2.setText(R.string.no_data);
     }
 
     /**
-     *
      * @param savedInstanceState used by OS to save the app state
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gatt_services_characteristics);
-
 
 
         mLocalBroadcastManager =
@@ -206,12 +166,8 @@ public class LiveDataActivity extends Activity {
 
         // Sets up UI references.
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
-        mGattServicesList = (ExpandableListView) findViewById(R.id.gatt_services_list);
-        mGattServicesList.setOnChildClickListener(servicesListClickListner);
+        mLiveDataList = (ListView) findViewById(R.id.gatt_services_list);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
-        mDataField0 = (TextView) findViewById(R.id.data_value_0);
-        mDataField1 = (TextView) findViewById(R.id.data_value_1);
-        mDataField2 = (TextView) findViewById(R.id.data_value_2);
 
         ActionBar ab = getActionBar();
         if (ab != null) {
@@ -224,7 +180,7 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     * 
+     *
      */
     @Override
     protected void onResume() {
@@ -239,7 +195,7 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     * 
+     *
      */
     @Override
     protected void onPause() {
@@ -249,7 +205,7 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     * 
+     *
      */
     @Override
     protected void onDestroy() {
@@ -257,7 +213,6 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     *
      * @param menu
      */
     @Override
@@ -274,7 +229,6 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     *
      * @param item
      */
     @Override
@@ -294,31 +248,18 @@ public class LiveDataActivity extends Activity {
     }
 
     /**
-     *
      * @param resourceId
      */
     private void updateConnectionState(final int resourceId) {
         mConnectionState.setText(resourceId);
     }
 
-    /**
-     *
-     * @param data
-     */
-    private void displayData(float[] data) {
-        if (data != null) {
-            mDataField0.setText(String.valueOf(data[0]));
-            mDataField0.setText(String.valueOf(data[1]));
-            mDataField0.setText(String.valueOf(data[2]));
-        }
-    }
 
     // Demonstrates how to iterate through the supported GATT Services/Characteristics.
     // In this sample, we populate the data structure that is bound to the ExpandableListView
     // on the UI.
 
     /**
-     *
      * @param gattServices
      */
     private void displayGattServices(List<BluetoothGattService> gattServices) {
@@ -363,18 +304,8 @@ public class LiveDataActivity extends Activity {
             gattCharacteristicData.add(gattCharacteristicGroupData);
         }
 
-        SimpleExpandableListAdapter gattServiceAdapter = new SimpleExpandableListAdapter(
-                this,
-                gattServiceData,
-                android.R.layout.simple_expandable_list_item_2,
-                new String[]{LIST_NAME, LIST_UUID},
-                new int[]{android.R.id.text1, android.R.id.text2},
-                gattCharacteristicData,
-                android.R.layout.simple_expandable_list_item_2,
-                new String[]{LIST_NAME, LIST_UUID},
-                new int[]{android.R.id.text1, android.R.id.text2}
-        );
-        mGattServicesList.setAdapter(gattServiceAdapter);
+        SensorDataListAdapter gattServiceAdapter = new SensorDataListAdapter(this.getApplicationContext());
+        mLiveDataList.setAdapter(gattServiceAdapter);
     }
 }
 

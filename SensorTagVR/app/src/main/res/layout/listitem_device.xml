@@ -2,17 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="visible">
 
     <TextView
         android:id="@+id/device_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp" />
+        android:theme="@style/AppTheme"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/device_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:visibility="visible" />
 </LinearLayout>

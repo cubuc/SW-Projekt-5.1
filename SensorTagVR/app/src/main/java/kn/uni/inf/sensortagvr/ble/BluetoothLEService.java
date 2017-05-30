@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static android.content.ContentValues.TAG;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_GYR_DATA;
@@ -50,11 +49,12 @@ public class BluetoothLEService extends Service {
             "kn.uni.inf.sensortagvr.ble.EXTRA_SENSOR";
     public final static String EXTRA_DATA =
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
-
-
+    private final String TAG = "BluetoothLEService";
     private final IBinder mBinder = new LocalBinder();
     public boolean bound = false;
     public boolean isWriting = false;
+    ArrayList<Sensor> enabledSensors = new ArrayList<>();
+    ArrayList<Sensor> notifyingSensors = new ArrayList<>();
     LocalBroadcastManager mLocalBroadcastManager;
     private BluetoothGatt mGatt;
     private BluetoothAdapter mBtAdapter;
@@ -290,6 +290,8 @@ public class BluetoothLEService extends Service {
      */
     @Override
     public void onDestroy() {
+        for (Sensor s : Sensor.SENSOR_LIST)
+            controlSensor(s, false, false);
         if (mGatt == null) {
             return;
         }
@@ -313,12 +315,6 @@ public class BluetoothLEService extends Service {
             return false;
         }
 
-        // Previously connected device.  Try to reconnect.
-        if (mBtDeviceAddress != null && address.equals(mBtDeviceAddress)
-                && mGatt != null) {
-            Log.d(TAG, "Trying to use an existing mGatt for connection.");
-            return mGatt.connect();
-        }
 
         final BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
         if (device == null) {
@@ -345,6 +341,7 @@ public class BluetoothLEService extends Service {
             return;
         }
         mGatt.disconnect();
+        mGatt.close();
     }
 
     /**
@@ -407,17 +404,33 @@ public class BluetoothLEService extends Service {
                         sensorConf.setValue(val);
                         write(sensorConf);
 
+
                         byte[] notify = notification ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                                 : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
 
                         config.setValue(notify);
                         write(config);
+
+                        updateLists(s, power, notification);
                     }
                 }
             }
         }
     }
 
+    private void updateLists(Sensor s, boolean power, boolean notification) {
+        if (power) {
+            enabledSensors.add(s);
+        } else {
+            enabledSensors.remove(s);
+            notifyingSensors.remove(s);
+        }
+        if (notification) {
+            notifyingSensors.add(s);
+        } else {
+            notifyingSensors.remove(s);
+        }
+    }
 
     /**
      * return the saved list of services that the GATT Server hosts
@@ -473,6 +486,13 @@ public class BluetoothLEService extends Service {
         }
     }
 
+    public ArrayList<Sensor> getEnabledSensors() {
+        return enabledSensors;
+    }
+
+    public ArrayList<Sensor> getNotifyingSensors() {
+        return notifyingSensors;
+    }
 
     class LocalBinder extends Binder {
         /**
@@ -482,7 +502,6 @@ public class BluetoothLEService extends Service {
             return BluetoothLEService.this;
         }
     }
-
 }
 
 

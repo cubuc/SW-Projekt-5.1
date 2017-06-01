@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -42,6 +43,11 @@ public class StorageMainService extends IntentService {
     public final static String EXTRA_DATA =
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
 
+    // Sets teh Scale factor for the measured Data
+    private static final int SCALE_DATA = 2;
+    private static final double SCALE_DATA_OFFSET = 1.0;
+    // Sets the Scale factor for the location grid in dataMeasured
+    private static final int SCALE_LOCATION = 10;
 
     // Create a custom broadcast receiver for the bluetooth broadcast
     public final StorageBroadcastReceiver bleReceiver = new StorageBroadcastReceiver(StorageMainService.this);
@@ -49,25 +55,10 @@ public class StorageMainService extends IntentService {
     // Creates a Binder, look at the onBind() method for more information
     private final IBinder binder = new StorageBinder();
 
+
     // Copied from the android dev guide for bound services
     private TrackingManagerService trackingService = null;
     private boolean trackingServiceBound = false;
-
-    //
-    private Location nullPoint = null;
-
-    // Saves all measured data in a session
-    private ArrayList<CompactData> dataMeasured;
-    private boolean sessionStarted = false;
-
-    // Path a data.json file is saved to
-    private String path;
-
-    /**
-     * stores data received from the bleReceiver
-     */
-    private Intent lastReceivedData;
-
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -94,6 +85,17 @@ public class StorageMainService extends IntentService {
             trackingServiceBound = false;
         }
     };
+    // Outdated
+    private Location nullPoint = null;
+    // Saves all measured data in a session
+    private ArrayList<CompactData> dataMeasured;
+    private boolean sessionStarted = false;
+    // Path a data.json file is saved to
+    private String path;
+    /**
+     * stores data received from the bleReceiver
+     */
+    private Intent lastReceivedData;
 
 
     /**
@@ -123,15 +125,25 @@ public class StorageMainService extends IntentService {
         Intent bindTrackService = new Intent(this, TrackingManagerService.class);
         bindService(bindTrackService, mConnection, Context.BIND_AUTO_CREATE);
 
-        // TODO make path to an external accessible file
-        path = getFilesDir().getAbsolutePath();
-
+        // File can be accessed by the phone itself
+        // Path = /storage/emulated/=/Android/data/kn.uni.inf.sensortagvr/files
+        if (isExternalStorageWritable()) {
+            path = getExternalFilesDir(null).getAbsolutePath();
+            Toast.makeText(getApplicationContext(), "" + path, Toast.LENGTH_LONG).show();
+        }
         // Testing
         startMeasureSession();
         createDummyData();
-        normalize(dataMeasured);
-        finishMeasureSession();
+        scaleAll(dataMeasured);
+
     }
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
 
     /**
      * @param intent intent that shall be handled
@@ -213,6 +225,8 @@ public class StorageMainService extends IntentService {
 
                 // Signals a recording session ended
                 sessionStarted = false;
+
+                Toast.makeText(getApplicationContext(), "Session closed", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -242,27 +256,64 @@ public class StorageMainService extends IntentService {
 
         File data = new File(dir, "data.json");
 
+        Toast.makeText(getApplicationContext(), "" + data.getAbsolutePath(), Toast.LENGTH_LONG).show();
         // Check whether a file could be created.
-        if (!data.createNewFile())
+        if (!data.isFile() && !data.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
 
         // Create a FileWriter, use gson to write to it and close it. This essentially creates the file.
         FileWriter writer = new FileWriter(data);
         gson.toJson(list, writer);
         writer.close();
+
     }
 
     /**
      * This method changes the values of the Location for a easier triangulation by webVR
-     * Current Implementation: round all doubles.
+     * Current Implementation: scales all variables to mach SCALE (the biggest value in list = SCALE
+     * afterwards)
      *
      * @param list List to be normalized
      */
-    private void normalize(ArrayList<CompactData> list) {
-        for (CompactData data : list) {
-            data.setX(Math.round(data.getX()));
-            data.setY(Math.round(data.getY()));
+    private void scaleAll(ArrayList<CompactData> list) {
+        double factor_loc = calculateLocationFactor(list);
+        double factor_data = calculateDataFactor(list);
+
+        // Scale the list values with the determined factors
+        for (CompactData item : list) {
+            item.setX(item.getX() / factor_loc);
+            item.setY(item.getY() / factor_loc);
+            item.setZ(item.getData() / factor_data - SCALE_DATA_OFFSET);
         }
+
+    }
+
+    private double calculateDataFactor(ArrayList<CompactData> list) {
+        double max = Double.MIN_VALUE;
+
+        // determine the biggest location parameter
+        for (CompactData item : list) {
+            max = Math.max(max, item.getData());
+        }
+
+        return max / SCALE_DATA;
+    }
+
+    /**
+     * Determines the factor by which list should be scaled down
+     *
+     * @param list ist of location points
+     * @return scaling factor to match SCALE
+     */
+    private double calculateLocationFactor(ArrayList<CompactData> list) {
+        double max = Double.MIN_VALUE;
+
+        // determine the biggest location parameter
+        for (CompactData item : list) {
+            max = Math.max(max, Math.max(item.getX(), item.getY()));
+        }
+
+        return max / SCALE_LOCATION;
     }
 
     /**
@@ -276,9 +327,6 @@ public class StorageMainService extends IntentService {
         //trackingService.calibrate();
 
         nullPoint = trackingService.getCurrentPosition();
-
-        // Testing
-        //Toast.makeText(getApplicationContext(), "StorageMainService calibrated: " + nullPoint.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -296,12 +344,12 @@ public class StorageMainService extends IntentService {
     // Copied from the android dev guide for bound services
 
     public void createDummyData() {
-        dataMeasured.add(new CompactData(1.1, 1.2, 1.3));
-        dataMeasured.add(new CompactData(1.4, 1.5, 1.6));
-        dataMeasured.add(new CompactData(1.7, 1.8, 1.9));
-        dataMeasured.add(new CompactData(2.1, 2.2, 2.3));
-        dataMeasured.add(new CompactData(3.1, 4.2, 5.3));
-        dataMeasured.add(new CompactData(1.1, 1.2, 1.3));
+        dataMeasured.add(new CompactData(1.1, 1.2, 23));
+        dataMeasured.add(new CompactData(1.4, 1.5, 56));
+        dataMeasured.add(new CompactData(1.7, 1.8, 12));
+        dataMeasured.add(new CompactData(2.1, 2.2, 45));
+        dataMeasured.add(new CompactData(3.1, 4.2, 42));
+        dataMeasured.add(new CompactData(1.1, 1.2, 10));
     }
 
     /**

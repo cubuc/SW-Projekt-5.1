@@ -160,31 +160,41 @@ public class StorageMainService extends IntentService {
     }
 
     /**
-     *
+     * Collects all data received by the ble-service and the loc-service, and saves them into the
+     * ArrayList measured
      */
     public void measureData() {
-        // get data from 'lastReceived'
-        float[] receivedData = {0};
-        if (lastReceivedData != null)
-            receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
+        if (sessionStarted) {
+            // get data from 'lastReceived'
+            float[] receivedData = {0};
+            if (lastReceivedData != null)
+                receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
 
-        // Mock-up and suggestion for future Location gathering
-        //double[2] xyLoc = trackingService.getLocation();
+            // Mock-up and suggestion for future Location gathering
+            /*
+            double[2] xyLoc = trackingService.getLocation();
 
-        // get Data from tracking module
-        Location loc = trackingService.getCurrentPosition();
+            x = xyLoc[0];
+            y = xyLoc[1];
+             */
 
-        double x = 0, y = 0;
-        if (nullPoint != null) {
-            x = loc.getLatitude() - nullPoint.getLatitude();
-            y = loc.getLongitude() - nullPoint.getLongitude();
-        }
 
-        // receivedData should be scaled between -.5 and 1
-        // TODO scale receivedData
-        dataMeasured.add(new CompactData(x, y, receivedData[0]));
+            // get Data from tracking module
+            Location loc = trackingService.getCurrentPosition();
 
-        Toast.makeText(getApplicationContext(), "Data received", Toast.LENGTH_SHORT).show();
+            double x = 0, y = 0;
+            if (nullPoint != null) {
+                x = loc.getLatitude() - nullPoint.getLatitude();
+                y = loc.getLongitude() - nullPoint.getLongitude();
+            }
+
+            // receivedData should be scaled between -.5 and 1
+            // TODO scale receivedData
+            dataMeasured.add(new CompactData(x, y, receivedData[0]));
+
+            Toast.makeText(getApplicationContext(), "Data received", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -205,7 +215,8 @@ public class StorageMainService extends IntentService {
     }
 
     /**
-     * Starts a new Measure Session. Be sure to close the session by calling {@see startMeasureSession}.
+     * Creates a new ArrayList in which measured data will be stored.
+     * Be sure to close the session by calling {@see startMeasureSession}.
      */
     public void startMeasureSession() {
         //trackingService.calibrate;
@@ -256,7 +267,6 @@ public class StorageMainService extends IntentService {
 
         File data = new File(dir, "data.json");
 
-        Toast.makeText(getApplicationContext(), "" + data.getAbsolutePath(), Toast.LENGTH_LONG).show();
         // Check whether a file could be created.
         if (!data.isFile() && !data.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();

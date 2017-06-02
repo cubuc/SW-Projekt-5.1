@@ -209,7 +209,7 @@ public class StorageMainService extends IntentService {
             trackingServiceBound = false;
         }
 
-        finishMeasureSession();
+        closeMeasureSession();
         // Testing
         Toast.makeText(getApplicationContext(), "StorageMainService destroyed", Toast.LENGTH_SHORT).show();
     }
@@ -229,7 +229,7 @@ public class StorageMainService extends IntentService {
     /**
      *
      */
-    public void finishMeasureSession() {
+    public void closeMeasureSession() {
         if (sessionStarted) {
             try {
                 writeInJsonFile(dataMeasured);

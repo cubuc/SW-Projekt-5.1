@@ -112,7 +112,7 @@ public class StorageMainService extends IntentService {
      */
     @Override
     public void onCreate() {
-
+        super.onCreate();
         //Create and fill a Intent Filter to only receive data from the ble-broadcast
         // TODO filter in xml file
         IntentFilter intentFilter = new IntentFilter();
@@ -288,14 +288,27 @@ public class StorageMainService extends IntentService {
     private void scaleAll(ArrayList<CompactData> list) {
         double factor_loc = calculateLocationFactor(list);
         double factor_data = calculateDataFactor(list);
+        double min_data = calculateMinData(list);
 
         // Scale the list values with the determined factors
         for (CompactData item : list) {
             item.setX(item.getX() / factor_loc);
             item.setY(item.getY() / factor_loc);
-            item.setZ(item.getData() / factor_data - SCALE_DATA_OFFSET);
+            // Data gets scaled to match a scale of 0 to 2, where the smallest data is 0 and the
+            // biggest data is 2
+            item.setZ((item.getData() - min_data) / factor_data - SCALE_DATA_OFFSET);
         }
 
+    }
+
+    private double calculateMinData(ArrayList<CompactData> list) {
+        double min = Double.MAX_VALUE;
+
+        for (CompactData item : list) {
+            min = Math.min(min, item.getData());
+        }
+
+        return min;
     }
 
     private double calculateDataFactor(ArrayList<CompactData> list) {
@@ -320,7 +333,7 @@ public class StorageMainService extends IntentService {
 
         // determine the biggest location parameter
         for (CompactData item : list) {
-            max = Math.max(max, Math.max(item.getX(), item.getY()));
+            max = Math.max(max, Math.max(Math.abs(item.getX()), Math.abs(item.getY())));
         }
 
         return max / SCALE_LOCATION;

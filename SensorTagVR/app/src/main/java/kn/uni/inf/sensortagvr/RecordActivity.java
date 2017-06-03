@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,21 +34,19 @@ public class RecordActivity extends Activity {
         buttonCal.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (storageServiceBound)
-                    storageService.callibrate();
+                    storageService.calibrate();
                 else
-                    Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
             }
         });
 
         final Button buttonMD = (Button) findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("TAG", "buttonMD pressed");
-                Toast.makeText(getApplicationContext(), "Measure got", Toast.LENGTH_SHORT);
                 if (storageServiceBound)
                     storageService.measureData();
                 else
-                    Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
             }
         });
     }

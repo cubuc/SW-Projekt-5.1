@@ -33,13 +33,9 @@ moveCon = function(body,camera,dataOne,dataTwo){
     }
   };
 
-  this.update = function(vrDisplay) {
+  this.update = function() {
     gamePad = navigator.getGamepads()[0];
-    if(vrDisplay.isPresenting){
-      updateLookDir();
-    }else{
     updateLookDir();
-    }
     if(gamePad != null){
       lookDir.multiplyScalar(0.2)
       if(gamePad.axes[1] > 0.05) {
@@ -60,6 +56,4 @@ moveCon = function(body,camera,dataOne,dataTwo){
       }
     }
   };
-
-
 };

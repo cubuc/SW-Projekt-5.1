@@ -123,7 +123,7 @@ public class TrackingTestActivity extends AppCompatActivity {
                 this.handler.postDelayed(this, 500);
 
                 if(mService != null) {
-                    this.textView.setText(mService.getCurrentPosition().toString() + " " + mService.getCurrentPosition().getProvider());
+                    this.textView.setText(mService.getRelativePosition().toString());
                 } else {
                     this.textView.setText("---");
                 }

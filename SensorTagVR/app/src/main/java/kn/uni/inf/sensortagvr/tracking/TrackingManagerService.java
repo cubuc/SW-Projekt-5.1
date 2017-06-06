@@ -3,6 +3,7 @@ package kn.uni.inf.sensortagvr.tracking;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,17 +20,18 @@ public class TrackingManagerService extends Service {
 
     private final IBinder binder = new TrackingBinder();
 
-    private Location customPosition = null;
-    private Location lastPosition = new Location("TRACKING_MANAGER");
+    private Location origin = null;
+    private PointF lastPostion = new PointF(0, 0);
+
+    private Location lastGPSPosition = new Location("TRACKING_MANAGER");
 
     private LocationManager locationManager = null;
-
     private LocationListener locationListener = new LocationListener() {
         /**
          * @param location
          */
         public void onLocationChanged(Location location) {
-            lastPosition = location;
+            lastGPSPosition = location;
         }
 
         /**
@@ -72,7 +74,7 @@ public class TrackingManagerService extends Service {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
             if(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null)
-                lastPosition = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                lastGPSPosition = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             else
                 Log.e("TrackingManager", "No last location!");
         } catch (SecurityException e) {
@@ -102,35 +104,37 @@ public class TrackingManagerService extends Service {
     /**
      *
      */
-    public Location getCurrentPosition() {
-        if (customPosition != null)
-            return customPosition;
-
-        return lastPosition;
+    public PointF getRelativePosition() {
+        return lastPostion;
     }
 
-    //set a custom location to overwrite real device location
+    public Location getAbsolutePosition() throws Exception {
+        //Earth’s radius, sphere
+        final double R = 6378137.0;
+        Location loc = new Location("TrackingManager");
 
-    /**
-     *
-     * @param newCustomPos
-     */
-    public void setCustomPosition(Location newCustomPos) {
-        customPosition = newCustomPos;
+        if(origin == null)
+            throw new Exception("No origin was set!");
+
+        //Coordinate offsets in radians
+        double dLat = lastPostion.x/R;
+        double dLon = lastPostion.y/(R*Math.cos( Math.PI * origin.getLatitude() / 180.0));
+
+        loc.setLatitude(origin.getLatitude() + dLat * 180.0 / Math.PI);
+        loc.setLongitude(origin.getLongitude() + dLon * 180.0 / Math.PI );
+
+        return loc;
     }
 
-    //clear location overwrite
+    public Location calibrateOrigin() throws Exception{
+        if(lastGPSPosition != null)
+            origin = lastGPSPosition;
+        else
+            throw new Exception("No position could be determined by GPS or network!");
 
-    /**
-     *
-     */
-    public void clearCustomPosition() {
-        customPosition = null;
+        return lastGPSPosition;
     }
 
-    /**
-     *
-     */
     public class TrackingBinder extends Binder {
         /**
          *

@@ -35,11 +35,14 @@ function init(){
   // load the whole scene
   createRoom(scene);
   //load the data from file
-  var loading = $.getJSON("data/test.json");
+  var loading = $.getJSON("files/data.json");
+  //wait for the loading to be done to continue using the file
   loading.done(function(loaded){
+    // load and diplay the data we got from the sensor
     var dataVis = loadData(loaded);
     scene.add(dataVis[0]);
     scene.add(dataVis[1]);
+    // add controls to the scene
     moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
 
     // Request animation frame loop function

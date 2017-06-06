@@ -367,12 +367,13 @@ public class StorageMainService extends IntentService {
     // Copied from the android dev guide for bound services
 
     public void createDummyData() {
-        dataMeasured.add(new CompactData(1.1, 1.2, 23));
-        dataMeasured.add(new CompactData(1.4, 1.5, 56));
-        dataMeasured.add(new CompactData(1.7, 1.8, 12));
-        dataMeasured.add(new CompactData(2.1, 2.2, 45));
-        dataMeasured.add(new CompactData(3.1, 4.2, 42));
-        dataMeasured.add(new CompactData(1.1, 1.2, 10));
+        dataMeasured.add(new CompactData(0,0, 23));
+        dataMeasured.add(new CompactData(4,0, 25));
+        dataMeasured.add(new CompactData(0,5, 20));
+        dataMeasured.add(new CompactData(0,7, 24));
+        dataMeasured.add(new CompactData(4,7, 22));
+        dataMeasured.add(new CompactData(4,5, 20));
+
     }
 
     /**

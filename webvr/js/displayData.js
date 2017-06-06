@@ -2,25 +2,36 @@
  * @author Alexej Gluschkow
  */
 
+//get the data from the main file
 function loadData(loadedData) {
+  // the two different visualisations
   var dataVis = new Array();
 
   var verticies = new Array();
+  // get the data from the file and store it in an array
   for (var i = 0; i < loadedData.length; i++) {
     var vert = new THREE.Vector3(Number(loadedData[i].x), Number(loadedData[i].y), Number(loadedData[i].z));
     verticies[i] = vert;
   }
   var data = new Array();
+  // store the data unsorted in the first entry of the data array
   data[0] = verticies;
+  dataVis[1] = makeBalls(data[0], loadedData);
+
+  //now we sort them and make the planes
   data = sortData(data);
   dataVis[0] = makePlanes(data);
-  dataVis[1] = makeBalls(data[0]);
+  // make the spheres and the data points
   return dataVis;
 }
 
-function makeBalls(data) {
+// make the balls to display the data in a second way
+function makeBalls(data, loadedData) {
+  // make the text and balls seperate
   var text = new THREE.Object3D();
   var balls = new THREE.Object3D();
+  //first make the balls in the position of the verticies, but disregard the
+  // height so all balls are in the same plane
   for (var i = 0; i < data.length; i++) {
     // the spheres
     var geometry = new THREE.SphereGeometry(0.05, 10, 10);
@@ -30,7 +41,7 @@ function makeBalls(data) {
     var sphere = new THREE.Mesh(geometry, material);
     sphere.translateX(data[i].x);
     sphere.translateZ(-data[i].y);
-    sphere.translateY(-0.5)
+    sphere.translateY(-0.5);
     balls.add(sphere);
     // the text as a 2D sprite which is nicer then just a 3D text
     var canvas = document.createElement('canvas');
@@ -38,13 +49,14 @@ function makeBalls(data) {
     var size = 64;
     canvas.width = size;
     canvas.height = size;
-
     context.font = "20px Serif";
     context.textAlign = "left";
     context.textBaseline = "top";
     context.fillStyle = 'white';
     context.strokeStyle = 'black';
-    context.fillText(data[i].z, 0, 0);
+    //context.fillText(data[i].z, 0, 0);
+    //for later use
+    context.fillText(loadedData[i].data, 0, 0);
 
     var texture = new THREE.Texture(canvas);
     texture.needsUpdate = true;

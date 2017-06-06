@@ -36,10 +36,14 @@ public class LiveDataActivity extends AppCompatActivity {
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private final static String TAG = LiveDataActivity.class.getSimpleName();
     LocalBroadcastManager mLocalBroadcastManager;
+    ArrayList<float[]> mData = new ArrayList<>();
     private TextView mConnectionState;
     private String mDeviceName;
     private String mDeviceAddress;
     private ListView mLiveDataList;
+    private TextView mDataField0;
+    private TextView mDataField1;
+    private TextView mDataField2;
     private BluetoothLEService mBluetoothLEService;
     /**
      * Handles the connection with the BluetoothLEService
@@ -109,7 +113,7 @@ public class LiveDataActivity extends AppCompatActivity {
                 case BluetoothLEService.ACTION_GATT_SERVICES_DISCOVERED:
                     Log.i(TAG, "received GATT Services Discovered");
                     // Show all the supported services and characteristics on the user interface.
-                    displayGattServices(mBluetoothLEService.getSupportedGattServices());
+                    //displayGattServices(mBluetoothLEService.getSupportedGattServices());
                     if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
                             (mDeviceName.equals("CC2650 SensorTag")))) {
                         for (Sensor s : Sensor.SENSOR_LIST)
@@ -168,6 +172,9 @@ public class LiveDataActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
         mLiveDataList = (ListView) findViewById(R.id.gatt_services_list);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
+        mDataField0 = (TextView) findViewById(R.id.data_value_0);
+        mDataField1 = (TextView) findViewById(R.id.data_value_1);
+        mDataField2 = (TextView) findViewById(R.id.data_value_2);
 
         ActionBar ab = getActionBar();
         if (ab != null) {

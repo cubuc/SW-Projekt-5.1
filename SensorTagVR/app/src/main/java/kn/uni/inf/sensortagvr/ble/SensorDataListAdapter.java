@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import kn.uni.inf.sensortagvr.R;
 
 import static kn.uni.inf.sensortagvr.R.layout.listitem_data;
@@ -22,13 +20,11 @@ class SensorDataListAdapter extends BaseAdapter {
     private final String TAG = "SensorDataLAdapter";
     Sensor[] mSensors;
     LayoutInflater mInflater;
-    ArrayList<float[]> mData;
 
     SensorDataListAdapter(Context con) {
         super();
         mSensors = Sensor.SENSOR_LIST;
         mInflater = LayoutInflater.from(con);
-        mData = new ArrayList<>();
     }
 
     /**
@@ -103,15 +99,15 @@ class SensorDataListAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         // General ListView optimization code.
         if (view == null) {
-            tview = mInflater.inflate(listitem_data, null);
+            view = mInflater.inflate(listitem_data, null);
             viewHolder = new ViewHolder();
             viewHolder.sensorName = (TextView) view.findViewById(R.id.sensor_name);
             viewHolder.val0 = (TextView) view.findViewById(R.id.data_value_0);
             viewHolder.val1 = (TextView) view.findViewById(R.id.data_value_1);
             viewHolder.val2 = (TextView) view.findViewById(R.id.data_value_2);
-            tview.setTag(viewHolder);
+            view.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) tview.getTag();
+            viewHolder = (ViewHolder) view.getTag();
             if (viewHolder == null) Log.e(TAG, "view.getTag failed");
         }
 

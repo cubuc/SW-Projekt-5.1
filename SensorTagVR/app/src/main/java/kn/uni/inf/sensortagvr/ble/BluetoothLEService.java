@@ -191,7 +191,6 @@ public class BluetoothLEService extends Service {
     private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
         switch (characteristic.getUuid().toString()) {
-            /* IRT */
             case UUID_IRT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
                 intent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));

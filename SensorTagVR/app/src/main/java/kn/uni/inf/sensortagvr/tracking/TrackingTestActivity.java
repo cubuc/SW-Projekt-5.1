@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService.TrackingBinder;
@@ -129,6 +130,24 @@ public class TrackingTestActivity extends AppCompatActivity {
 
                 adapter.clear();
                 adapter.addAll(wifiTracker.getWifiAPs(true));
+                adapter.sort(new Comparator<WifiAP>() {
+                    @Override
+                    public int compare(WifiAP lhs, WifiAP rhs) {
+                        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                        if(lhs.isTracked()) {
+                            if(rhs.isTracked())
+                                return 0;
+                            else
+                                return -1;
+                        }
+                        else {
+                            if(rhs.isTracked())
+                                return 1;
+                            else
+                                return 0;
+                        }
+                    }
+                });
             }
         }
         handler.post(new LocationUpdater(handler, (TextView) findViewById(R.id.location), lv, wifiTracker));

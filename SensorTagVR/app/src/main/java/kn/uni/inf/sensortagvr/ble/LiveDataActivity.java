@@ -1,8 +1,6 @@
 package kn.uni.inf.sensortagvr.ble;
 
 import android.app.ActionBar;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,17 +11,19 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collections;
 
 import kn.uni.inf.sensortagvr.R;
+
+import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
@@ -36,10 +36,12 @@ public class LiveDataActivity extends AppCompatActivity {
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private final static String TAG = LiveDataActivity.class.getSimpleName();
     LocalBroadcastManager mLocalBroadcastManager;
+    ArrayList<float[]> mData = new ArrayList<>();
+    SensorDataListAdapter adapter = new SensorDataListAdapter();
     private TextView mConnectionState;
     private String mDeviceName;
     private String mDeviceAddress;
-    private ListView mLiveDataList;
+    private RecyclerView mLiveDataList;
     private BluetoothLEService mBluetoothLEService;
     /**
      * Handles the connection with the BluetoothLEService
@@ -72,10 +74,6 @@ public class LiveDataActivity extends AppCompatActivity {
             mBluetoothLEService = null;
         }
     };
-    private BluetoothGattCharacteristic mNotifyCharacteristic;
-    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics;
-
-
     private boolean mConnected = false;
     /**
      * Handles various events fired by the Service.
@@ -106,18 +104,9 @@ public class LiveDataActivity extends AppCompatActivity {
                     invalidateOptionsMenu();
                     clearUI();
                     break;
-                case BluetoothLEService.ACTION_GATT_SERVICES_DISCOVERED:
-                    Log.i(TAG, "received GATT Services Discovered");
-                    // Show all the supported services and characteristics on the user interface.
-                    displayGattServices(mBluetoothLEService.getSupportedGattServices());
-                    if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
-                            (mDeviceName.equals("CC2650 SensorTag")))) {
-                        for (Sensor s : Sensor.SENSOR_LIST)
-                            mBluetoothLEService.controlSensor(s, true, true);
-                    }
-                    break;
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
-                    mData.add(intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
+                    adapter.addItem(((Sensor) intent.getExtras().get(EXTRA_SENSOR)),
+                            intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
                     break;
                 default:
                     Log.e(TAG, "invalid broadcast received");
@@ -133,7 +122,6 @@ public class LiveDataActivity extends AppCompatActivity {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothLEService.ACTION_GATT_CONNECTED);
         intentFilter.addAction(BluetoothLEService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BluetoothLEService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLEService.ACTION_DATA_AVAILABLE);
         return intentFilter;
     }
@@ -142,10 +130,7 @@ public class LiveDataActivity extends AppCompatActivity {
      *
      */
     private void clearUI() {
-        mLiveDataList.setAdapter(null);
-        mDataField0.setText(R.string.no_data);
-        mDataField1.setText(R.string.no_data);
-        mDataField2.setText(R.string.no_data);
+        adapter.setDataList(Collections.<DataListItem>emptyList());
     }
 
     /**
@@ -166,8 +151,11 @@ public class LiveDataActivity extends AppCompatActivity {
 
         // Sets up UI references.
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
-        mLiveDataList = (ListView) findViewById(R.id.gatt_services_list);
+        mLiveDataList = (RecyclerView) findViewById(R.id.data_list);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
+        mLiveDataList.setAdapter(adapter);
+        mLiveDataList.setLayoutManager(new LinearLayoutManager(this));
+
 
         ActionBar ab = getActionBar();
         if (ab != null) {
@@ -254,59 +242,6 @@ public class LiveDataActivity extends AppCompatActivity {
         mConnectionState.setText(resourceId);
     }
 
-
-    // Demonstrates how to iterate through the supported GATT Services/Characteristics.
-    // In this sample, we populate the data structure that is bound to the ExpandableListView
-    // on the UI.
-
-    /**
-     * @param gattServices
-     */
-    private void displayGattServices(List<BluetoothGattService> gattServices) {
-        if (gattServices == null) return;
-        String uuid;
-        String unknownServiceString = getResources().getString(R.string.unknown_service);
-        String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
-        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<>();
-        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
-                = new ArrayList<>();
-        mGattCharacteristics = new ArrayList<>();
-
-        // Loops through available GATT Services.
-        String LIST_NAME = "NAME";
-        String LIST_UUID = "UUID";
-        for (BluetoothGattService gattService : gattServices) {
-            HashMap<String, String> currentServiceData = new HashMap<>();
-            uuid = gattService.getUuid().toString();
-            currentServiceData.put(
-                    LIST_NAME, TIUUIDs.lookup(uuid, unknownServiceString));
-            currentServiceData.put(LIST_UUID, uuid);
-            gattServiceData.add(currentServiceData);
-
-            ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
-                    new ArrayList<>();
-            List<BluetoothGattCharacteristic> gattCharacteristics =
-                    gattService.getCharacteristics();
-            ArrayList<BluetoothGattCharacteristic> charas =
-                    new ArrayList<>();
-
-            // Loops through available Characteristics.
-            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                charas.add(gattCharacteristic);
-                HashMap<String, String> currentCharaData = new HashMap<>();
-                uuid = gattCharacteristic.getUuid().toString();
-                currentCharaData.put(
-                        LIST_NAME, TIUUIDs.lookup(uuid, unknownCharaString));
-                currentCharaData.put(LIST_UUID, uuid);
-                gattCharacteristicGroupData.add(currentCharaData);
-            }
-            mGattCharacteristics.add(charas);
-            gattCharacteristicData.add(gattCharacteristicGroupData);
-        }
-
-        SensorDataListAdapter gattServiceAdapter = new SensorDataListAdapter(this.getApplicationContext());
-        mLiveDataList.setAdapter(gattServiceAdapter);
-    }
 }
 
 

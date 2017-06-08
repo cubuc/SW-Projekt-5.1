@@ -10,7 +10,6 @@ import java.util.Calendar;
 
 class CompactData {
 
-    private final String time;
     /**
      * x: north/south
      * y: east/west
@@ -19,6 +18,7 @@ class CompactData {
      *
      * time: time data was recorded
      */
+    private final String time;
     private double x;
     private double y;
     private double z;

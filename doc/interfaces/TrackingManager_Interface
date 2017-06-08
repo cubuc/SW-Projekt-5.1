@@ -1,21 +1,17 @@
 Interface TrackingManager {
-   //get the current location of the device
-   public Location p getCurrentPosition() {
-      ensures iff lockCustomPos
-         p == customPos;
-      else
-         p == currentPosition;
+   //get the current location of the device reltaive to the origin
+   public PointF getRelativePosition() {
+     
    }
 
-   //set a custom location to overwrite real device location
-   //(for testing purposes)
-   public void setCustomPosition(Location newCustomPos) {
-      ensures customPos == newCustomPos;
-      ensures lockCustomPos == true;
+   //get absolute position of device
+   public  Location getAbsolutePosition() {
+   	requires origin != null;
    }
 
-   //clear location overwrite
-   public void clearCustomPosition() {
-      ensures lockCustomPos == false;
+   //set origin of relative coordinate system
+   public Location calibrateOrigin() {
+   	requires currentGPSPosition can be estimated;
+      ensures origin = currentGPSPosition;
    }
 }

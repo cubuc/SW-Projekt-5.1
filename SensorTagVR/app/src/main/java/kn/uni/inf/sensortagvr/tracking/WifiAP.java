@@ -1,5 +1,6 @@
 package kn.uni.inf.sensortagvr.tracking;
 
+import android.graphics.PointF;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.os.Parcel;
@@ -17,21 +18,21 @@ public class WifiAP implements Parcelable {
     private String SSID;
     private final String BSSID;
     private double distance;
-    private Location location;
+    private PointF location;
 
     private final double A;
     private final double n;
 
     private boolean tracked = false;
 
-    public WifiAP(String BSSID, Location location) {
+    public WifiAP(String BSSID, PointF location) {
         this.BSSID = BSSID;
         this.location = location;
         this.A = -50.0;
         this.n = 3.5;
     }
 
-    public WifiAP(String SSID, String BSSID, Location location, double A, double n, boolean tracked) {
+    public WifiAP(String SSID, String BSSID, PointF location, double A, double n, boolean tracked) {
         this.SSID = SSID;
         this.BSSID = BSSID;
         this.location = location;
@@ -42,7 +43,7 @@ public class WifiAP implements Parcelable {
 
     public WifiAP(ScanResult scan) {
         this.BSSID = scan.BSSID;
-        this.location = new Location("TRACKING_MANAGER");
+        this.location = new PointF();
         this.A = -50.0;
         this.n = 3.5;
 
@@ -71,7 +72,7 @@ public class WifiAP implements Parcelable {
         return distance;
     }
 
-    public Location getLocation() {
+    public PointF getLocation() {
         return location;
     }
 
@@ -133,8 +134,8 @@ public class WifiAP implements Parcelable {
         writer.beginObject();
         writer.name("SSID").value(SSID);
         writer.name("BSSID").value(BSSID);
-        writer.name("longitude").value(location.getLongitude());
-        writer.name("latitude").value(location.getLatitude());
+        writer.name("posX").value((double)location.x);
+        writer.name("posY").value((double)location.y);
         writer.name("A").value(A);
         writer.name("n").value(n);
         writer.name("tracked").value(tracked);
@@ -142,8 +143,8 @@ public class WifiAP implements Parcelable {
     }
 
     public WifiAP(JsonReader reader) throws IOException {
-        double latitude = 0;
-        double longitude = 0;
+        float posX = 0;
+        float posY = 0;
         String bssid = "";
         double varA = -50.0;
         double varN = 3.5;
@@ -156,11 +157,11 @@ public class WifiAP implements Parcelable {
                 SSID = reader.nextString();
             } else if (name.equals("BSSID")) {
                 bssid = reader.nextString();
-            } else if (name.equals("latitude")) {
-                latitude = reader.nextDouble();
+            } else if (name.equals("posX")) {
+                posX = (float)reader.nextDouble();
             }
-            else if (name.equals("longitude")) {
-                longitude = reader.nextDouble();
+            else if (name.equals("posY")) {
+                posY = (float)reader.nextDouble();
             }
             else if (name.equals("A")) {
                 varA = reader.nextDouble();
@@ -177,9 +178,7 @@ public class WifiAP implements Parcelable {
 
         reader.endObject();
 
-        location = new Location("TRACKING_MANAGER");
-        location.setLongitude(longitude);
-        location.setLatitude(latitude);
+        location = new PointF(posX, posY);
 
         BSSID = bssid;
         A = varA;

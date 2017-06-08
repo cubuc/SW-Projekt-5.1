@@ -30,7 +30,7 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_SERV;
 
 
-enum Sensor {
+public enum Sensor {
 
     IR_TEMPERATURE("IR_Temperature", UUID.fromString(UUID_IRT_SERV), UUID.fromString(UUID_IRT_DATA), UUID.fromString(UUID_IRT_CONF)) {
         /**
@@ -238,7 +238,7 @@ enum Sensor {
     };
 
     public static final byte ENABLE_SENSOR_CODE = 1;
-    public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, ACCELEROMETER, MAGNETOMETER, LUXMETER, GYROSCOPE, HUMIDITY, BAROMETER};
+    public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
     public final String name;
     public final UUID service, data, config;
     private byte enableCode; // See getEnableSensorCode for explanation.

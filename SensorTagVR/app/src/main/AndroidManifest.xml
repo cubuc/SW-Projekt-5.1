@@ -39,7 +39,9 @@
         <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />
         <activity android:name=".ble.LiveDataActivity" />
-        <activity android:name=".tracking.APSettingsActivity"></activity>
+        <activity android:name=".tracking.APSettingsActivity"/>
+        <activity android:name=".VRActivity"/>
+
 
         <service
             android:name=".ble.BluetoothLEService"

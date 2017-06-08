@@ -1,7 +1,7 @@
 package kn.uni.inf.sensortagvr.tracking;
 
 import android.content.Intent;
-import android.location.Location;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -25,8 +25,8 @@ public class APSettingsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.ssid)).setText(wifiAP.getSSID());
         ((TextView) findViewById(R.id.bssid)).setText(wifiAP.getBSSID());
 
-        ((EditText) findViewById(R.id.lon)).setText(Double.toString(wifiAP.getLocation().getLongitude()));
-        ((EditText) findViewById(R.id.lat)).setText(Double.toString(wifiAP.getLocation().getLatitude()));
+        ((EditText) findViewById(R.id.posX)).setText(Double.toString(wifiAP.getLocation().x));
+        ((EditText) findViewById(R.id.posY)).setText(Double.toString(wifiAP.getLocation().y));
 
         ((EditText) findViewById(R.id.varA)).setText(Double.toString(wifiAP.getA()));
         ((EditText) findViewById(R.id.varN)).setText(Double.toString(wifiAP.getN()));
@@ -49,9 +49,8 @@ public class APSettingsActivity extends AppCompatActivity {
     }
 
     private void end(boolean track) {
-        Location loc = new Location("TRACKING_MANAGER");
-        loc.setLongitude(Double.parseDouble( ((EditText) findViewById(R.id.lon)).getText().toString() ));
-        loc.setLatitude(Double.parseDouble( ((EditText) findViewById(R.id.lat)).getText().toString() ));
+        PointF loc = new PointF(Float.parseFloat( ((EditText) findViewById(R.id.posX)).getText().toString() ),
+                Float.parseFloat( ((EditText) findViewById(R.id.posY)).getText().toString() ));
 
         WifiAP newAP = new WifiAP(wifiAP.getSSID(),
                 wifiAP.getBSSID(),

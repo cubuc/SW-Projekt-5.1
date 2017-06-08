@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,9 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService.TrackingBinder;
@@ -36,10 +34,8 @@ public class TrackingTestActivity extends AppCompatActivity {
     public final int FINE_LOCATION_PERMISSION_REQUEST = 0;
     public final int AP_SETTINGS_REQUEST = 1;
 
-    private TrackingManagerService mService = null;
+    private TrackingManagerService trackingService = null;
     private boolean mBound = false;
-
-    private WifiTracker wifiTracker;
 
     protected ListView lv;
 
@@ -49,8 +45,6 @@ public class TrackingTestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tracking_test);
 
         lv = (ListView) findViewById(R.id.wifiList);
-
-        wifiTracker = new WifiTracker((WifiManager) getApplication().getApplicationContext().getSystemService(Context.WIFI_SERVICE));
 
         lv.setClickable(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,15 +57,6 @@ public class TrackingTestActivity extends AppCompatActivity {
                 startActivityForResult(intent, AP_SETTINGS_REQUEST);
             }
         });
-
-        FileInputStream inputStream;
-        try {
-            inputStream = openFileInput("AP_CONFIG.json");
-            wifiTracker.readFromFile(inputStream);
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -99,39 +84,6 @@ public class TrackingTestActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, TrackingManagerService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
-        final Handler handler = new Handler();
-        class LocationUpdater implements Runnable {
-            private Handler handler;
-            private TextView textView;
-            private ListView list;
-            private WifiTracker wifiTracker;
-            private WifiAPAdapter adapter;
-
-            public LocationUpdater(Handler handler, TextView textView, ListView list, WifiTracker wifiTracker) {
-                this.handler = handler;
-                this.textView = textView;
-                this.list = list;
-                this.wifiTracker = wifiTracker;
-
-                adapter = new WifiAPAdapter(TrackingTestActivity.this, new ArrayList<WifiAP>());
-                list.setAdapter(adapter);
-            }
-            @Override
-            public void run() {
-                this.handler.postDelayed(this, 500);
-
-                if(mService != null) {
-                    this.textView.setText(mService.getCurrentPosition().toString() + " " + mService.getCurrentPosition().getProvider());
-                } else {
-                    this.textView.setText("---");
-                }
-
-                adapter.clear();
-                adapter.addAll(wifiTracker.getWifiAPs(true));
-            }
-        }
-        handler.post(new LocationUpdater(handler, (TextView) findViewById(R.id.location), lv, wifiTracker));
     }
 
 
@@ -142,15 +94,6 @@ public class TrackingTestActivity extends AppCompatActivity {
 
     protected void onPause() {
         super.onPause();
-
-        FileOutputStream outputStream;
-        try {
-            outputStream = openFileOutput("AP_CONFIG.json", Context.MODE_PRIVATE);
-            wifiTracker.writeToFile(outputStream);
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -174,7 +117,7 @@ public class TrackingTestActivity extends AppCompatActivity {
         if (requestCode == AP_SETTINGS_REQUEST) {
             if (resultCode == RESULT_OK) {
                 WifiAP ap = data.getParcelableExtra("ACCESS_POINT");
-                wifiTracker.trackAP(ap);
+                trackingService.trackAP(ap);
 
                 if(ap.isTracked())
                     Toast.makeText(getApplicationContext(), "Now tracking:\n" + ap.toString(), Toast.LENGTH_SHORT).show();
@@ -189,8 +132,11 @@ public class TrackingTestActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             TrackingBinder binder = (TrackingBinder) service;
-            mService = binder.getService();
+            trackingService = binder.getService();
             mBound = true;
+
+            final Handler handler = new Handler();
+            handler.post(new LocationUpdater(handler, (TextView) findViewById(R.id.location), lv, trackingService));
         }
 
         @Override
@@ -222,6 +168,53 @@ public class TrackingTestActivity extends AppCompatActivity {
             text.setText(ap.toString());
 
             return convertView;
+        }
+    }
+
+    class LocationUpdater implements Runnable {
+        private Handler handler;
+        private TextView textView;
+        private WifiAPAdapter adapter;
+        private TrackingManagerService trackingService;
+
+        public LocationUpdater(Handler handler, TextView textView, ListView list, TrackingManagerService trackingService) {
+            this.handler = handler;
+            this.textView = textView;
+            this.trackingService = trackingService;
+
+            adapter = new WifiAPAdapter(TrackingTestActivity.this, new ArrayList<WifiAP>());
+            list.setAdapter(adapter);
+        }
+        @Override
+        public void run() {
+            this.handler.postDelayed(this, 500);
+
+            if(TrackingTestActivity.this.trackingService != null) {
+                this.textView.setText(TrackingTestActivity.this.trackingService.getRelativePosition().toString());
+            } else {
+                this.textView.setText("---");
+            }
+
+            adapter.clear();
+            adapter.addAll(trackingService.getWifiAPs());
+            adapter.sort(new Comparator<WifiAP>() {
+                @Override
+                public int compare(WifiAP lhs, WifiAP rhs) {
+                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                    if(lhs.isTracked()) {
+                        if(rhs.isTracked())
+                            return 0;
+                        else
+                            return -1;
+                    }
+                    else {
+                        if(rhs.isTracked())
+                            return 1;
+                        else
+                            return 0;
+                    }
+                }
+            });
         }
     }
 }

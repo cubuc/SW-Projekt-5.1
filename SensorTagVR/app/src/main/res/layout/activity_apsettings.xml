@@ -72,19 +72,19 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/lon"
+        android:id="@+id/posX"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Longitude"
+        android:hint="X"
         android:inputType="textPersonName|numberDecimal" />
 
     <EditText
-        android:id="@+id/lat"
+        android:id="@+id/posY"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Latitude"
+        android:hint="Y"
         android:inputType="textPersonName|numberDecimal" />
 
     <LinearLayout

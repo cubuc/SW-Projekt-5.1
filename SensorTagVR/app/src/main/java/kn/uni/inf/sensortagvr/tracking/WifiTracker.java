@@ -61,6 +61,7 @@ public class WifiTracker {
         }
 
         aps = newAPs;
+        wifiManager.startScan();
     }
 
     public boolean trackAP(WifiAP ap) {
@@ -101,6 +102,8 @@ public class WifiTracker {
 
             positions[i][0] = ap.getLocation().x;
             positions[i][1] = ap.getLocation().y;
+
+            distances[i] = ap.getDistance();
         }
 
         NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(

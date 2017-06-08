@@ -134,8 +134,8 @@ public class WifiAP implements Parcelable {
         writer.beginObject();
         writer.name("SSID").value(SSID);
         writer.name("BSSID").value(BSSID);
-        writer.name("posX").value(location.x);
-        writer.name("posY").value(location.y);
+        writer.name("posX").value((double)location.x);
+        writer.name("posY").value((double)location.y);
         writer.name("A").value(A);
         writer.name("n").value(n);
         writer.name("tracked").value(tracked);
@@ -157,10 +157,10 @@ public class WifiAP implements Parcelable {
                 SSID = reader.nextString();
             } else if (name.equals("BSSID")) {
                 bssid = reader.nextString();
-            } else if (name.equals("latitude")) {
+            } else if (name.equals("posX")) {
                 posX = (float)reader.nextDouble();
             }
-            else if (name.equals("longitude")) {
+            else if (name.equals("posY")) {
                 posY = (float)reader.nextDouble();
             }
             else if (name.equals("A")) {

@@ -30,7 +30,7 @@ public class VRActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
-                String url = "http://localhost:12345";
+                String url = "http://localhost:12345/index.html";
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.setPackage("com.android.chrome");

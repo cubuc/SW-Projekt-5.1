@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static android.content.ContentValues.TAG;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_GYR_DATA;
@@ -41,8 +40,6 @@ public class BluetoothLEService extends Service {
             "kn.uni.inf.sensortagvr.ble.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
             "kn.uni.inf.sensortagvr.ble:ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            "kn.uni.inf.sensortagvr.ble:ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
             "kn.uni.inf.sensortagvr.ble.ACTION_DATA_AVAILABLE";
     /* Data Contained in Intent.putExtra() when ACTION_DATA_AVAILABLE */
@@ -50,15 +47,15 @@ public class BluetoothLEService extends Service {
             "kn.uni.inf.sensortagvr.ble.EXTRA_SENSOR";
     public final static String EXTRA_DATA =
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
-
-
+    private final String TAG = "BluetoothLEService";
     private final IBinder mBinder = new LocalBinder();
     public boolean bound = false;
     public boolean isWriting = false;
+    ArrayList<Sensor> enabledSensors = new ArrayList<>();
+    ArrayList<Sensor> notifyingSensors = new ArrayList<>();
     LocalBroadcastManager mLocalBroadcastManager;
     private BluetoothGatt mGatt;
     private BluetoothAdapter mBtAdapter;
-    private String mBtDeviceAddress;
     private ConcurrentLinkedQueue<Object> mRWQueue = new ConcurrentLinkedQueue<>();
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         /**
@@ -97,10 +94,13 @@ public class BluetoothLEService extends Service {
          */
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            ArrayList<BluetoothGattService> services = (ArrayList<BluetoothGattService>)
-                    gatt.getServices();
-            Log.i("onServicesDiscovered", services.toString());
-            mLocalBroadcastManager.sendBroadcast(new Intent(ACTION_GATT_SERVICES_DISCOVERED));
+            Log.i("onServicesDiscovered", "");
+            String mDeviceName = mGatt.getDevice().getName();
+            if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
+                    (mDeviceName.equals("CC2650 SensorTag")))) {
+                for (Sensor s : Sensor.SENSOR_LIST)
+                    controlSensor(s, true, true);
+            }
         }
 
         /**
@@ -190,8 +190,8 @@ public class BluetoothLEService extends Service {
      */
     private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+        intent.setClassName("kn.uni.inf.sensortagvr.stor", "StorageMainService");
         switch (characteristic.getUuid().toString()) {
-            /* IRT */
             case UUID_IRT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
                 intent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));
@@ -219,6 +219,7 @@ public class BluetoothLEService extends Service {
             case UUID_OPT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
+                startService(intent);
                 break;
             default:
                 Log.i(TAG, "no valid data characteristic");
@@ -290,6 +291,8 @@ public class BluetoothLEService extends Service {
      */
     @Override
     public void onDestroy() {
+        for (Sensor s : Sensor.SENSOR_LIST)
+            controlSensor(s, false, false);
         if (mGatt == null) {
             return;
         }
@@ -313,12 +316,6 @@ public class BluetoothLEService extends Service {
             return false;
         }
 
-        // Previously connected device.  Try to reconnect.
-        if (mBtDeviceAddress != null && address.equals(mBtDeviceAddress)
-                && mGatt != null) {
-            Log.d(TAG, "Trying to use an existing mGatt for connection.");
-            return mGatt.connect();
-        }
 
         final BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
         if (device == null) {
@@ -329,7 +326,6 @@ public class BluetoothLEService extends Service {
         // parameter to false.
         mGatt = device.connectGatt(this, false, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
-        mBtDeviceAddress = address;
         return true;
     }
 
@@ -345,6 +341,7 @@ public class BluetoothLEService extends Service {
             return;
         }
         mGatt.disconnect();
+        mGatt.close();
     }
 
     /**
@@ -407,17 +404,33 @@ public class BluetoothLEService extends Service {
                         sensorConf.setValue(val);
                         write(sensorConf);
 
+
                         byte[] notify = notification ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                                 : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
 
                         config.setValue(notify);
                         write(config);
+
+                        updateLists(s, power, notification);
                     }
                 }
             }
         }
     }
 
+    private void updateLists(Sensor s, boolean power, boolean notification) {
+        if (power) {
+            enabledSensors.add(s);
+        } else {
+            enabledSensors.remove(s);
+            notifyingSensors.remove(s);
+        }
+        if (notification) {
+            notifyingSensors.add(s);
+        } else {
+            notifyingSensors.remove(s);
+        }
+    }
 
     /**
      * return the saved list of services that the GATT Server hosts
@@ -473,6 +486,13 @@ public class BluetoothLEService extends Service {
         }
     }
 
+    public ArrayList<Sensor> getEnabledSensors() {
+        return enabledSensors;
+    }
+
+    public ArrayList<Sensor> getNotifyingSensors() {
+        return notifyingSensors;
+    }
 
     class LocalBinder extends Binder {
         /**
@@ -482,7 +502,6 @@ public class BluetoothLEService extends Service {
             return BluetoothLEService.this;
         }
     }
-
 }
 
 

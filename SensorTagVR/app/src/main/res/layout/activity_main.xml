@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
 <<<<<<< HEAD
+<<<<<<< HEAD
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -53,6 +54,8 @@
 
 
 =======
+=======
+>>>>>>> 1052eafcd384442ca546cc9a00770a1127f07dae
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
@@ -127,6 +130,9 @@ tools:context="MainActivity">
     android:id="@+id/guideline"
     app:layout_constraintGuide_begin="20dp"
     android:orientation="vertical" />
+<<<<<<< HEAD
+>>>>>>> 1052eafcd384442ca546cc9a00770a1127f07dae
+=======
 >>>>>>> 1052eafcd384442ca546cc9a00770a1127f07dae
 
 </android.support.constraint.ConstraintLayout>

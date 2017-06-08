@@ -1,0 +1,67 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="sensoritem"
+            type="kn.uni.inf.sensortagvr.ble.DataListItem" />
+    </data>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/sensorname_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/AppTheme"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/sensorname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@{sensoritem.sensorName.name}"
+        android:textSize="18sp"
+        android:theme="@style/AppTheme"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/sensordata_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/AppTheme"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/sensordata_0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@{String.valueOf(sensoritem.data0)}"
+        android:textAppearance="@style/AppTheme"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/sensordata_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@{String.valueOf(sensoritem.data1)}"
+        android:textAppearance="@style/AppTheme"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/sensordata_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@{String.valueOf(sensoritem.data2)}"
+        android:textAppearance="@style/AppTheme"
+        android:textSize="18sp"
+        android:visibility="visible" />
+</LinearLayout>
+</layout>

@@ -51,51 +51,8 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/data_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_data"
-            android:textSize="18sp" />
-
-        <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/data_value_0"
-            android:layout_width="79dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp" />
-
-        <Space
-            android:layout_width="3dp"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/data_value_1"
-            android:layout_width="118dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp" />
-
-        <Space
-            android:layout_width="3dp"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/data_value_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <ExpandableListView
-        android:id="@+id/gatt_services_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 </LinearLayout>

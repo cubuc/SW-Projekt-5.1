@@ -4,9 +4,8 @@ import android.app.IntentService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.location.Location;
+import android.graphics.PointF;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
@@ -22,6 +21,9 @@ import java.util.ArrayList;
 
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
+import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.ACTION_DATA_AVAILABLE;
+import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
+
 
 /**
  * Main Service that should get started with the App. It registers a broadcastReceiver for Sensor
@@ -32,31 +34,13 @@ import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
 public class StorageMainService extends IntentService {
 
-    /* From the bleSensor actions */
-
-    public final static String ACTION_DATA_AVAILABLE =
-            "kn.uni.inf.sensortagvr.ble.ACTION_DATA_AVAILABLE";
-
-    // TODO make data scaling depend on the Sensor (not mandatory)
-    //public final static String EXTRA_SENSOR = "kn.uni.inf.sensortagvr.ble.EXTRA_SENSOR";
-
-    public final static String EXTRA_DATA =
-            "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
-
-    // Sets teh Scale factor for the measured Data
+    // Sets the Scale factor for the measured Data
     private static final int SCALE_DATA = 2;
     private static final double SCALE_DATA_OFFSET = 1.0;
     // Sets the Scale factor for the location grid in dataMeasured
     private static final int SCALE_LOCATION = 10;
-
-    // Create a custom broadcast receiver for the bluetooth broadcast
-    public final StorageBroadcastReceiver bleReceiver = new StorageBroadcastReceiver(StorageMainService.this);
-
-    // Creates a Binder, look at the onBind() method for more information
-    private final IBinder binder = new StorageBinder();
-
-
-    // Copied from the android dev guide for bound services
+    IBinder binder = new StorageBinder();
+    // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
     private boolean trackingServiceBound = false;
     /**
@@ -86,21 +70,15 @@ public class StorageMainService extends IntentService {
         }
     };
     // Outdated
-    private Location nullPoint = null;
+    private PointF nullPoint = null;
     // Saves all measured data in a session
     private ArrayList<CompactData> dataMeasured;
     private boolean sessionStarted = false;
     // Path a data.json file is saved to
     private String path;
-    /**
-     * stores data received from the bleReceiver
-     */
     private Intent lastReceivedData;
 
 
-    /**
-     *
-     */
     public StorageMainService() {
         super("StorageMainService");
     }
@@ -112,14 +90,7 @@ public class StorageMainService extends IntentService {
      */
     @Override
     public void onCreate() {
-
-        //Create and fill a Intent Filter to only receive data from the ble-broadcast
-        // TODO filter in xml file
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_DATA_AVAILABLE);
-
-        // Register the bleReceiver
-        this.registerReceiver(bleReceiver, intentFilter);
+        super.onCreate();
 
         // Binding TrackingManagerService
         Intent bindTrackService = new Intent(this, TrackingManagerService.class);
@@ -127,23 +98,9 @@ public class StorageMainService extends IntentService {
 
         // File can be accessed by the phone itself
         // Path = /storage/emulated/=/Android/data/kn.uni.inf.sensortagvr/files
-        if (isExternalStorageWritable()) {
+        if (isExternalStorageWritable())
             path = getExternalFilesDir(null).getAbsolutePath();
-            Toast.makeText(getApplicationContext(), "" + path, Toast.LENGTH_LONG).show();
-        }
-        // Testing
-        startMeasureSession();
-        createDummyData();
-        scaleAll(dataMeasured);
-
     }
-
-    /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
 
     /**
      * @param intent intent that shall be handled
@@ -154,37 +111,38 @@ public class StorageMainService extends IntentService {
         // When started by StorageBroadcastReceiver
         if (ACTION_DATA_AVAILABLE.equals(intent.getAction()))
             this.lastReceivedData = intent;
-
-        // Testing
-        //Toast.makeText(getApplicationContext(), "Intend handled by StorageMainService", Toast.LENGTH_SHORT).show();
     }
 
     /**
+     * The service is bound by the RecordDataActivity for creating a measurement session.
      *
+     * @param intent intent
+     * @return binder
      */
-    public void measureData() {
-        // get data from 'lastReceived'
-        float[] receivedData = {0};
-        if (lastReceivedData != null)
-            receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
+    @Override
+    public IBinder onBind(Intent intent) {
+        //trackingService.calibrate;
+        dataMeasured = new ArrayList<>();
+        sessionStarted = true;
+        return binder;
+    }
 
-        // Mock-up and suggestion for future Location gathering
-        //double[2] xyLoc = trackingService.getLocation();
-
-        // get Data from tracking module
-        Location loc = trackingService.getCurrentPosition();
-
-        double x = 0, y = 0;
-        if (nullPoint != null) {
-            x = loc.getLatitude() - nullPoint.getLatitude();
-            y = loc.getLongitude() - nullPoint.getLongitude();
-        }
-
-        // receivedData should be scaled between -.5 and 1
-        // TODO scale receivedData
-        dataMeasured.add(new CompactData(x, y, receivedData[0]));
-
-        Toast.makeText(getApplicationContext(), "Data received", Toast.LENGTH_SHORT).show();
+    /**
+     * Called when the RecordActivity unbound the interface. Scales all measured data and closes
+     * the session
+     *
+     * @param intent The Intent that was used to bind to this service,
+     *               as given to {@link Context#bindService
+     *               Context.bindService}.  Note that any extras that were included with
+     *               the Intent at that point will <em>not</em> be seen here.
+     * @return Return true if you would like to have the service's
+     * {@link #onRebind} method later called when new clients bind to it.
+     */
+    @Override
+    public boolean onUnbind(Intent intent) {
+        scaleAll(dataMeasured);
+        closeMeasureSession();
+        return super.onUnbind(intent);
     }
 
     /**
@@ -192,33 +150,42 @@ public class StorageMainService extends IntentService {
      */
     @Override
     public void onDestroy() {
-        this.unregisterReceiver(bleReceiver);
 
         if (trackingServiceBound) {
             unbindService(mConnection);
             trackingServiceBound = false;
         }
-
-        finishMeasureSession();
-        // Testing
-        Toast.makeText(getApplicationContext(), "StorageMainService destroyed", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
     }
 
     /**
-     * Starts a new Measure Session. Be sure to close the session by calling {@see startMeasureSession}.
+     * Collects all data received by the ble-service and the loc-service, and saves them into the
+     * ArrayList measured
      */
-    public void startMeasureSession() {
-        //trackingService.calibrate;
-        dataMeasured = new ArrayList<>();
+    public void measureData() {
+        if (sessionStarted) {
+            // get data from 'lastReceived'
+            float[] receivedData = {0};
+            if (lastReceivedData != null)
+                receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
 
-        // Signals a recording session started
-        sessionStarted = true;
+            // get Data from tracking module
+            PointF loc = trackingService.getRelativePosition();
+
+            int x = 0, y = 0;
+            // receivedData should be scaled between -.5 and 1
+            // TODO scale receivedData
+            dataMeasured.add(new CompactData(x, y, receivedData[0]));
+
+            Toast.makeText(getApplicationContext(), "Data received", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
     }
 
     /**
      *
      */
-    public void finishMeasureSession() {
+    public void closeMeasureSession() {
         if (sessionStarted) {
             try {
                 writeInJsonFile(dataMeasured);
@@ -231,6 +198,13 @@ public class StorageMainService extends IntentService {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /**
@@ -256,7 +230,6 @@ public class StorageMainService extends IntentService {
 
         File data = new File(dir, "data.json");
 
-        Toast.makeText(getApplicationContext(), "" + data.getAbsolutePath(), Toast.LENGTH_LONG).show();
         // Check whether a file could be created.
         if (!data.isFile() && !data.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
@@ -268,6 +241,7 @@ public class StorageMainService extends IntentService {
 
     }
 
+
     /**
      * This method changes the values of the Location for a easier triangulation by webVR
      * Current Implementation: scales all variables to mach SCALE (the biggest value in list = SCALE
@@ -278,14 +252,27 @@ public class StorageMainService extends IntentService {
     private void scaleAll(ArrayList<CompactData> list) {
         double factor_loc = calculateLocationFactor(list);
         double factor_data = calculateDataFactor(list);
+        double min_data = calculateMinData(list);
 
         // Scale the list values with the determined factors
         for (CompactData item : list) {
             item.setX(item.getX() / factor_loc);
             item.setY(item.getY() / factor_loc);
-            item.setZ(item.getData() / factor_data - SCALE_DATA_OFFSET);
+            // Data gets scaled to match a scale of 0 to 2, where the smallest data is 0 and the
+            // biggest data is 2
+            item.setZ((item.getData() - min_data) / factor_data - SCALE_DATA_OFFSET);
         }
 
+    }
+
+    private double calculateMinData(ArrayList<CompactData> list) {
+        double min = Double.MAX_VALUE;
+
+        for (CompactData item : list) {
+            min = Math.min(min, item.getData());
+        }
+
+        return min;
     }
 
     private double calculateDataFactor(ArrayList<CompactData> list) {
@@ -310,51 +297,12 @@ public class StorageMainService extends IntentService {
 
         // determine the biggest location parameter
         for (CompactData item : list) {
-            max = Math.max(max, Math.max(item.getX(), item.getY()));
+            max = Math.max(max, Math.max(Math.abs(item.getX()), Math.abs(item.getY())));
         }
 
         return max / SCALE_LOCATION;
     }
 
-    /**
-     * This sets the surface zero to the current Location
-     * (Should be called at the start of the measurement)
-     * <p>
-     * Will probably be removed soon
-     */
-    public void calibrate() {
-
-        //trackingService.calibrate();
-
-        nullPoint = trackingService.getCurrentPosition();
-    }
-
-    /**
-     * the service is intended to be bound at the main activity or the recordActivity
-     *
-     * @param intent intent
-     * @return binder
-     */
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-
-    // Copied from the android dev guide for bound services
-
-    public void createDummyData() {
-        dataMeasured.add(new CompactData(1.1, 1.2, 23));
-        dataMeasured.add(new CompactData(1.4, 1.5, 56));
-        dataMeasured.add(new CompactData(1.7, 1.8, 12));
-        dataMeasured.add(new CompactData(2.1, 2.2, 45));
-        dataMeasured.add(new CompactData(3.1, 4.2, 42));
-        dataMeasured.add(new CompactData(1.1, 1.2, 10));
-    }
-
-    /**
-     * For more detailed info look at  https://developer.android.com/guide/components/bound-services.html
-     */
     public class StorageBinder extends Binder {
         /**
          * @return current Instance of StorageMainService

@@ -35,11 +35,14 @@ function init(){
   // load the whole scene
   createRoom(scene);
   //load the data from file
-  var loading = $.getJSON("data/test.json");
+  var loading = $.getJSON("files/data.json");
+  //wait for the loading to be done to continue using the file
   loading.done(function(loaded){
+    // load and diplay the data we got from the sensor
     var dataVis = loadData(loaded);
     scene.add(dataVis[0]);
     scene.add(dataVis[1]);
+    // add controls to the scene
     moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
 
     // Request animation frame loop function
@@ -65,7 +68,7 @@ function animate(timestamp) {
   // Update VR headset position and apply to camera.
   controls.update();
 
-  moveCon.update(vrDisplay);
+  moveCon.update();
 
 
   // Render the scene.
@@ -90,24 +93,6 @@ window.addEventListener('resize', onResize);
 window.addEventListener('vrdisplaypresentchange', onVRDisplayPresentChange);
 
 // Button click handlers.
-document.querySelector('button#fullscreen').addEventListener('click', function() {
-  enterFullscreen(renderer.domElement);
-});
 document.querySelector('button#vr').addEventListener('click', function() {
   vrDisplay.requestPresent([{ source: renderer.domElement }]);
 });
-document.querySelector('button#reset').addEventListener('click', function() {
-  vrDisplay.resetPose();
-});
-
-function enterFullscreen (el) {
-  if (el.requestFullscreen) {
-    el.requestFullscreen();
-  } else if (el.mozRequestFullScreen) {
-    el.mozRequestFullScreen();
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen();
-  }
-}

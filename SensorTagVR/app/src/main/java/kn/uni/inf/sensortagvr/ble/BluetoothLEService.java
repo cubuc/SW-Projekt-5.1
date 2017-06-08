@@ -40,8 +40,6 @@ public class BluetoothLEService extends Service {
             "kn.uni.inf.sensortagvr.ble.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
             "kn.uni.inf.sensortagvr.ble:ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            "kn.uni.inf.sensortagvr.ble:ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
             "kn.uni.inf.sensortagvr.ble.ACTION_DATA_AVAILABLE";
     /* Data Contained in Intent.putExtra() when ACTION_DATA_AVAILABLE */
@@ -58,7 +56,6 @@ public class BluetoothLEService extends Service {
     LocalBroadcastManager mLocalBroadcastManager;
     private BluetoothGatt mGatt;
     private BluetoothAdapter mBtAdapter;
-    private String mBtDeviceAddress;
     private ConcurrentLinkedQueue<Object> mRWQueue = new ConcurrentLinkedQueue<>();
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         /**
@@ -97,10 +94,13 @@ public class BluetoothLEService extends Service {
          */
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            ArrayList<BluetoothGattService> services = (ArrayList<BluetoothGattService>)
-                    gatt.getServices();
-            Log.i("onServicesDiscovered", services.toString());
-            mLocalBroadcastManager.sendBroadcast(new Intent(ACTION_GATT_SERVICES_DISCOVERED));
+            Log.i("onServicesDiscovered", "");
+            String mDeviceName = mGatt.getDevice().getName();
+            if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
+                    (mDeviceName.equals("CC2650 SensorTag")))) {
+                for (Sensor s : Sensor.SENSOR_LIST)
+                    controlSensor(s, true, true);
+            }
         }
 
         /**
@@ -190,6 +190,7 @@ public class BluetoothLEService extends Service {
      */
     private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+        intent.setClassName("kn.uni.inf.sensortagvr.stor", "StorageMainService");
         switch (characteristic.getUuid().toString()) {
             case UUID_IRT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
@@ -218,6 +219,7 @@ public class BluetoothLEService extends Service {
             case UUID_OPT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
+                startService(intent);
                 break;
             default:
                 Log.i(TAG, "no valid data characteristic");
@@ -324,7 +326,6 @@ public class BluetoothLEService extends Service {
         // parameter to false.
         mGatt = device.connectGatt(this, false, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
-        mBtDeviceAddress = address;
         return true;
     }
 

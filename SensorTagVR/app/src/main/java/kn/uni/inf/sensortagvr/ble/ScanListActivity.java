@@ -19,8 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,9 +34,9 @@ public class ScanListActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
     static RecyclerView mDeviceList;
     private final int REQUEST_ENABLE_BT = 1;
+    BluetoothLeScanner mLEScanner;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
-    private BluetoothLeScanner mLEScanner;
     private boolean mScanning;
     private ScanSettings settings;
     private List<ScanFilter> filters;
@@ -94,7 +92,9 @@ public class ScanListActivity extends AppCompatActivity {
             ab.setTitle(R.string.title_devices);
 
         // Sets up UI references.
-        mDeviceList = (RecyclerView) findViewById(R.id.data_list);
+        mLeDeviceListAdapter = new LeDeviceListAdapter();
+        setContentView(R.layout.activity_scanlist);
+        mDeviceList = (RecyclerView) findViewById(R.id.scanlist);
         mDeviceList.setAdapter(mLeDeviceListAdapter);
         mDeviceList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -134,8 +134,8 @@ public class ScanListActivity extends AppCompatActivity {
                         .build();
 
                 fi = new ScanFilter.Builder()
-                        .setDeviceName("SensorTag2")
 
+                        .setDeviceName("CC2650 SensorTag")
                         .build();
 
                 filters = new ArrayList<>();
@@ -145,44 +145,6 @@ public class ScanListActivity extends AppCompatActivity {
                 scanLeDevice(true);
         }
 
-    }
-
-    /**
-     * @param menu The options menu in which you place your items.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        if (!mScanning) {
-            menu.findItem(R.id.menu_stop).setVisible(false);
-            menu.findItem(R.id.menu_scan).setVisible(true);
-            menu.findItem(R.id.menu_refresh).setActionView(null);
-        } else {
-            menu.findItem(R.id.menu_stop).setVisible(true);
-            menu.findItem(R.id.menu_scan).setVisible(false);
-            menu.findItem(R.id.menu_refresh).setActionView(
-                    R.layout.actionbar_indeterminate_progress);
-        }
-        return true;
-    }
-
-    /**
-     * @param item The item that the user tapped on.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_scan:
-                mLeDeviceListAdapter.clear();
-                scanLeDevice(true);
-                break;
-            case R.id.menu_stop:
-                scanLeDevice(false);
-                break;
-            default:
-                Log.i("ScanLActivity", "onOptionsItemSel.switch(getItemid):default");
-        }
-        return true;
     }
 
     /**

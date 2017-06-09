@@ -1,6 +1,5 @@
 package kn.uni.inf.sensortagvr;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -82,6 +81,16 @@ public class RecordActivity extends AppCompatActivity {
                     storageService.measureData();
                 else
                     Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        final Button writeButton = (Button) findViewById(R.id.write);
+        writeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                storageService.closeMeasureSession();
+                Toast.makeText(getApplicationContext(), "Write", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -1,6 +1,7 @@
 package kn.uni.inf.sensortagvr.ble;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,31 +20,26 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
  *
  */
 class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
-    private ArrayList<ScanListItem> deviceList;
+    private ArrayList<ScanListItem> deviceList = new ArrayList<>();
 
     /**
-     *
      * @param deviceList
      */
     public void setDeviceList(ArrayList<ScanListItem> deviceList) {
         this.deviceList = deviceList;
+        notifyDataSetChanged();
     }
 
     /**
      * @param device Bluetooth device to add
      */
     void addDevice(BluetoothDevice device) {
-        ScanListItem i = new ScanListItem();
-        i.setDevice(device);
-        deviceList.add(i);
-        notifyItemInserted(deviceList.size() - 1);
+        ScanListItem li = new ScanListItem();
+        li.setDevice(device);
+        this.deviceList.add(li);
+        notifyItemInserted(this.deviceList.size());
     }
 
-
-    /** @param position Position of the item on the list */
-    BluetoothDevice getDevice(int position) {
-        return deviceList.get(position).getDevice();
-    }
 
     /**
      *
@@ -55,19 +51,18 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
     /**
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      * @param viewType The view type of the new View.
-     * an adapter position.
-     * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
-     * an item.
-     * <p>
-     * This new ViewHolder should be constructed with a new View that can represent the items
-     * of the given type. You can either create a new View manually or inflate it from an XML
-     * layout file.
-     * <p>
-     * The new ViewHolder will be used to display items of the adapter using
-     * onBindViewHolder(ViewHolder, int, List). Since it will be re-used to display
-     * different items in the data set, it is a good idea to cache references to sub views of
-     * the View to avoid unnecessary {@link View#findViewById(int)} calls.
-     *
+     *                 an adapter position.
+     *                 Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
+     *                 an item.
+     *                 <p>
+     *                 This new ViewHolder should be constructed with a new View that can represent the items
+     *                 of the given type. You can either create a new View manually or inflate it from an XML
+     *                 layout file.
+     *                 <p>
+     *                 The new ViewHolder will be used to display items of the adapter using
+     *                 onBindViewHolder(ViewHolder, int, List). Since it will be re-used to display
+     *                 different items in the data set, it is a good idea to cache references to sub views of
+     *                 the View to avoid unnecessary {@link View#findViewById(int)} calls.
      * @return A new ViewHolder that holds a View of the given view type.
      */
     @Override
@@ -96,14 +91,16 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
      *
      * @param holder   The ViewHolder which should be updated to represent the contents of the
      * @param position The position of the item within the adapter's data set.
-     * item at the given position in the data set.
+     *                 item at the given position in the data set.
      */
     @Override
     public void onBindViewHolder(LeDeviceListAdapter.ViewHolder holder, int position) {
         holder.bind(deviceList.get(position));
     }
 
-    /** @param i position of the item */
+    /**
+     * @param i position of the item
+     */
     @Override
     public long getItemId(int i) {
         return i;
@@ -147,9 +144,12 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
          */
         @Override
         public void onClick(View v) {
-
+            final BluetoothDevice device = binding.getDeviceItem().getDevice();
+            if (device == null) return;
+            final Intent intent = new Intent(v.getContext(), LiveDataActivity.class);
+            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
+            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+            v.getContext().startActivity(intent);
         }
     }
 }
-
-

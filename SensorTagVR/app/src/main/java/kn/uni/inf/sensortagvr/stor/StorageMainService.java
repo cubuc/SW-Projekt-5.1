@@ -145,7 +145,6 @@ public class StorageMainService extends IntentService {
     @Override
     public boolean onUnbind(Intent intent) {
         scaleAll(dataMeasured);
-        closeMeasureSession();
         return super.onUnbind(intent);
     }
 
@@ -178,7 +177,7 @@ public class StorageMainService extends IntentService {
 
             // receivedData should be scaled between -.5 and 1
             dataMeasured.add(new CompactData(x, y[(++yIndex) % 3], receivedData[0]));
-            xCount = xCount++ % 3;
+            xCount = (++xCount) % 3;
 
             if (xCount == 0) x++;
 

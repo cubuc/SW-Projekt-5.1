@@ -28,6 +28,7 @@
 [Idea: Calculate distance by Bluetooth RSSI and geotag on connect and disconnect](https://findlapa.com)
 [RSSI-based max distance](http://stackoverflow.com/a/15150279)
 [](https://stackoverflow.com/questions/20416218/understanding-ibeacon-distancing?noredirect=1&lq=1)
+[Trilateration Solver by lemmingapex](https://github.com/lemmingapex/trilateration)
 
 ### GUI   
 [Activities Guide](https://developer.android.com/guide/components/activities/index.html)  

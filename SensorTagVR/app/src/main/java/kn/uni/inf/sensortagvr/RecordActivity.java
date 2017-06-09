@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import kn.uni.inf.sensortagvr.stor.StorageMainService;
  * Created by lisa-maria on 21.05.17.
  */
 
-public class RecordActivity extends Activity {
+public class RecordActivity extends AppCompatActivity {
 
     StorageMainService storageService;
     boolean storageServiceBound = false;

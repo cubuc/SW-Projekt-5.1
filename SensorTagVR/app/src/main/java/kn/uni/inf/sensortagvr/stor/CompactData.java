@@ -19,17 +19,17 @@ class CompactData {
      * time: time data was recorded
      */
     private final String time;
-    private double x;
-    private double y;
-    private double z;
-    private double data;
+    private float x;
+    private float y;
+    private float z;
+    private float data;
 
     /**
      * @param x
      * @param y
      * @param data
      */
-    CompactData(double x, double y, double data) {
+    CompactData(float x, float y, float data) {
         this.x = x;
         this.y = y;
 
@@ -41,7 +41,7 @@ class CompactData {
     /**
      *
      */
-    double getX() {
+    float getX() {
         return x;
     }
 
@@ -49,14 +49,14 @@ class CompactData {
      *
      * @param x
      */
-    void setX(double x) {
+    void setX(float x) {
         this.x = x;
     }
 
     /**
      *
      */
-    double getY() {
+    float getY() {
         return y;
     }
 
@@ -64,31 +64,39 @@ class CompactData {
      *
      * @param y
      */
-    void setY(double y) {
+    void setY(float y) {
         this.y = y;
     }
 
     /**
      *
-     * @param z
      */
-    void setZ(double z) {
-        this.z = z;
-    }
-
-    /**
-     *
-     */
-    double getData() {
+    float getData() {
         return data;
     }
 
     /**
      *
      */
-    @SuppressWarnings("unused")
     public String getTime() {
         return time;
+    }
+
+    public String toString() {
+        return "x: " + x + " , " + "y: " + y + " \n, " + "z: " + getZ() + " ,\n " + "data: " + data +
+                "\n" + time;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    /**
+     *
+     * @param z
+     */
+    void setZ(float z) {
+        this.z = z;
     }
 }
 

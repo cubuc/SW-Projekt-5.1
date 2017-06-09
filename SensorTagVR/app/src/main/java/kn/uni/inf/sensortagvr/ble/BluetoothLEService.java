@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import kn.uni.inf.sensortagvr.stor.StorageMainService;
+
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_GYR_DATA;
@@ -188,7 +190,6 @@ public class BluetoothLEService extends Service {
      */
     private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
-        intent.setClassName("kn.uni.inf.sensortagvr.stor", "StorageMainService");
         switch (characteristic.getUuid().toString()) {
             case UUID_IRT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
@@ -217,7 +218,10 @@ public class BluetoothLEService extends Service {
             case UUID_OPT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
-                startService(intent);
+                Intent iSvcIntent = new Intent(this, StorageMainService.class);
+                iSvcIntent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
+                iSvcIntent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
+                startService(iSvcIntent);
                 break;
             default:
                 Log.i(TAG, "no valid data characteristic");

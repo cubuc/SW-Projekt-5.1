@@ -104,4 +104,5 @@
     <string name="rec_title">Record</string>
     <string name="vr_title">VR</string>
     <string name="settings_title">Settings</string>
+    <string name="connect">Connect</string>
 </resources>

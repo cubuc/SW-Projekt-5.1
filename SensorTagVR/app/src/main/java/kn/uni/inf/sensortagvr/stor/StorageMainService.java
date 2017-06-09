@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
-import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.ACTION_DATA_AVAILABLE;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 
 
@@ -36,9 +36,6 @@ public class StorageMainService extends IntentService {
 
 
     private static final int y[] = new int[]{0, 5, 7};
-    // Sets the Scale factor for the measured Data
-    private static final int SCALE_DATA = 2;
-    private static final double SCALE_DATA_OFFSET = 1.0;
     // Sets the Scale factor for the location grid in dataMeasured
     private static final int SCALE_LOCATION = 10;
     IBinder binder = new StorageBinder();
@@ -103,7 +100,7 @@ public class StorageMainService extends IntentService {
         bindService(bindTrackService, mConnection, Context.BIND_AUTO_CREATE);
 
         // File can be accessed by the phone itself
-        // Path = /storage/emulated/=/Android/data/kn.uni.inf.sensortagvr/files
+        // Path = /storage/emulated/0/Android/data/kn.uni.inf.sensortagvr/files
         if (isExternalStorageWritable())
             path = getExternalFilesDir(null).getAbsolutePath();
     }
@@ -111,9 +108,6 @@ public class StorageMainService extends IntentService {
     /** @param intent intent that shall be handled */
     @Override
     public void onHandleIntent(Intent intent) {
-
-        // When started by StorageBroadcastReceiver
-        if (ACTION_DATA_AVAILABLE.equals(intent.getAction()))
             this.lastReceivedData = intent;
     }
 
@@ -129,23 +123,6 @@ public class StorageMainService extends IntentService {
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
         return binder;
-    }
-
-    /**
-     * Called when the RecordActivity unbound the interface. Scales all measured data and closes
-     * the session
-     *
-     * @param intent The Intent that was used to bind to this service,
-     *               as given to {@link Context#bindService
-     *               Context.bindService}.  Note that any extras that were included with
-     *               the Intent at that point will <em>not</em> be seen here.
-     * @return Return true if you would like to have the service's
-     * {@link #onRebind} method later called when new clients bind to it.
-     */
-    @Override
-    public boolean onUnbind(Intent intent) {
-        scaleAll(dataMeasured);
-        return super.onUnbind(intent);
     }
 
     /**
@@ -177,6 +154,7 @@ public class StorageMainService extends IntentService {
 
             // receivedData should be scaled between -.5 and 1
             dataMeasured.add(new CompactData(x, y[(++yIndex) % 3], receivedData[0]));
+            Log.d("StorMan", "Data " + receivedData[0]);
             xCount = (++xCount) % 3;
 
             if (xCount == 0) x++;
@@ -192,6 +170,7 @@ public class StorageMainService extends IntentService {
     public void closeMeasureSession() {
         if (sessionStarted) {
             try {
+                scaleAll(dataMeasured);
                 writeInJsonFile(dataMeasured);
 
                 // Signals a recording session ended
@@ -240,7 +219,8 @@ public class StorageMainService extends IntentService {
         // Check whether a file could be created.
         if (!data.isFile() && !data.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
-
+        for (CompactData item : list)
+            Log.d("StorMainSvc", item.toString());
         // Create a FileWriter, use gson to write to it and close it. This essentially creates the file.
         FileWriter writer = new FileWriter(data);
         gson.toJson(list, writer);
@@ -256,17 +236,12 @@ public class StorageMainService extends IntentService {
      * @param list List to be normalized
      */
     private void scaleAll(ArrayList<CompactData> list) {
-        double factor_loc = calculateLocationFactor(list);
-        double factor_data = calculateDataFactor(list);
-        double min_data = calculateMinData(list);
-
         // Scale the list values with the determined factors
         for (CompactData item : list) {
-            item.setX(item.getX() / factor_loc);
-            item.setY(item.getY() / factor_loc);
             // Data gets scaled to match a scale of 0 to 2, where the smallest data is 0 and the
             // biggest data is 2
-            item.setZ((item.getData() - min_data) / factor_data - SCALE_DATA_OFFSET);
+            item.setZ((float) (item.getData() / (calculateMaxDataVal(list) / 100) * 0.02));
+            Log.d("StorMan", "z = " + item.getZ());
         }
 
     }
@@ -275,7 +250,7 @@ public class StorageMainService extends IntentService {
      *
      * @param list
      */
-    private double calculateMinData(ArrayList<CompactData> list) {
+    private double calculateMinDataVal(ArrayList<CompactData> list) {
         double min = Double.MAX_VALUE;
 
         for (CompactData item : list) {
@@ -289,7 +264,7 @@ public class StorageMainService extends IntentService {
      *
      * @param list
      */
-    private double calculateDataFactor(ArrayList<CompactData> list) {
+    private double calculateMaxDataVal(ArrayList<CompactData> list) {
         double max = Double.MIN_VALUE;
 
         // determine the biggest location parameter
@@ -297,7 +272,7 @@ public class StorageMainService extends IntentService {
             max = Math.max(max, item.getData());
         }
 
-        return max / SCALE_DATA;
+        return max;
     }
 
     /**

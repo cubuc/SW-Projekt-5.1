@@ -11,10 +11,16 @@ import android.widget.TextView;
 
 import kn.uni.inf.sensortagvr.R;
 
+/**
+ *
+ */
 public class APSettingsActivity extends AppCompatActivity {
 
     private WifiAP wifiAP;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +39,9 @@ public class APSettingsActivity extends AppCompatActivity {
 
         final Button trackButton = (Button) findViewById(R.id.track);
         trackButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 end(true);
@@ -41,6 +50,10 @@ public class APSettingsActivity extends AppCompatActivity {
 
         final Button untrackButton = (Button) findViewById(R.id.untrack);
         untrackButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 end(false);
@@ -48,6 +61,10 @@ public class APSettingsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * @param track
+     */
     private void end(boolean track) {
         PointF loc = new PointF(Float.parseFloat( ((EditText) findViewById(R.id.posX)).getText().toString() ),
                 Float.parseFloat( ((EditText) findViewById(R.id.posY)).getText().toString() ));
@@ -65,3 +82,5 @@ public class APSettingsActivity extends AppCompatActivity {
         finish();
     }
 }
+
+

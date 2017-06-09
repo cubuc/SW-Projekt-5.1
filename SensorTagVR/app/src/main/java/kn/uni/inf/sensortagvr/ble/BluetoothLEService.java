@@ -19,7 +19,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -62,7 +61,7 @@ public class BluetoothLEService extends Service {
          * @param gatt The (dis-)connected GATT Server
          * @param status The status of the GATT Server according to BluetoothGatt.Status
          * @param newState The new State of the GATT Server. May be Connected or Disconnected,
-         *                 all other states will cause an illegal state connection.
+         * all other states will cause an illegal state connection.
          */
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -86,7 +85,7 @@ public class BluetoothLEService extends Service {
         }
 
         /**
-         *  Saves the Services of the GATT Server in an ArrayList after the gatt.discoverServices()
+         * Saves the Services of the GATT Server in an ArrayList after the gatt.discoverServices()
          *  method finished and broadcasts that the services were discovered.
          *
          * @param gatt The GATT Server of that who's services has been discovered
@@ -175,7 +174,6 @@ public class BluetoothLEService extends Service {
         }
 
     };
-    private ArrayList<BluetoothGattService> services = new ArrayList<>();
 
     /**
      *  Empty constructor required because we're androids.
@@ -184,7 +182,7 @@ public class BluetoothLEService extends Service {
     }
 
     /**
-     *  Parses the raw data and sends broadcasts dependent on the type of sensor.
+     * Parses the raw data and sends broadcasts dependent on the type of sensor.
      *
      * @param characteristic The characteristic that has changed it's value or was read.
      */
@@ -230,7 +228,7 @@ public class BluetoothLEService extends Service {
     /**
      *
      * @param intent The intent that the service was started with; explicitly:
-     *               bindService(new Intent(this, BluetoothLEService.class)
+     * bindService(new Intent(this, BluetoothLEService.class)
      */
     @Override
     public IBinder onBind(Intent intent) {
@@ -418,6 +416,11 @@ public class BluetoothLEService extends Service {
         }
     }
 
+    /**
+     * @param s
+     * @param power
+     * @param notification
+     */
     private void updateLists(Sensor s, boolean power, boolean notification) {
         if (power) {
             enabledSensors.add(s);
@@ -433,21 +436,12 @@ public class BluetoothLEService extends Service {
     }
 
     /**
-     * return the saved list of services that the GATT Server hosts
-     */
-    public List<BluetoothGattService> getSupportedGattServices() {
-        if (mGatt == null) return null;
-
-        return services;
-    }
-
-    /**
      * Wrapper for a blocking write: Either execute if the Queue is empty and no write is currently
      * going on or enqueue the write task.
      *
      * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the
-     *          sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
-     *          Config descriptor, to en-/disable the notifications).
+     * sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
+     * Config descriptor, to en-/disable the notifications).
      */
     private synchronized void write(Object o) {
         if (mRWQueue.isEmpty() && !isWriting) {
@@ -471,8 +465,8 @@ public class BluetoothLEService extends Service {
      * finished)
      *
      * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the
-     *          sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic 
-     *          Config descriptor, to en-/disable the notifications).
+     * sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
+     * Config descriptor, to en-/disable the notifications).
      */
     private synchronized void doWrite(Object o) {
         if (o instanceof BluetoothGattCharacteristic) {
@@ -486,14 +480,23 @@ public class BluetoothLEService extends Service {
         }
     }
 
+    /**
+     *
+     */
     public ArrayList<Sensor> getEnabledSensors() {
         return enabledSensors;
     }
 
+    /**
+     *
+     */
     public ArrayList<Sensor> getNotifyingSensors() {
         return notifyingSensors;
     }
 
+    /**
+     *
+     */
     class LocalBinder extends Binder {
         /**
          * returns the reference to the service object
@@ -503,5 +506,7 @@ public class BluetoothLEService extends Service {
         }
     }
 }
+
+
 
 

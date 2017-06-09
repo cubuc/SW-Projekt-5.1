@@ -25,9 +25,7 @@ public class VRActivity extends AppCompatActivity {
 
         final Button VRbutton = (Button) findViewById(R.id.start_VR);
         VRbutton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * @param v
-             */
+            /** @param v */
             @Override
             public void onClick(View v) {
                 String url = "http://localhost:12345/index.html";
@@ -41,4 +39,6 @@ public class VRActivity extends AppCompatActivity {
 
     }
 }
+
+
 

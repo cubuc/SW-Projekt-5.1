@@ -1,21 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:visibility="visible">
+<layout>
 
-    <TextView
-        android:id="@+id/device_name"
+    <data>
+
+        <variable
+            name="deviceItem"
+            type="kn.uni.inf.sensortagvr.ble.ScanListItem" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme"
-        android:visibility="visible" />
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <TextView
-        android:id="@+id/device_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:visibility="visible" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{deviceItem.deviceName}"
+            android:theme="@style/AppTheme"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/device_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{deviceItem.deviceAddress}"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:visibility="visible" />
+    </LinearLayout>
+</layout>

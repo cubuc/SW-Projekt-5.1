@@ -5,19 +5,10 @@
     android:orientation="vertical">
 
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/scanlist"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:background="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="#CCCCCC"
-        android:dividerHeight="1dp"
-        android:paddingEnd="2dp"
-        android:paddingStart="2dp"
-        android:theme="@style/AppTheme" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

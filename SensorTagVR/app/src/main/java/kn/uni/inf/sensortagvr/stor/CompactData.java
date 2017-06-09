@@ -24,6 +24,11 @@ class CompactData {
     private double z;
     private double data;
 
+    /**
+     * @param x
+     * @param y
+     * @param data
+     */
     CompactData(double x, double y, double data) {
         this.x = x;
         this.y = y;
@@ -33,32 +38,58 @@ class CompactData {
         this.time = Calendar.getInstance().getTime().toString();
     }
 
+    /**
+     *
+     */
     double getX() {
         return x;
     }
 
+    /**
+     *
+     * @param x
+     */
     void setX(double x) {
         this.x = x;
     }
 
+    /**
+     *
+     */
     double getY() {
         return y;
     }
 
+    /**
+     *
+     * @param y
+     */
     void setY(double y) {
         this.y = y;
     }
 
+    /**
+     *
+     * @param z
+     */
     void setZ(double z) {
         this.z = z;
     }
 
+    /**
+     *
+     */
     double getData() {
         return data;
     }
 
+    /**
+     *
+     */
     @SuppressWarnings("unused")
     public String getTime() {
         return time;
     }
 }
+
+

@@ -22,6 +22,10 @@ public class RecordActivity extends Activity {
     StorageMainService storageService;
     boolean storageServiceBound = false;
     private ServiceConnection storageConnection = new ServiceConnection() {
+        /**
+         * @param name
+         * @param service
+         */
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             StorageMainService.StorageBinder binder = (StorageMainService.StorageBinder) service;
@@ -29,12 +33,20 @@ public class RecordActivity extends Activity {
             storageServiceBound = true;
         }
 
+        /**
+         *
+         * @param name
+         */
         @Override
         public void onServiceDisconnected(ComponentName name) {
             storageServiceBound = false;
         }
     };
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +57,10 @@ public class RecordActivity extends Activity {
 
         final Button buttonCal = (Button) findViewById(R.id.callibrate);
         buttonCal.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             */
             public void onClick(View v) {
                 if (storageServiceBound) {
                 }
@@ -56,6 +72,10 @@ public class RecordActivity extends Activity {
 
         final Button buttonMD = (Button) findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
+            /**
+             *
+             * @param v
+             */
             public void onClick(View v) {
                 if (storageServiceBound)
                     storageService.measureData();
@@ -65,6 +85,9 @@ public class RecordActivity extends Activity {
         });
     }
 
+    /**
+     * 
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -72,3 +95,5 @@ public class RecordActivity extends Activity {
         stopService(new Intent(this, StorageMainService.class));
     }
 }
+
+

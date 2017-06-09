@@ -32,18 +32,43 @@ import java.util.Comparator;
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService.TrackingBinder;
 
+/**
+ *
+ */
 public class TrackingTestActivity extends AppCompatActivity {
 
     public final int FINE_LOCATION_PERMISSION_REQUEST = 0;
     public final int AP_SETTINGS_REQUEST = 1;
-
+    protected ListView lv;
     private TrackingManagerService mService = null;
     private boolean mBound = false;
-
     private WifiTracker wifiTracker;
+    private ServiceConnection mConnection = new ServiceConnection() {
 
-    protected ListView lv;
+        /**
+         * @param className
+         * @param service
+         */
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            TrackingBinder binder = (TrackingBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
 
+        /**
+         * @param arg0
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +80,13 @@ public class TrackingTestActivity extends AppCompatActivity {
 
         lv.setClickable(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             *
+             * @param arg0
+             * @param arg1
+             * @param position
+             * @param arg3
+             */
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 WifiAP ap = (WifiAP) lv.getItemAtPosition(position);
@@ -75,6 +107,9 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -102,6 +137,9 @@ public class TrackingTestActivity extends AppCompatActivity {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         final Handler handler = new Handler();
+        /**
+         *
+         */
         class LocationUpdater implements Runnable {
             private Handler handler;
             private TextView textView;
@@ -109,6 +147,13 @@ public class TrackingTestActivity extends AppCompatActivity {
             private WifiTracker wifiTracker;
             private WifiAPAdapter adapter;
 
+            /**
+             *
+             * @param handler
+             * @param textView
+             * @param list
+             * @param wifiTracker
+             */
             public LocationUpdater(Handler handler, TextView textView, ListView list, WifiTracker wifiTracker) {
                 this.handler = handler;
                 this.textView = textView;
@@ -118,6 +163,10 @@ public class TrackingTestActivity extends AppCompatActivity {
                 adapter = new WifiAPAdapter(TrackingTestActivity.this, new ArrayList<WifiAP>());
                 list.setAdapter(adapter);
             }
+
+            /**
+             *
+             */
             @Override
             public void run() {
                 this.handler.postDelayed(this, 500);
@@ -131,6 +180,11 @@ public class TrackingTestActivity extends AppCompatActivity {
                 adapter.clear();
                 adapter.addAll(wifiTracker.getWifiAPs(true));
                 adapter.sort(new Comparator<WifiAP>() {
+                    /**
+                     *
+                     * @param lhs
+                     * @param rhs
+                     */
                     @Override
                     public int compare(WifiAP lhs, WifiAP rhs) {
                         // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
@@ -153,12 +207,17 @@ public class TrackingTestActivity extends AppCompatActivity {
         handler.post(new LocationUpdater(handler, (TextView) findViewById(R.id.location), lv, wifiTracker));
     }
 
-
+    /**
+     *
+     */
     @Override
     protected void onResume() {
         super.onResume();
     }
 
+    /**
+     *
+     */
     protected void onPause() {
         super.onPause();
 
@@ -172,6 +231,12 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -188,6 +253,12 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AP_SETTINGS_REQUEST) {
@@ -203,27 +274,26 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            TrackingBinder binder = (TrackingBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-
+    /**
+     * 
+     */
     public class WifiAPAdapter extends ArrayAdapter<WifiAP> {
 
+        /**
+         *
+         * @param context
+         * @param aps
+         */
         public WifiAPAdapter(Context context, ArrayList<WifiAP> aps) {
             super(context, 0, aps);
         }
 
+        /**
+         *
+         * @param position
+         * @param convertView
+         * @param parent
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             WifiAP ap = getItem(position);
@@ -244,3 +314,5 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 }
+
+

@@ -34,12 +34,17 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 
 public class StorageMainService extends IntentService {
 
+
+    private static final int y[] = new int[]{0, 5, 7};
     // Sets the Scale factor for the measured Data
     private static final int SCALE_DATA = 2;
     private static final double SCALE_DATA_OFFSET = 1.0;
     // Sets the Scale factor for the location grid in dataMeasured
     private static final int SCALE_LOCATION = 10;
     IBinder binder = new StorageBinder();
+    private int x = 0;
+    private int yIndex = 0;
+    private int xCount = 0;
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
     private boolean trackingServiceBound = false;
@@ -69,8 +74,6 @@ public class StorageMainService extends IntentService {
             trackingServiceBound = false;
         }
     };
-    // Outdated
-    private PointF nullPoint = null;
     // Saves all measured data in a session
     private ArrayList<CompactData> dataMeasured;
     private boolean sessionStarted = false;
@@ -79,6 +82,9 @@ public class StorageMainService extends IntentService {
     private Intent lastReceivedData;
 
 
+    /**
+     * 
+     */
     public StorageMainService() {
         super("StorageMainService");
     }
@@ -102,9 +108,7 @@ public class StorageMainService extends IntentService {
             path = getExternalFilesDir(null).getAbsolutePath();
     }
 
-    /**
-     * @param intent intent that shall be handled
-     */
+    /** @param intent intent that shall be handled */
     @Override
     public void onHandleIntent(Intent intent) {
 
@@ -172,10 +176,11 @@ public class StorageMainService extends IntentService {
             // get Data from tracking module
             PointF loc = trackingService.getRelativePosition();
 
-            int x = 0, y = 0;
             // receivedData should be scaled between -.5 and 1
-            // TODO scale receivedData
-            dataMeasured.add(new CompactData(x, y, receivedData[0]));
+            dataMeasured.add(new CompactData(x, y[(++yIndex) % 3], receivedData[0]));
+            xCount = xCount++ % 3;
+
+            if (xCount == 0) x++;
 
             Toast.makeText(getApplicationContext(), "Data received", Toast.LENGTH_SHORT).show();
         } else
@@ -202,6 +207,9 @@ public class StorageMainService extends IntentService {
 
 
     /* Checks if external storage is available for read and write */
+    /**
+     * 
+     */
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
@@ -241,7 +249,6 @@ public class StorageMainService extends IntentService {
 
     }
 
-
     /**
      * This method changes the values of the Location for a easier triangulation by webVR
      * Current Implementation: scales all variables to mach SCALE (the biggest value in list = SCALE
@@ -265,6 +272,10 @@ public class StorageMainService extends IntentService {
 
     }
 
+    /**
+     *
+     * @param list
+     */
     private double calculateMinData(ArrayList<CompactData> list) {
         double min = Double.MAX_VALUE;
 
@@ -275,6 +286,10 @@ public class StorageMainService extends IntentService {
         return min;
     }
 
+    /**
+     *
+     * @param list
+     */
     private double calculateDataFactor(ArrayList<CompactData> list) {
         double max = Double.MIN_VALUE;
 
@@ -303,6 +318,9 @@ public class StorageMainService extends IntentService {
         return max / SCALE_LOCATION;
     }
 
+    /**
+     * 
+     */
     public class StorageBinder extends Binder {
         /**
          * @return current Instance of StorageMainService
@@ -312,6 +330,8 @@ public class StorageMainService extends IntentService {
         }
     }
 }
+
+
 
 
 

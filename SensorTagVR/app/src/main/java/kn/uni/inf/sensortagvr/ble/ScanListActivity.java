@@ -3,7 +3,6 @@ package kn.uni.inf.sensortagvr.ble;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -17,12 +16,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ import kn.uni.inf.sensortagvr.R;
  */
 public class ScanListActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
-    static ListView listView;
+    static RecyclerView mDeviceList;
     private final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
@@ -95,6 +93,11 @@ public class ScanListActivity extends AppCompatActivity {
         if (ab != null)
             ab.setTitle(R.string.title_devices);
 
+        // Sets up UI references.
+        mDeviceList = (RecyclerView) findViewById(R.id.data_list);
+        mDeviceList.setAdapter(mLeDeviceListAdapter);
+        mDeviceList.setLayoutManager(new LinearLayoutManager(this));
+
         mHandler = new Handler();
 
         // BLE available on this device?
@@ -130,46 +133,20 @@ public class ScanListActivity extends AppCompatActivity {
                         .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                         .build();
 
-//                fi = new ScanFilter.Builder()
-//                        .setServiceUuid(new ParcelUuid(UUID.fromString(TIUUIDs.UUID_DEVINFO_SERV)))
-//                        .build();
+                fi = new ScanFilter.Builder()
+                        .setDeviceName("CC2650 SensorTag")
+                        .build();
 
                 filters = new ArrayList<>();
-//                filters.add(fi);
+                filters.add(fi);
             }
 
-            final Context con = this.getApplicationContext();
-            setContentView(R.layout.activity_scanlist);
-            listView = (ListView) findViewById(R.id.scanlist);
-            mLeDeviceListAdapter = new LeDeviceListAdapter(con);
-            if (mLeDeviceListAdapter != null && listView != null) {
-                listView.setAdapter(mLeDeviceListAdapter);
-
-                //Adds OnClickListener
-                listView.setOnItemClickListener(new ListView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-                        if (device == null) return;
-                        final Intent intent = new Intent(con, LiveDataActivity.class);
-                        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
-                        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-                        if (mScanning) {
-                            mLEScanner.stopScan(mScanCallback);
-                            mScanning = false;
-                        }
-                        startActivity(intent);
-                    }
-                });
                 scanLeDevice(true);
-            }
         }
+
     }
 
-    /**
-     * @param menu The options menu in which you place your items.
-     */
+    /** @param menu The options menu in which you place your items. */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -186,9 +163,7 @@ public class ScanListActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * @param item The item that the user tapped on.
-     */
+    /** @param item The item that the user tapped on. */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -230,9 +205,7 @@ public class ScanListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * @param enable
-     */
+    /** @param enable */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             mHandler.postDelayed(new Runnable() {
@@ -257,5 +230,7 @@ public class ScanListActivity extends AppCompatActivity {
 
 
 }
+
+
 
 

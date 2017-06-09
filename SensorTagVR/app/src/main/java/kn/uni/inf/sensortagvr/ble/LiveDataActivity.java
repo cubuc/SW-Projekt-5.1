@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 import kn.uni.inf.sensortagvr.R;
@@ -36,7 +35,6 @@ public class LiveDataActivity extends AppCompatActivity {
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private final static String TAG = LiveDataActivity.class.getSimpleName();
     LocalBroadcastManager mLocalBroadcastManager;
-    ArrayList<float[]> mData = new ArrayList<>();
     SensorDataListAdapter adapter = new SensorDataListAdapter();
     private TextView mConnectionState;
     private String mDeviceName;
@@ -64,10 +62,9 @@ public class LiveDataActivity extends AppCompatActivity {
         }
 
         /**
-         *  set the current {@link BluetoothLEService} instance to null if the service connection
-         *  is shutdown
-         *
          * @param componentName not used
+         * set the current {@link BluetoothLEService} instance to null if the service connection
+         *  is shutdown
          */
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
@@ -139,7 +136,7 @@ public class LiveDataActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatt_services_characteristics);
+        setContentView(R.layout.activity_livedata);
 
 
         mLocalBroadcastManager =
@@ -200,9 +197,7 @@ public class LiveDataActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    /**
-     * @param menu
-     */
+    /** @param menu */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.services, menu);
@@ -216,9 +211,7 @@ public class LiveDataActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * @param item
-     */
+    /** @param item */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -235,13 +228,13 @@ public class LiveDataActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * @param resourceId
-     */
+    /** @param resourceId */
     private void updateConnectionState(final int resourceId) {
         mConnectionState.setText(resourceId);
     }
 
 }
+
+
 
 

@@ -66,6 +66,10 @@ public class TrackingManagerService extends Service {
         //locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     }
 
+    /**
+     *
+     * @param intent
+     */
     @Override
     public IBinder onBind(Intent intent) {
         try {
@@ -108,6 +112,9 @@ public class TrackingManagerService extends Service {
         return lastPostion;
     }
 
+    /**
+     * 
+     */
     public Location getAbsolutePosition() throws Exception {
         //Earth’s radius, sphere
         final double R = 6378137.0;
@@ -121,11 +128,14 @@ public class TrackingManagerService extends Service {
         double dLon = lastPostion.y/(R*Math.cos( Math.PI * origin.getLatitude() / 180.0));
 
         loc.setLatitude(origin.getLatitude() + dLat * 180.0 / Math.PI);
-        loc.setLongitude(origin.getLongitude() + dLon * 180.0 / Math.PI );
+        loc.setLongitude(origin.getLongitude() + dLon * 180.0 / Math.PI);
 
         return loc;
     }
 
+    /**
+     * 
+     */
     public Location calibrateOrigin() throws Exception{
         if(lastGPSPosition != null)
             origin = lastGPSPosition;
@@ -135,6 +145,9 @@ public class TrackingManagerService extends Service {
         return lastGPSPosition;
     }
 
+    /**
+     * 
+     */
     public class TrackingBinder extends Binder {
         /**
          *
@@ -144,3 +157,4 @@ public class TrackingManagerService extends Service {
         }
     }
 }
+

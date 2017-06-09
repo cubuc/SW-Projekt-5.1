@@ -34,10 +34,16 @@ public class WifiTracker {
     private WifiManager wifiManager;
     private Map<String, WifiAP> aps = new HashMap<String, WifiAP>();
 
+    /**
+     * @param wifiManager
+     */
     public WifiTracker(WifiManager wifiManager) {
         this.wifiManager = wifiManager;
     }
 
+    /**
+     *
+     */
     public void update() {
         List<ScanResult> results =  wifiManager.getScanResults();
         Map<String, WifiAP> newAPs = new HashMap<String, WifiAP>();
@@ -63,6 +69,10 @@ public class WifiTracker {
         aps = newAPs;
     }
 
+    /**
+     *
+     * @param ap
+     */
     public boolean trackAP(WifiAP ap) {
         if(!aps.containsKey(ap.getBSSID()))
             return false;
@@ -71,6 +81,9 @@ public class WifiTracker {
         return true;
     }
 
+    /**
+     *
+     */
     public  PointF calculateLocation() {
         this.update();
 
@@ -119,6 +132,10 @@ public class WifiTracker {
         return new PointF((float)optimum.getPoint().toArray()[0], (float)optimum.getPoint().toArray()[1]);
     }
 
+    /**
+     *
+     * @param update
+     */
     public List<WifiAP> getWifiAPs(boolean update) {
         if(update)
             update();
@@ -126,6 +143,10 @@ public class WifiTracker {
         return new ArrayList<WifiAP>(aps.values());
     }
 
+    /**
+     *
+     * @param out
+     */
     public void writeToFile(FileOutputStream out) throws IOException{
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out));
         writer.setIndent("  ");
@@ -139,6 +160,10 @@ public class WifiTracker {
         writer.close();
     }
 
+    /**
+     *
+     * @param in
+     */
     public void readFromFile(FileInputStream in) throws IOException{
         JsonReader reader = new JsonReader(new InputStreamReader(in));
 
@@ -152,3 +177,5 @@ public class WifiTracker {
         reader.close();
     }
 }
+
+

@@ -101,4 +101,7 @@
     <string name="ap_settings">Access Point Settings</string>
     <string name="track_ap">Track Access Point</string>
     <string name="untrack_ap">Stop Tracking</string>
+    <string name="rec_title">Record</string>
+    <string name="vr_title">VR</string>
+    <string name="settings_title">Settings</string>
 </resources>

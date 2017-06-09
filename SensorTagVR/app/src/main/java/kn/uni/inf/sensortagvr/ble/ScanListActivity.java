@@ -134,7 +134,8 @@ public class ScanListActivity extends AppCompatActivity {
                         .build();
 
                 fi = new ScanFilter.Builder()
-                        .setDeviceName("CC2650 SensorTag")
+                        .setDeviceName("SensorTag2")
+
                         .build();
 
                 filters = new ArrayList<>();
@@ -146,7 +147,9 @@ public class ScanListActivity extends AppCompatActivity {
 
     }
 
-    /** @param menu The options menu in which you place your items. */
+    /**
+     * @param menu The options menu in which you place your items.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -163,7 +166,9 @@ public class ScanListActivity extends AppCompatActivity {
         return true;
     }
 
-    /** @param item The item that the user tapped on. */
+    /**
+     * @param item The item that the user tapped on.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -205,7 +210,9 @@ public class ScanListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /** @param enable */
+    /**
+     * @param enable
+     */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             mHandler.postDelayed(new Runnable() {
@@ -230,7 +237,5 @@ public class ScanListActivity extends AppCompatActivity {
 
 
 }
-
-
 
 

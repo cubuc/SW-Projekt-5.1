@@ -44,7 +44,7 @@ class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAdapter.V
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         ListitemDataBinding binding = DataBindingUtil.inflate(layoutInflater,
-                R.layout.recyclerview_listitem_data, parent, false);
+                R.layout.listitem_data, parent, false);
         return new ViewHolder(binding);
     }
 

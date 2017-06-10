@@ -1,0 +1,19 @@
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><help_text>Space for diagram notes
+</help_text><element><id>UMLDeployment</id><coordinates><x>80</x><y>70</y><w>490</w><h>310</h></coordinates><panel_attributes>:User Phone
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>200</x><y>120</y><w>240</w><h>100</h></coordinates><panel_attributes>symbol=component
+Web Browser
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>200</x><y>260</y><w>240</w><h>100</h></coordinates><panel_attributes>symbol=component
+App
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>210</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;-
+</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>UMLDeployment</id><coordinates><x>690</x><y>84</y><w>320</w><h>300</h></coordinates><panel_attributes>:Web Server
+group=3</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>750</x><y>134</y><w>200</w><h>90</h></coordinates><panel_attributes>symbol=component
+Application
+WebVR
+group=3
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLDeployment</id><coordinates><x>160</x><y>434</y><w>300</w><h>160</h></coordinates><panel_attributes>:Bluetooth Sensor
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>250</x><y>484</y><w>140</w><h>80</h></coordinates><panel_attributes>symbol=component
+TI SensorTag
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>370</x><y>350</y><w>30</w><h>160</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>10;140;10;10</additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>750</x><y>254</y><w>200</w><h>90</h></coordinates><panel_attributes>symbol=component
+Sensor data
+group=3</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>300</y><w>340</w><h>30</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>320;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>170</y><w>340</w><h>30</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>320;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>890</x><y>210</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;-
+group=3</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element></diagram>

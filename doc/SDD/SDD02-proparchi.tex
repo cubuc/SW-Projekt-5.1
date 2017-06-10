@@ -12,7 +12,7 @@ A better zoomable representation of these diagrams can be found in the github re
 \begin{itemize}
   \item \textbf{BluetoothManager:} Uses the android.bluetooth and especially the android.bluetooth.le libraries to fetch the sensor data from the sensor device. \\
 
- \hspace{-4cm} \includegraphics[width=1.4\textwidth]{pics/ble_man.png}
+ \includegraphics[width=0.8\textwidth]{pics/ble_man.png}
 
   \item \textbf{TrackingManager:} Handles the tracking of the (current) location where the data are recorded. The current position is determined by GPS and enhanced by the cellphone sensor and wifi data.
 
@@ -49,7 +49,14 @@ A better zoomable representation of these diagrams can be found in the github re
   \item \textbf{Parser and helper functions for each sensor} because the BLE protocol implemented in the TI CC2650 delivers raw sensor output
 \end{itemize}
 
-\%subsection{Hardware/ Software mapping}
+\subsection{Hardware/ Software mapping}
+
+The app consists of two parts both parts run on the users smart phone, the app will connect to the bluetooth sensor, gather the data and store
+it on a web server. The web application will also run on the users smart phone and will be executed in the browser, while the user can start this
+browser from the app. The web application will show the scene and display the previously saved data from the sensor in virtual reality.
+
+\includegraphics[width=0.8\textwidth]{diagramms/hsMapping.png}
+
 %TO DO ???
 
 %\subsection{Persistent data management}
@@ -214,20 +221,19 @@ Interface WebVR {
 	\item[2) Switch to stereoscopic 3D: ] When the user enters the VR view, he can choose to switch the view and thereby switch to a stereoscopic view or switch back to non-stereoscopic view, respectively. \\
 	\includegraphics[width=0.8\textwidth]{diagramms/stereo.png}
 
-	\item[3) Switch data visualization: ] When the user opens the web site with the VR view, he  can switch the visualization. Then, the data will be visualized in another way.  \\
+	\item[3) Switch data visualization: ] When the user opens the web site with the VR view, he  can switch the visualization. The first view is a plane composed from
+  the location tracking together with the data from the sensor, the second visualization is a representation of the locations as dots
+  and the data as numbers hovering over these dots.  \\
 	\includegraphics[width=0.8\textwidth]{diagramms/switchVisual.png}
 
 	\item[4) Scan and Connect:] Scan for Bluetooth low energy devices and connect to one of them by clicking on the correct result ("TI CC2650").
 	After beeing connected one can edit the configuration of the sensors on the CC2650: \\dis-/enable a sensor, (de-)activate the notifications for a measurement characteristic, read values, disconnect from the device. After that the user may start a new data scan record or start the VR View.\\
 	\includegraphics[width=0.8\textwidth]{diagramms/bleseq.png}
 
-	\item[5) Open scan: ] text \\
-	\includegraphics[width=0.8\textwidth]{diagramms/scan.png}
-
-	\item[6) Record new data set: ] When the user clicks the button to record a new data set, the StorageManager will provie the data and get the repective location from the TrackingManager to calibrate the initial location for the recording session. \\
+	\item[6) Record new data set: ] When the user clicks the button to record a new data set, the StorageManager will provide the data and get the repective location from the TrackingManager to calibrate the initial location for the recording session. \\
 	\includegraphics[width=0.8\textwidth]{diagramms/newDataset.png}
 
-	\item[7) Record data point: ] When the user clicks the button to record new data, the StorageManager will provie the data and get the repective location from the TrackingManager.\\
+	\item[7) Record data point: ] When the user clicks the button to record new data, the StorageManager will provide the data and get the repective location from the TrackingManager.\\
 	\includegraphics[width=0.8\textwidth]{diagramms/recordDatapoint.png}
 
 

@@ -87,10 +87,10 @@
 \frametitle{Bluetooth-Manager}
 \framesubtitle{Bisherige Funktionen}
 \begin{itemize}
-  \item Scannen nach Sensoren in der N\"ahe
-  \item Verbinden mit einem Sensor
-  \item Anzeigen erhaltener Daten in einer Live-Ansicht
-  \item Senden von Daten \"uber einen Local Broadcaster zur Weiterverarbeitung in der App
+  \item Scanen nach TI CC2650 MCU(s)
+  \item Verbinden zum GATT Server eines TI CC2650 MCU
+  \item Anzeigen erhaltener Sensordaten in einer Live-Ansicht
+  \item senden der Sensordaten (via LocalBroadcastManager) bzw. starten des IntentService
 \end{itemize}
 \end{frame}
 
@@ -98,7 +98,8 @@
 \frametitle{Bluetooth-Manager}
 \framesubtitle{N\"achste Schritte}
 \begin{itemize}
-  \item ???
+  \item Debuggen (insbes. Scan)
+  \item Activities in Fragments umwandeln
 \end{itemize}
 \end{frame}
 
@@ -111,9 +112,8 @@
 \frametitle{Storage-Manager}
 \framesubtitle{Bisherige Funktionen}
 \begin{itemize}
-  \item Holt sich Daten vom Sensor
-  \item Speichert die Daten in einem Zwischenarray ab
-  \item Speichert die Daten in einer .json-Datei auf dem Smartphone ab
+  \item Speichert den letzten Empfangenen Intent
+  \item Skaliert die Daten und schreibt diese in eine JSON-File
   \item Bindet Tracking-Manager, noch kein Datentransfer von diesem
 \end{itemize}
 \end{frame}
@@ -122,8 +122,8 @@
 \frametitle{Storage-Manager}
 \framesubtitle{N\"achste Schritte}
 \begin{itemize}
-  \item Dateinen auf webserver hochladen
-  \item Tracking-Manager Daten und Sensor Daten zusammenf\"uhren
+  \item Dateinen auf Webserver hochladen
+  \item Positionsdaten einbinden
 \end{itemize}
 \end{frame}
 

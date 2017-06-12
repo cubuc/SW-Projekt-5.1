@@ -75,18 +75,13 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Composite Diagram}
-\includegraphics[width=\textwidth]{../doc/SDD/pics/composite_app.png}
-\end{frame}
+%\begin{frame}
+%\frametitle{Composite Diagram}
+%\includegraphics[width=\textwidth]{../doc/SDD/pics/composite_app.png}
+%\end{frame}
 
 \section{Bluetooth-Manager}
 
-\begin{frame}
-\frametitle{Bluetooth-Manager}
-\framesubtitle{Component Diagram}
-\hspace{2cm} \includegraphics[width=0.6\textwidth]{../doc/SDD/pics/ble_man.png}
-\end{frame}
 
 \begin{frame}
 \frametitle{Bluetooth-Manager}
@@ -110,11 +105,7 @@
 
 \section{Storage-Manager}
 
-\begin{frame}
-\frametitle{Storage-Manager}
-\framesubtitle{Component Diagram}
-\hspace{1cm} \includegraphics[width=0.8\textwidth]{../doc/SDD/pics/StorageMgr_Composition.png}
-\end{frame}
+
 
 \begin{frame}
 \frametitle{Storage-Manager}
@@ -131,17 +122,14 @@
 \frametitle{Storage-Manager}
 \framesubtitle{N\"achste Schritte}
 \begin{itemize}
-  \item ???
+  \item Dateinen auf webserver hochladen
+  \item Tracking-Manager Daten und Sensor Daten zusammenf\"uhren
 \end{itemize}
 \end{frame}
 
 \section{Tracking-Manager}
 
-\begin{frame}
-\frametitle{Tracking-Manager}
-\framesubtitle{Component Diagram}
-\hspace{1cm} \includegraphics[width=0.8\textwidth]{../doc/SDD/pics/TrackingManager_Composition.png}
-\end{frame}
+
 
 \begin{frame}
 \frametitle{Tracking-Manager}
@@ -150,7 +138,7 @@
   \item Grobe Positionsbestimmung durch GPS oder Networkprovider
   \item	Genauere Positionsbestimmung durch Trilateration von WLAN-Accesspoints
   \item	Abstandsbestimmung duch RSSI
-  \item	APs k\"onnen individuell konfiguiert und f\"ur das Tracking selektiert werden. 
+  \item	APs k\"onnen individuell konfiguiert und f\"ur das Tracking selektiert werden.
 \end{itemize}
 \end{frame}
 
@@ -160,7 +148,7 @@
 \begin{itemize}
   \item TESTEN\\
   		(Raum w\"ahlen, APs installieren und konfigurieren)
-  \item Verbesserungsmöglichkeiten:
+  \item Verbesserungsm\"oglichkeiten:
   		\begin{itemize}
   		\item	Smoothing der RSSI-Daten
   		\item	Kombination mit Accelerometer und Gyrometer Daten
@@ -170,18 +158,13 @@
 
 \section{GUI}
 
-\begin{frame}
-\frametitle{GUI}
-\framesubtitle{Component Diagram}
-\hspace{1cm} \includegraphics[width=0.8\textwidth]{../doc/SDD/pics/GUI-component.png}
-\end{frame}
 
 \begin{frame}
 \frametitle{GUI}
 \framesubtitle{Bisherige Funktionen}
 \begin{itemize}
   \item Splash Screen beim Starten der App
-  \item Grundlegende Strukturierung durch Tableiste 
+  \item Grundlegende Strukturierung durch Tableiste
   \item Starten des Browsers, um Webanwendung auszuf\"uhren
   \item Sendet Intent an den Bluetooth-Manager, um Scan zu starten und Live-Data anzuzeigen.
 \end{itemize}
@@ -191,7 +174,7 @@
 \frametitle{GUI}
 \framesubtitle{N\"achste Schritte}
 \begin{itemize}
-  \item ``Zur\"uck''-Button implementieren 
+  \item ``Zur\"uck''-Button implementieren
   \item LiveData in RecordActivity einbinden
   \item SettingsActivity: Tracking- und Bluetooth-Funktionen sinnvoll integrieren
   \item Layout vereinheitlichen
@@ -216,7 +199,8 @@
 \frametitle{Webanwendung}
 \framesubtitle{N\"achste Schritte}
 \begin{itemize}
-  \item ???
+  \item Modelierung des Raumes in Blender
+  \item Webserver einrichten
 \end{itemize}
 \end{frame}
 

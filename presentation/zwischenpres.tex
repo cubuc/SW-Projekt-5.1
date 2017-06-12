@@ -43,9 +43,9 @@
 \frametitle{Einleitung}
 \framesubtitle{Aufgabenstellung}
 \begin{itemize}
-	\item Visualisierung von mindestens einem Sensorwert (z.B. Temperatur) in Abhängigkeit von seiner Position.
-	\item Verschiedene Visualisierungsmöglichkeiten der Sensordaten.
-	\item Visualisierung in einer fertigen 3D Umgebung, basierend auf der Originalumgebung.
+	\item Visualisierung von mindestens einem Sensorwert (z.B. Temperatur) in Abh\"angigkeit von seiner Position.
+	\item Verschiedene Visualisierungsm\"oglichkeiten der Sensordaten.
+	\item Visualisierung in einer vorgefertigten 3D-Umgebung, basierend auf der Originalumgebung.
 \end{itemize}
 \end{frame}
 
@@ -55,9 +55,9 @@
 \frametitle{Einleitung}
 \framesubtitle{Idee}
 \begin{itemize}
-	\item Aufzeichnen von Daten mit der App.
-  \item Positions tracking \"uber das smart phone.
-  \item Anzeigen dieser Daten in der WebVR Umgebung.
+  \item Aufzeichnen von Daten mit der App.
+  \item Positionstracking \"uber das Smartphone.
+  \item Anzeigen der aufgenommenen Daten in der WebVR Umgebung.
 \end{itemize}
 \end{frame}
 
@@ -69,22 +69,41 @@
 \begin{itemize}
 	\item Aufspaltung in zwei Teile: \pause
   \begin{enumerate}
-    \item App f\"ur die verbindung zum Sensor, Ortsbestimmung und Daten speicherung.
-    \item WebVR umgebung zur Dastellung der Daten und der 3D Umgebung.
+    \item App f\"ur die Verbindung zum Sensor, Ortsbestimmung und Datenspeicherung.
+    \item Webanwendung zur Darstellung der Daten und der 3D-Umgebung.
   \end{enumerate}
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Composite Diagram}
+\includegraphics[width=\textwidth]{../doc/SDD/pics/composite_app.png}
 \end{frame}
 
 \section{Bluetooth-Manager}
 
 \begin{frame}
 \frametitle{Bluetooth-Manager}
-\framesubtitle{Bisherigen Funktionen}
+\framesubtitle{Component Diagram}
+\hspace{2cm} \includegraphics[width=0.6\textwidth]{../doc/SDD/pics/ble_man.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Bluetooth-Manager}
+\framesubtitle{Bisherige Funktionen}
 \begin{itemize}
-  \item Scanned nach Sensoren in der N\"ahe.
-	\item Verbindet mit einem Sensor.
-  \item Zeit die Daten in einem Live-View an.
-  \item Sendet Daten \"uber eine Local Broadcaster an die App zur Weiterverarbeitung.
+  \item Scannen nach Sensoren in der N\"ahe
+  \item Verbinden mit einem Sensor
+  \item Anzeigen erhaltener Daten in einer Live-Ansicht
+  \item Senden von Daten \"uber einen Local Broadcaster zur Weiterverarbeitung in der App
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Bluetooth-Manager}
+\framesubtitle{N\"achste Schritte}
+\begin{itemize}
+  \item ???
 \end{itemize}
 \end{frame}
 
@@ -93,26 +112,53 @@
 
 \begin{frame}
 \frametitle{Storage-Manager}
-\framesubtitle{Bisherigen Funktionen}
+\framesubtitle{Component Diagram}
+\hspace{1cm} \includegraphics[width=0.8\textwidth]{../doc/SDD/pics/StorageMgr_Composition.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Storage-Manager}
+\framesubtitle{Bisherige Funktionen}
 \begin{itemize}
-  \item Holt sich Daten vom Sensor.
-	\item Speichter die Daten in einem zwieschen Array ab.
-  \item Speichert die Daten in einer .json auf dem smart phone ab.
-  \item Bindet Tracking-Manager aber holt sich noch keine Daten.
+  \item Holt sich Daten vom Sensor
+  \item Speichert die Daten in einem Zwischenarray ab
+  \item Speichert die Daten in einer .json-Datei auf dem Smartphone ab
+  \item Bindet Tracking-Manager, noch kein Datentransfer von diesem
 \end{itemize}
 \end{frame}
 
+\begin{frame}
+\frametitle{Storage-Manager}
+\framesubtitle{N\"achste Schritte}
+\begin{itemize}
+  \item ???
+\end{itemize}
+\end{frame}
 
 \section{Tracking-Manager}
 
 \begin{frame}
 \frametitle{Tracking-Manager}
-\framesubtitle{Bisherigen Funktionen}
+\framesubtitle{Component Diagram}
+\hspace{1cm} \includegraphics[width=0.8\textwidth]{../doc/SDD/pics/TrackingManager_Composition.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tracking-Manager}
+\framesubtitle{Bisherige Funktionen}
 \begin{itemize}
   \item Grobe Positionsbestimmung durch GPS oder Networkprovider
-  \item	Genauerer Bestimmung der Position durch Trilateration von WLAN-Accesspoints
+  \item	Genauere Positionsbestimmung durch Trilateration von WLAN-Accesspoints
   \item	Abstandsbestimmung duch RSSI
-  \item	APs k\"onnen individuell konfiguiert werden und f\"ur das Tracking selectiert werden. 
+  \item	APs k\"onnen individuell konfiguiert und f\"ur das Tracking selektiert werden. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tracking-Manager}
+\framesubtitle{N\"achste Schritte}
+\begin{itemize}
+  \item ???
 \end{itemize}
 \end{frame}
 
@@ -120,26 +166,51 @@
 
 \begin{frame}
 \frametitle{GUI}
-\framesubtitle{Bisherigen Funktionen}
+\framesubtitle{Component Diagram}
+\hspace{1cm} \includegraphics[width=0.8\textwidth]{../doc/SDD/pics/GUI-Component.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{GUI}
+\framesubtitle{Bisherige Funktionen}
 \begin{itemize}
-  \item Splash screen bei start up.
-  \item Tabs um einfacher zwieschen den unter funktionen Navigieren.
-  \item Startet den Browser um WebVR anzuzeigen.
-  \item Sendet intent an den Bluetooth-Manager um scan zu starten und Live-Data anzuzeigen.
+  \item Splash Screen beim Starten der App
+  \item Grundlegende Strukturierung durch Tableiste 
+  \item Starten des Browsers, um Webanwendung auszuf\"uhren
+  \item Sendet Intent an den Bluetooth-Manager, um Scan zu starten und Live-Data anzuzeigen.
 \end{itemize}
 \end{frame}
 
-\section{Web Application}
+\begin{frame}
+\frametitle{GUI}
+\framesubtitle{N\"achste Schritte}
+\begin{itemize}
+  \item ``Zur\"uck''-Button implementieren 
+  \item LiveData in RecordActivity einbinden
+  \item SettingsActivity: Tracking- und Bluetooth-Funktionen sinnvoll integrieren
+  \item Layout vereinheitlichen
+\end{itemize}
+\end{frame}
+
+\section{Webanwendung}
 
 \begin{frame}
-\frametitle{Web Application}
-\framesubtitle{Bisherigen Funktionen}
+\frametitle{Webanwendung}
+\framesubtitle{Bisherige Funktionen}
 \begin{itemize}
-  \item Umstellung auf stereoscopic 3D view m\"oglich.
-  \item Rudiment\"are 3D Welt.
-  \item Bewegung mit dem gamepad m\"oglich.
-  \item 2 verscheidene Visualisierungsmöglichkeiten der Dataen sind eingebaut.
-  \item Umstellung dieser mit Gamepad m\"oglich.
+  \item Umstellung auf stereoskopische 3D-Ansicht m\"oglich
+  \item Rudiment\"are 3D-Welt
+  \item Bewegung mit dem Gamepad m\"oglich
+  \item 2 verschiedene Visualisierungsm\"oglichkeiten der Daten
+  \item Umstellung dieser mit Gamepad m\"oglich
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Webanwendung}
+\framesubtitle{N\"achste Schritte}
+\begin{itemize}
+  \item ???
 \end{itemize}
 \end{frame}
 

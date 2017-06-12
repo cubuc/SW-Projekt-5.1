@@ -30,17 +30,13 @@ A better zoomable representation of these diagrams can be found in the github re
 
 \subsubsection{GUI}
 
-\includegraphics[width=0.8\textwidth]{pics/GUI.png}
+\includegraphics[width=0.8\textwidth]{pics/GUI-Component.png}
 
 \begin{itemize}
   \item \textbf{MainActivity} Provides the main startup screen as the main entry point.
-  \item \textbf{VRViewActivity} Shall open a new browser window to display the WebVR webpage.
-  \item \textbf{LiveDataActivity} Shall provide a view of the sensor data in human readable form.
-  \item \textbf{Settings:} Shall provide a settings screen containing scanning and connecting, connected devices and device settings fragments.
-  \begin{itemize}
-    \item \textbf{ScanListActivity} shall show the scanning results, delivered by the android.bluetooth.le.BluetoothLeScanner and connect on click on the device.
-    \item \textbf{DeviceControlActivity} shall provide propper read and write functions to show and edit the following configuration options of the sensors on the CC2650: Enable/disable the sensor, enable/disable the notifications, disconnect.
-  \end{itemize}
+  \item \textbf{RecordActivity} Provides an user interface to record new data.
+  \item \textbf{VRActivity} Opens the web application.
+  \item \textbf{SettingsActivity} Provides a user interface to configure the connectivity to the sensor device and the tracking options.
 \end{itemize}
 
 \subsubsection{Additional Classes}
@@ -51,9 +47,9 @@ A better zoomable representation of these diagrams can be found in the github re
 
 \subsection{Hardware/ Software mapping}
 
-The app consists of two parts both parts run on the users smart phone, the app will connect to the bluetooth sensor, gather the data and store
-it on a web server. The web application will also run on the users smart phone and will be executed in the browser, while the user can start this
-browser from the app. The web application will show the scene and display the previously saved data from the sensor in virtual reality.
+The product consists of two parts which both run on the smart phone: \\
+Firstly, the app will connect to the bluetooth sensor, gather the data and store them on a web server. \\
+Secondly, the web application will also run on the smart phone and will be executed in a web browser which can be started by the user from within the app. The web application will show a previously built scene and display the gathered sensor's data in virtual reality.
 
 \includegraphics[width=0.8\textwidth]{diagramms/hsMapping.png}
 

@@ -55,7 +55,6 @@ public class ScanListActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     mLeDeviceListAdapter.addDevice(result.getDevice());
-                    mLeDeviceListAdapter.notifyDataSetChanged();
                 }
             });
         }

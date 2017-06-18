@@ -1,15 +1,17 @@
-
-
-var scene,camera,controls,effect,renderer;
+var scene, camera, controls, effect, renderer;
 var vrDisplay = null;
 var lastRender;
 var dollyCam;
+var stats = new Stats();
+
 init();
 
 //setup the renderer, camera und loads the scene and data
-function init(){
+function init() {
 
-  renderer = new THREE.WebGLRenderer({antialias: false});
+  renderer = new THREE.WebGLRenderer({
+    antialias: false
+  });
   renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
 
   // Append the canvas element created by the renderer to document body element.
@@ -34,16 +36,20 @@ function init(){
   effect.setSize(window.innerWidth, window.innerHeight);
   // load the whole scene
   createRoom(scene);
+  stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+  document.body.appendChild(stats.domElement);
+
   //load the data from file
   var loading = $.getJSON("files/data.json");
   //wait for the loading to be done to continue using the file
-  loading.done(function(loaded){
+  loading.done(function(loaded) {
     // load and diplay the data we got from the sensor
     var dataVis = loadData(loaded);
     scene.add(dataVis[0]);
     scene.add(dataVis[1]);
     // add controls to the scene
-    moveCon = new moveCon(dollyCam,camera,dataVis[0],dataVis[1]);
+    moveCon = new moveCon(dollyCam, camera, dataVis[0], dataVis[1]);
+
 
     // Request animation frame loop function
     lastRender = 0;
@@ -63,6 +69,9 @@ function init(){
 
 function animate(timestamp) {
 
+
+  stats.begin();
+
   lastRender = timestamp;
 
   // Update VR headset position and apply to camera.
@@ -73,6 +82,7 @@ function animate(timestamp) {
 
   // Render the scene.
   effect.render(scene, camera);
+  stats.end();
 
   // Keep looping.
   vrDisplay.requestAnimationFrame(animate);
@@ -94,5 +104,7 @@ window.addEventListener('vrdisplaypresentchange', onVRDisplayPresentChange);
 
 // Button click handlers.
 document.querySelector('button#vr').addEventListener('click', function() {
-  vrDisplay.requestPresent([{ source: renderer.domElement }]);
+  vrDisplay.requestPresent([{
+    source: renderer.domElement
+  }]);
 });

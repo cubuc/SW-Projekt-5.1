@@ -240,7 +240,7 @@ public class StorageMainService extends IntentService {
         for (CompactData item : list) {
             // Data gets scaled to match a scale of 0 to 2, where the smallest data is 0 and the
             // biggest data is 2
-            item.setZ((float) (item.getData() / (calculateMaxDataVal(list) / 100) * 0.02));
+            item.setZ((float) ((item.getData() / (calculateMaxDataVal(list) / 100) * 0.01) - 1.5));
             Log.d("StorMan", "z = " + item.getZ());
         }
 

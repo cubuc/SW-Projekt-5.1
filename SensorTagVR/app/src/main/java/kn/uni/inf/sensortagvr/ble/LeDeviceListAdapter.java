@@ -3,12 +3,11 @@ package kn.uni.inf.sensortagvr.ble;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.v4.util.ArraySet;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
 
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
@@ -20,13 +19,13 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
  *
  */
 class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
-    private ArrayList<ScanListItem> deviceList = new ArrayList<>();
+    private ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
     /**
-     * @param deviceList
+     * @param deviceSet
      */
-    public void setDeviceList(ArrayList<ScanListItem> deviceList) {
-        this.deviceList = deviceList;
+    public void setDeviceSet(ArraySet<ScanListItem> deviceSet) {
+        this.deviceSet = deviceSet;
         notifyDataSetChanged();
     }
 
@@ -34,10 +33,15 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
      * @param device Bluetooth device to add
      */
     void addDevice(BluetoothDevice device) {
+        for (ScanListItem li : deviceSet) {
+            if (li.getDeviceAddress().equals(device.getAddress()))
+                return;
+        }
+
         ScanListItem li = new ScanListItem();
         li.setDevice(device);
-        this.deviceList.add(li);
-        notifyItemInserted(this.deviceList.size());
+        this.deviceSet.add(li);
+        notifyItemInserted(this.deviceSet.size());
     }
 
 
@@ -45,7 +49,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
      *
      */
     void clear() {
-        deviceList.clear();
+        deviceSet.clear();
     }
 
     /**
@@ -95,7 +99,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
      */
     @Override
     public void onBindViewHolder(LeDeviceListAdapter.ViewHolder holder, int position) {
-        holder.bind(deviceList.get(position));
+        holder.bind(deviceSet.valueAt(position));
     }
 
     /**
@@ -113,7 +117,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
      */
     @Override
     public int getItemCount() {
-        return deviceList.size();
+        return deviceSet.size();
     }
 
     /**

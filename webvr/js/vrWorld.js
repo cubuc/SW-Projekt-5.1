@@ -4,7 +4,7 @@
 
 //create the scene we want to explore the data in
 createRoom = function(scene) {
-  createGround();
+  //createGround();
   // a skybox so if we run out of the room its nicer
   var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
   var skyBoxMaterial = new THREE.MeshBasicMaterial({
@@ -13,11 +13,54 @@ createRoom = function(scene) {
   });
   var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
 
-  createWalls();
+  //createWalls();
+  var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+  scene.add( light );
+
+
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.setPath('files/');
+  mtlLoader.load('sporthalle1.mtl', function(materials) {
+    materials.preload();
+    var objLoader = new THREE.OBJLoader();
+    objLoader.setMaterials(materials);
+    objLoader.setPath('files/');
+    objLoader.load('sporthalle1.obj', function(object) {
+      object.position.y = -2;
+      scene.add(object);
+    }, onProgress, onError);
+  });
+/*
+  var objLoader = new THREE.OBJLoader();
+  var mat = new THREE.MeshBasicMaterial({
+    color: 0x8c8c8c,
+    wireframe: true,
+
+    side: THREE.DoubleSide
+  });
+  objLoader.load('files/sporthalle.obj', function(obj) {
+    obj.traverse(function(child) {
+      if (child instanceof THREE.Mesh) {
+        child.material = mat;
+      }
+
+    });
+    obj.position.y = -2;
+    scene.add(obj);
+  });*/
 
 
   scene.add(skyBox);
 };
+
+var onProgress = function ( xhr ) {
+  if ( xhr.lengthComputable ) {
+    var percentComplete = xhr.loaded / xhr.total * 100;
+    console.log( Math.round(percentComplete, 2) + '% downloaded' );
+  }
+};
+var onError = function ( xhr ) { };
+
 
 //create all the walls
 function createWalls() {

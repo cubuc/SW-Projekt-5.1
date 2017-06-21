@@ -15,15 +15,21 @@ canvas {
 
 .vr-button {
   background-color: Transparent;
-  outline:none;
-  background-repeat:no-repeat;
+  outline: none;
+  background-repeat: no-repeat;
   border: none;
   position: absolute;
-  right:    0;
-  bottom:   0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
-  color:white;
+  color: white;
   font-size: 20px;
   margin-right: 2px;
   margin-bottom: 2px;
+}
+
+#stats {
+  position: absolute;
+  top: 0;
+  left: 0
 }

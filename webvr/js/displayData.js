@@ -17,7 +17,6 @@ function loadData(loadedData) {
   // store the data unsorted in the first entry of the data array
   data[0] = verticies;
   dataVis[1] = makeBalls(data[0], loadedData);
-
   //now we sort them and make the planes
   data = sortData(data);
   dataVis[0] = makePlanes(data);
@@ -25,23 +24,26 @@ function loadData(loadedData) {
   return dataVis;
 }
 
+
 // make the balls to display the data in a second way
 function makeBalls(data, loadedData) {
   // make the text and balls seperate
   var text = new THREE.Object3D();
   var balls = new THREE.Object3D();
+  var color = calcColor(loadedData);
+
   //first make the balls in the position of the verticies, but disregard the
   // height so all balls are in the same plane
   for (var i = 0; i < data.length; i++) {
     // the spheres
     var geometry = new THREE.SphereGeometry(0.05, 10, 10);
     var material = new THREE.MeshBasicMaterial({
-      color: 0xffff00
+      color: color[i]
     });
     var sphere = new THREE.Mesh(geometry, material);
     sphere.translateX(data[i].x);
     sphere.translateZ(-data[i].y);
-    sphere.translateY(-0.5);
+    sphere.translateY(data[i].z);
     balls.add(sphere);
     // the text as a 2D sprite which is nicer then just a 3D text
     var canvas = document.createElement('canvas');
@@ -54,8 +56,6 @@ function makeBalls(data, loadedData) {
     context.textBaseline = "top";
     context.fillStyle = 'white';
     context.strokeStyle = 'black';
-    //context.fillText(data[i].z, 0, 0);
-    //for later use
     context.fillText(loadedData[i].data, 0, 0);
 
     var texture = new THREE.Texture(canvas);
@@ -63,12 +63,12 @@ function makeBalls(data, loadedData) {
 
     var material = new THREE.SpriteMaterial({
       map: texture,
-      transparent: false
+      transparent: false,
     });
     var sprite = new THREE.Sprite(material);
     sprite.position.x = data[i].x;
     sprite.position.z = -data[i].y;
-    sprite.position.y = -0.5;
+    sprite.position.y = data[i].z;
 
     text.add(sprite);
 
@@ -86,6 +86,27 @@ function makeBalls(data, loadedData) {
   return dataVis;
 }
 
+
+function calcColor(data) {
+  var col = [];
+  var max = Number(data[0].data);
+  var min = Number(data[0].data);
+  for (var i = 0; i < data.length; i++) {
+    if (Number(data[i].data) > max) {
+      max = Number(data[i].data);
+    } else if (Number(data[i].data) < min) {
+      min = Number(data[i].data);
+    }
+  }
+
+  for (var i = 0; i < data.length; i++) {
+    var tmp = (Number(data[i].data) - min) / (max - min);
+    tmp = 50 - 50 * tmp;
+    col[i] = new THREE.Color("hsl(" + tmp + ", 100%, 50%)");
+  }
+  return col
+}
+
 function makePlanes(data) {
   var plane = new THREE.Object3D();
   for (var i = 1; i < data.length; i++) {
@@ -94,7 +115,8 @@ function makePlanes(data) {
     var planeMat = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
       wireframe: false,
-      transparent: true
+      transparent: true,
+      shading: THREE.SmoothShading
     });
     planeMat.opacity = 0.5;
     var triangles = THREE.ShapeUtils.triangulateShape(data[i], []);
@@ -102,7 +124,8 @@ function makePlanes(data) {
     for (var j = 0; j < triangles.length; j++) {
       planeGeometry.faces.push(new THREE.Face3(triangles[j][0], triangles[j][1], triangles[j][2]));
     }
-    //planeGeometry.rotateX( - Math.PI / 2 );
+    planeGeometry.computeVertexNormals();
+
     plane.add(new THREE.Mesh(planeGeometry, planeMat));
   }
   plane.rotateX(-Math.PI / 2);

@@ -1,5 +1,7 @@
 package kn.uni.inf.sensortagvr.stor;
 
+import android.graphics.PointF;
+
 import java.util.Calendar;
 
 /**
@@ -19,29 +21,43 @@ class CompactData {
      * time: time data was recorded
      */
     private final String time;
-    private float x;
-    private float y;
-    private float z;
+    private double x;
+    private double y;
+    private double z;
     private float data;
+
+    CompactData() {
+        this.time = Calendar.getInstance().getTime().toString();
+    }
+
 
     /**
      * @param x
      * @param y
      * @param data
      */
-    CompactData(float x, float y, float data) {
+    CompactData(double x, double y, float data) {
+        this();
+
         this.x = x;
         this.y = y;
 
         this.data = data;
+    }
 
-        this.time = Calendar.getInstance().getTime().toString();
+    CompactData(PointF loc , float data) {
+        this();
+
+        this.x = loc.x;
+        this.y = loc.y;
+
+        this.data = data;
     }
 
     /**
      *
      */
-    float getX() {
+    double getX() {
         return x;
     }
 
@@ -49,14 +65,14 @@ class CompactData {
      *
      * @param x
      */
-    void setX(float x) {
+    void setX(double x) {
         this.x = x;
     }
 
     /**
      *
      */
-    float getY() {
+    double getY() {
         return y;
     }
 
@@ -64,7 +80,7 @@ class CompactData {
      *
      * @param y
      */
-    void setY(float y) {
+    void setY(double y) {
         this.y = y;
     }
 
@@ -87,7 +103,7 @@ class CompactData {
                 "\n" + time;
     }
 
-    public float getZ() {
+    double getZ() {
         return z;
     }
 
@@ -95,7 +111,7 @@ class CompactData {
      *
      * @param z
      */
-    void setZ(float z) {
+    void setZ(double z) {
         this.z = z;
     }
 }

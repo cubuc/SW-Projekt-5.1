@@ -35,16 +35,16 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 public class StorageMainService extends IntentService {
 
 
-    private static final int y[] = new int[]{0, 5, 7};
     // Sets the Scale factor for the location grid in dataMeasured
     private static final int SCALE_LOCATION = 10;
+
     IBinder binder = new StorageBinder();
-    private int x = 0;
-    private int yIndex = 0;
-    private int xCount = 0;
+
+
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
     private boolean trackingServiceBound = false;
+
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -71,13 +71,20 @@ public class StorageMainService extends IntentService {
             trackingServiceBound = false;
         }
     };
+
     // Saves all measured data in a session
     private ArrayList<CompactData> dataMeasured;
     private boolean sessionStarted = false;
+
     // Path a data.json file is saved to
     private String path;
     private Intent lastReceivedData;
 
+
+    private double SCALEFACTOR_X = 30;
+    private double SCALEFACTOR_Y = 20;
+    private boolean REBASE = false;
+    private boolean DISTORT = false;
 
     /**
      * 
@@ -122,6 +129,7 @@ public class StorageMainService extends IntentService {
         //trackingService.calibrate;
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
+        createDummyData();
         return binder;
     }
 
@@ -146,6 +154,7 @@ public class StorageMainService extends IntentService {
         if (sessionStarted) {
             // get data from 'lastReceived'
             float[] receivedData = {0};
+
             if (lastReceivedData != null)
                 receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
 
@@ -153,13 +162,8 @@ public class StorageMainService extends IntentService {
             PointF loc = trackingService.getRelativePosition();
 
             // receivedData should be scaled between -.5 and 1
-            dataMeasured.add(new CompactData(x, y[(++yIndex) % 3], receivedData[0]));
+            dataMeasured.add(new CompactData(loc, receivedData[0]));
             Log.d("StorMan", "Data " + receivedData[0]);
-            xCount = (++xCount) % 3;
-
-            if (xCount == 0) x++;
-
-            Toast.makeText(getApplicationContext(), "Data received", Toast.LENGTH_SHORT).show();
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
     }
@@ -220,7 +224,7 @@ public class StorageMainService extends IntentService {
         if (!data.isFile() && !data.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
         for (CompactData item : list)
-            Log.d("StorMainSvc", item.toString());
+            Log.d("StorMan", item.toString());
         // Create a FileWriter, use gson to write to it and close it. This essentially creates the file.
         FileWriter writer = new FileWriter(data);
         gson.toJson(list, writer);
@@ -236,11 +240,39 @@ public class StorageMainService extends IntentService {
      * @param list List to be normalized
      */
     private void scaleAll(ArrayList<CompactData> list) {
+
+        double maxData = calculateMaxDataVal(list);
+        double minData = calculateMinDataVal(list);
+        double dataFactor = maxData - minData;
+
+        // Rebases the set of data points, thus no point has a negative X or Y value
+        if (REBASE){
+            double[] minVals = calculateMinValues(list);
+
+            for (CompactData item : list) {
+                item.setX(item.getX() - minVals[0]);
+                item.setY(item.getY() - minVals[1]);
+            }
+        }
+
+        // Given that the max distance may change if the Origin is changed, the max Distance to
+        // any axis is calculated afterwards
+        double[] maxDist = calculateMaxDistance(list);
+
+        if (!DISTORT) {
+            SCALEFACTOR_Y = SCALEFACTOR_X;
+        }
+
+        double factorX = maxDist[0] / SCALEFACTOR_X;
+        double factorY = maxDist[1] / SCALEFACTOR_Y;
+
+
         // Scale the list values with the determined factors
         for (CompactData item : list) {
-            // Data gets scaled to match a scale of 0 to 2, where the smallest data is 0 and the
-            // biggest data is 2
-            item.setZ((float) ((item.getData() / (calculateMaxDataVal(list) / 100) * 0.01) - 1.5));
+
+            item.setX( item.getX() / factorX); // = item.getX() / maxDist[0] * SCALEFACTOR_X
+            item.setY( item.getY() / factorY);
+            item.setZ( (item.getData() - minData) / dataFactor - .5);
             Log.d("StorMan", "z = " + item.getZ());
         }
 
@@ -276,20 +308,50 @@ public class StorageMainService extends IntentService {
     }
 
     /**
-     * Determines the factor by which list should be scaled down
+     * Determines the biggest distance a point has to the nullpoint.
+     *
+     * If distortion is active, the fi
      *
      * @param list ist of location points
-     * @return scaling factor to match SCALE
+     * @return If distortion is active, the first value of the array is the biggest distance a point
+     *  has on the x-axis and the second value is the biggest distance a point has on the y-axis.
+     *  If distortion is not active, the first value is the biggest distance a point has to any axis.
+     *  (the second value will be like with distortion active)
      */
-    private double calculateLocationFactor(ArrayList<CompactData> list) {
-        double max = Double.MIN_VALUE;
+    private double[] calculateMaxDistance(ArrayList<CompactData> list) {
 
-        // determine the biggest location parameter
+        double maxX = Double.MIN_VALUE;
+        double maxY = Double.MIN_VALUE;
+
         for (CompactData item : list) {
-            max = Math.max(max, Math.max(Math.abs(item.getX()), Math.abs(item.getY())));
+            maxX = Math.max(maxX, Math.abs(item.getX()));
+            maxY = Math.max(maxY, Math.abs(item.getY()));
         }
 
-        return max / SCALE_LOCATION;
+        if (!DISTORT) {
+            maxX = Math.max(maxX, maxY);
+        }
+
+        return DISTORT ? new double[]{maxX, maxY} : new double[]{maxX, maxX};
+
+    }
+
+    /**
+     *
+     * @param list
+     * @return
+     */
+    private double[] calculateMinValues(ArrayList<CompactData> list) {
+
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+
+        for (CompactData item : list) {
+            minX = Math.min(minX, item.getX());
+            minY = Math.min(minY, item.getY());
+        }
+
+        return new double[] {minX, minY};
     }
 
     /**
@@ -303,6 +365,17 @@ public class StorageMainService extends IntentService {
             return StorageMainService.this;
         }
     }
+
+
+    public void createDummyData() {
+        dataMeasured.add(new CompactData(0,0, 23));
+        dataMeasured.add(new CompactData(4,0, 25));
+        dataMeasured.add(new CompactData(0,5, 20));
+        dataMeasured.add(new CompactData(0,7, 24));
+        dataMeasured.add(new CompactData(4,7, 22));
+        dataMeasured.add(new CompactData(4,5, 20));
+    }
+
 }
 
 

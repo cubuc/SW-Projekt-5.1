@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
+import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 public class RecordFragment extends Fragment implements View.OnClickListener{
 
@@ -77,6 +78,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity().getApplicationContext(), "Write", Toast.LENGTH_SHORT).show();
             }
         }); */
+
+        final Button trackingButton = (Button) view.findViewById(R.id.location);
+        trackingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity().getApplicationContext(), TrackingTestActivity.class));
+            }
+        });
 
         return view;
     }

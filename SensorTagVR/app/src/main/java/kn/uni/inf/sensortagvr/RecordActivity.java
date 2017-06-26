@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
+import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 /**
  * Created by lisa-maria on 21.05.17.
@@ -93,6 +94,14 @@ public class RecordActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Write", Toast.LENGTH_SHORT).show();
             }
         });
+
+        /*final Button trackingButton = (Button) findViewById(R.id.location);
+        trackingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), TrackingTestActivity.class));
+            }
+        });*/
     }
 
     /**

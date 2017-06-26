@@ -13,14 +13,30 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import kn.uni.inf.sensortagvr.MainActivity;
 import kn.uni.inf.sensortagvr.R;
-import kn.uni.inf.sensortagvr.RecordActivity;
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
 
 public class RecordFragment extends Fragment implements View.OnClickListener{
 
     View view;
+    StorageMainService storageService;
+    boolean storageServiceBound = false;
+    private ServiceConnection storageConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            StorageMainService.StorageBinder binder = (StorageMainService.StorageBinder) service;
+            storageService = binder.getService();
+            storageServiceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+            storageServiceBound = false;
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          view =  inflater.inflate(R.layout.fragment_record, container, false);
@@ -41,7 +57,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
            //onclick
        // });
 
-        final Button buttonMD = (Button) getView().findViewById(R.id.measure);
+        final Button buttonMD = (Button) view.findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -72,25 +88,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
         else
             Toast.makeText(getActivity().getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
     }
-
-
-    StorageMainService storageService;
-    boolean storageServiceBound = false;
-    private ServiceConnection storageConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            StorageMainService.StorageBinder binder = (StorageMainService.StorageBinder) service;
-            storageService = binder.getService();
-            storageServiceBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-            storageServiceBound = false;
-        }
-    };
 
    /* @Override
     public void onClick(View v) {

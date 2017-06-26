@@ -71,7 +71,7 @@ public class TabGroupActivity extends ActivityGroup {
      * The primary purpose is to prevent systems before android.os.Build.VERSION_CODES.ECLAIR
      * from calling their default KeyEvent.KEYCODE_BACK during onKeyDown.
      */
-    @Override
+   /* @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
@@ -79,12 +79,13 @@ public class TabGroupActivity extends ActivityGroup {
         }
         return super.onKeyDown(keyCode, event);
     }
+    */
 
     /**
      * Overrides the default implementation for KeyEvent.KEYCODE_BACK
      * so that all systems call onBackPressed().
      */
-    @Override
+   /* @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             onBackPressed();
@@ -92,12 +93,13 @@ public class TabGroupActivity extends ActivityGroup {
         }
         return super.onKeyUp(keyCode, event);
     }
+    */
 
     /**
      * If a Child Activity handles KeyEvent.KEYCODE_BACK.
      * Simply override and add this method.
      */
-    @Override
+    /*@Override
     public void  onBackPressed  () {
         int length = mIdList.size();
         if ( length > 1) {
@@ -105,6 +107,7 @@ public class TabGroupActivity extends ActivityGroup {
             current.finish();
         }
     }
+    */
 
 }
 

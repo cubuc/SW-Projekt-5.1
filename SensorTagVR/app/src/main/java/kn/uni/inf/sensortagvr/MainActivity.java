@@ -3,12 +3,13 @@ package kn.uni.inf.sensortagvr;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
-import kn.uni.inf.sensortagvr.gui_tab_management.TabSample;
+import kn.uni.inf.sensortagvr.gui_tab_management.TabActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     public static int firstActiveTab = 0;
 
@@ -16,6 +17,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final Intent startTabs = new Intent(MainActivity.this, TabActivity.class);
 
         ImageButton recButt = (ImageButton) findViewById(R.id.recordButton);
         ImageButton vrButt = (ImageButton) findViewById(R.id.vrButton);
@@ -25,9 +28,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 firstActiveTab = 0;
-                Intent myIntent = new Intent(MainActivity.this,
-                        TabSample.class);
-                startActivity(myIntent);
+                startActivity(startTabs);
             }
         });
 
@@ -35,9 +36,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 firstActiveTab = 1;
-                Intent myIntent = new Intent(MainActivity.this,
-                        TabSample.class);
-                startActivity(myIntent);
+                startActivity(startTabs);
             }
         });
 
@@ -45,9 +44,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 firstActiveTab = 2;
-                Intent myIntent = new Intent(MainActivity.this,
-                        TabSample.class);
-                startActivity(myIntent);
+                startActivity(startTabs);
             }
         });
 

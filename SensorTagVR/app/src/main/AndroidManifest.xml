@@ -35,19 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecordActivity" />
         <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />
         <activity android:name=".ble.LiveDataActivity" />
         <activity android:name=".tracking.APSettingsActivity"/>
-        <activity android:name=".VRActivity"/>
-        <activity android:name=".SettingsActivity" />
 
-        <activity android:name=".gui_tab_management.TabSample" android:label="@string/app_name"></activity>
-        <activity android:name=".gui_tab_management.TabGroup1Activity" />
-        <activity android:name=".gui_tab_management.TabGroup2Activity" />
-        <activity android:name=".gui_tab_management.TabGroup3Activity" />
-        <activity android:name=".gui_tab_management.TabGroupActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">

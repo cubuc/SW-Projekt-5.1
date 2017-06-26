@@ -14,18 +14,18 @@ createRoom = function(scene) {
   var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
 
   //createWalls();
-  var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+  var light = new THREE.HemisphereLight( 0xffffff, 0x080820, 1 );
   scene.add( light );
 
 
   var mtlLoader = new THREE.MTLLoader();
   mtlLoader.setPath('files/');
-  mtlLoader.load('sporthalle1.mtl', function(materials) {
+  mtlLoader.load('sporthalle4.mtl', function(materials) {
     materials.preload();
     var objLoader = new THREE.OBJLoader();
     objLoader.setMaterials(materials);
     objLoader.setPath('files/');
-    objLoader.load('sporthalle1.obj', function(object) {
+    objLoader.load('sporthalle4.obj', function(object) {
       object.position.y = -2;
       scene.add(object);
     }, onProgress, onError);

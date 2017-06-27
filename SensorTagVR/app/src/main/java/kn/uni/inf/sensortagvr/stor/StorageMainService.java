@@ -6,19 +6,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
@@ -34,9 +43,6 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 
 public class StorageMainService extends IntentService {
 
-
-    // Sets the Scale factor for the location grid in dataMeasured
-    private static final int SCALE_LOCATION = 10;
 
     IBinder binder = new StorageBinder();
 
@@ -77,7 +83,7 @@ public class StorageMainService extends IntentService {
     private boolean sessionStarted = false;
 
     // Path a data.json file is saved to
-    private String path;
+    private String path = null;
     private Intent lastReceivedData;
 
 
@@ -102,14 +108,12 @@ public class StorageMainService extends IntentService {
     public void onCreate() {
         super.onCreate();
 
+        path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
+        Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
         // Binding TrackingManagerService
         Intent bindTrackService = new Intent(this, TrackingManagerService.class);
         bindService(bindTrackService, mConnection, Context.BIND_AUTO_CREATE);
 
-        // File can be accessed by the phone itself
-        // Path = /storage/emulated/0/Android/data/kn.uni.inf.sensortagvr/files
-        if (isExternalStorageWritable())
-            path = getExternalFilesDir(null).getAbsolutePath();
     }
 
     /** @param intent intent that shall be handled */
@@ -126,11 +130,39 @@ public class StorageMainService extends IntentService {
      */
     @Override
     public IBinder onBind(Intent intent) {
-        //trackingService.calibrate;
+        createNewSession();
+        return binder;
+    }
+
+    /**
+     *
+     */
+    public void createNewSession() {
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
-        createDummyData();
-        return binder;
+    }
+
+    /**
+     *
+     */
+    public void continueSession() {
+
+        File data = new File(path);
+
+        if(data.isFile()) {
+            try {
+                Gson gson = new Gson();
+                JsonReader reader = new JsonReader(new FileReader(path));
+
+                CompactData[] datas = gson.fromJson(reader, CompactData[].class);
+                dataMeasured = new ArrayList<>(Arrays.asList(datas));
+
+                sessionStarted = true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else
+            Toast.makeText(getApplicationContext(), "No old session found", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -166,6 +198,7 @@ public class StorageMainService extends IntentService {
             Log.d("StorMan", "Data " + receivedData[0]);
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -180,21 +213,11 @@ public class StorageMainService extends IntentService {
                 // Signals a recording session ended
                 sessionStarted = false;
 
-                Toast.makeText(getApplicationContext(), "Session closed", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Session closed", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-
-    /* Checks if external storage is available for read and write */
-    /**
-     * 
-     */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /**
@@ -208,25 +231,15 @@ public class StorageMainService extends IntentService {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        File dir = new File(path);
-
-        // Check whether the directory exists, tries to create it, if it doesn't exist yet
-        if (!dir.exists()) {
-            if (dir.mkdirs())
-                Toast.makeText(getApplicationContext(), "New Directories created", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getApplicationContext(), "Couldn't create Directories", Toast.LENGTH_SHORT).show();
-        }
-
-        File data = new File(dir, "data.json");
+        File file = new File(path);
 
         // Check whether a file could be created.
-        if (!data.isFile() && !data.createNewFile())
+        if (!file.isFile() && !file.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
         for (CompactData item : list)
             Log.d("StorMan", item.toString());
         // Create a FileWriter, use gson to write to it and close it. This essentially creates the file.
-        FileWriter writer = new FileWriter(data);
+        FileWriter writer = new FileWriter(file);
         gson.toJson(list, writer);
         writer.close();
 
@@ -366,6 +379,76 @@ public class StorageMainService extends IntentService {
         }
     }
 
+    /**
+     *
+     */
+    private void uploadFile() {
+        AsyncTask<String, Boolean, Integer> up = new Uploader();
+        up.execute(path);
+
+    }
+
+    /**
+     *
+     */
+    private class Uploader extends AsyncTask<String, Boolean, Integer> {
+        @Override
+        protected Integer doInBackground(String... strings) {
+            FTPClient con;
+
+            try
+            {
+                // establish a connection
+                con = new FTPClient();
+                con.connect("web.kim.uni-konstanz.de");
+
+                // Try to log in to the server
+                if (con.isConnected() && con.login("softwareproject17", "Cardboard51**"))
+                {
+                    con.enterLocalPassiveMode(); // important!
+                    con.setFileType(FTP.ASCII_FILE_TYPE);
+
+                    int reply = con.getReplyCode();
+
+                    if(!FTPReply.isPositiveCompletion(reply))
+                        return 1;
+
+                    // Create the File that gets uploaded
+                    File data = new File(strings[0]);
+
+                    if (!data.isFile())
+                        return 1;
+
+                    // Upload the file
+                    FileInputStream in = new FileInputStream(data);
+                    boolean result = con.storeFile("/data.json", in);
+                    in.close();
+                    if (result) Log.v("upload result", "succeeded");
+                    else return 1;
+                    // close the connection
+                    con.logout();
+                    con.disconnect();
+                }
+                else
+                    return 1;
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                return 1;
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            if (result == 1)
+                Toast.makeText(getApplicationContext(), "Upload not successfull", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(), "Upload successfull", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     public void createDummyData() {
         dataMeasured.add(new CompactData(0,0, 23));

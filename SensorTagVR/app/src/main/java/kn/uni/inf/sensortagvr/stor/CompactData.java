@@ -25,6 +25,8 @@ class CompactData {
     private double y;
     private double z;
     private float data;
+    private double originalX;
+    private double originalY;
 
     CompactData() {
         this.time = Calendar.getInstance().getTime().toString();
@@ -39,8 +41,8 @@ class CompactData {
     CompactData(double x, double y, float data) {
         this();
 
-        this.x = x;
-        this.y = y;
+        this.originalX = x;
+        this.originalY = y;
 
         this.data = data;
     }
@@ -48,8 +50,8 @@ class CompactData {
     CompactData(PointF loc , float data) {
         this();
 
-        this.x = loc.x;
-        this.y = loc.y;
+        this.originalX = loc.x;
+        this.originalY = loc.y;
 
         this.data = data;
     }
@@ -113,6 +115,14 @@ class CompactData {
      */
     void setZ(double z) {
         this.z = z;
+    }
+
+    public double getOriginalX() {
+        return originalX;
+    }
+
+    public double getOriginalY() {
+        return originalY;
     }
 }
 

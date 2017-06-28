@@ -140,6 +140,8 @@ public class StorageMainService extends IntentService {
     public void createNewSession() {
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
+
+        Toast.makeText(getApplicationContext(), "New Session created", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -183,6 +185,7 @@ public class StorageMainService extends IntentService {
      * ArrayList measured
      */
     public void measureData() {
+
         if (sessionStarted) {
             // get data from 'lastReceived'
             float[] receivedData = {0};
@@ -243,6 +246,8 @@ public class StorageMainService extends IntentService {
         gson.toJson(list, writer);
         writer.close();
 
+        Toast.makeText(getApplicationContext(), "File saved", Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -263,8 +268,8 @@ public class StorageMainService extends IntentService {
             double[] minVals = calculateMinValues(list);
 
             for (CompactData item : list) {
-                item.setX(item.getX() - minVals[0]);
-                item.setY(item.getY() - minVals[1]);
+                item.setX(item.getOriginalX() - minVals[0]);
+                item.setY(item.getOriginalY() - minVals[1]);
             }
         }
 
@@ -283,8 +288,8 @@ public class StorageMainService extends IntentService {
         // Scale the list values with the determined factors
         for (CompactData item : list) {
 
-            item.setX( item.getX() / factorX); // = item.getX() / maxDist[0] * SCALEFACTOR_X
-            item.setY( item.getY() / factorY);
+            item.setX( item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
+            item.setY( item.getOriginalY() / factorY);
             item.setZ( (item.getData() - minData) / dataFactor - .5);
             Log.d("StorMan", "z = " + item.getZ());
         }
@@ -337,8 +342,8 @@ public class StorageMainService extends IntentService {
         double maxY = Double.MIN_VALUE;
 
         for (CompactData item : list) {
-            maxX = Math.max(maxX, Math.abs(item.getX()));
-            maxY = Math.max(maxY, Math.abs(item.getY()));
+            maxX = Math.max(maxX, Math.abs(item.getOriginalX()));
+            maxY = Math.max(maxY, Math.abs(item.getOriginalY()));
         }
 
         if (!DISTORT) {
@@ -360,8 +365,8 @@ public class StorageMainService extends IntentService {
         double minY = Double.MAX_VALUE;
 
         for (CompactData item : list) {
-            minX = Math.min(minX, item.getX());
-            minY = Math.min(minY, item.getY());
+            minX = Math.min(minX, item.getOriginalX());
+            minY = Math.min(minY, item.getOriginalY());
         }
 
         return new double[] {minX, minY};

@@ -28,6 +28,7 @@ public class TabActivity extends AppCompatActivity {
 
         tabLayout.addTab(tabLayout.newTab().setText("Record"));
         tabLayout.addTab(tabLayout.newTab().setText("VR View"));
+        tabLayout.addTab(tabLayout.newTab().setText("LiveData"));
         tabLayout.addTab(tabLayout.newTab().setText("Settings"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -38,7 +39,7 @@ public class TabActivity extends AppCompatActivity {
 
         viewPager.setCurrentItem(firstActiveTab);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());

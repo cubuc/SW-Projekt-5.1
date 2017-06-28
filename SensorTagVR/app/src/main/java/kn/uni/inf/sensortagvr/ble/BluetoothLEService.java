@@ -58,6 +58,10 @@ public class BluetoothLEService extends Service {
     private BluetoothGatt mGatt;
     private BluetoothAdapter mBtAdapter;
     private ConcurrentLinkedQueue<Object> mRWQueue = new ConcurrentLinkedQueue<>();
+
+    /**
+     * Bluetooth generic attribute profile callback implementation
+     */
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         /**
          * @param gatt The (dis-)connected GATT Server
@@ -183,8 +187,14 @@ public class BluetoothLEService extends Service {
     public BluetoothLEService() {
     }
 
+    /*
+        Service interaction
+     */
+
     /**
      * Parses the raw data and sends broadcasts dependent on the type of sensor.
+     * ATM only with hardcoded sensor data acquisition over the record fragment/storage service
+     * because it's not supported by the other sides
      *
      * @param characteristic The characteristic that has changed it's value or was read.
      */
@@ -194,6 +204,12 @@ public class BluetoothLEService extends Service {
             case UUID_IRT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
                 intent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));
+
+                // Hardcoded active sensor.
+                Intent iSvcIntent = new Intent(this, StorageMainService.class);
+                iSvcIntent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
+                iSvcIntent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));
+                startService(iSvcIntent);
                 break;
             case UUID_ACC_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.ACCELEROMETER);
@@ -218,16 +234,16 @@ public class BluetoothLEService extends Service {
             case UUID_OPT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
-                Intent iSvcIntent = new Intent(this, StorageMainService.class);
-                iSvcIntent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
-                iSvcIntent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
-                startService(iSvcIntent);
                 break;
             default:
                 Log.i(TAG, "no valid data characteristic");
         }
         mLocalBroadcastManager.sendBroadcast(intent);
     }
+
+    /*
+        Service life-cycle
+     */
 
     /**
      *
@@ -302,7 +318,11 @@ public class BluetoothLEService extends Service {
         mGatt = null;
         super.onDestroy();
     }
-    
+
+    /*
+        Connecting and disconnecting
+     */
+
     /**
      * connects to the gatt server hosted on the bluetooth le device.
      *
@@ -346,32 +366,9 @@ public class BluetoothLEService extends Service {
         mGatt.close();
     }
 
-    /**
-     * Read a BluetoothCharacteristic.
-     *
-     * @param characteristic Characteristic to read
+    /*
+      Control the sensor: writes are only used to en-/disable the sensors and their notifications
      */
-    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (mBtAdapter == null || mGatt == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
-        }
-        mGatt.readCharacteristic(characteristic);
-    }
-
-    /**
-     * Read a sensor value, giving the sensor name as parameter instead of a characteristic.
-     *
-     * @param s A sensor, listed in the Sensor enum
-     */
-    public void readFromSensor(Sensor s) {
-        if (mBtAdapter == null || mGatt == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
-        }
-        BluetoothGattService sensorService = mGatt.getService(s.getServiceUUID());
-        mGatt.readCharacteristic(sensorService.getCharacteristic(s.getDataUUID()));
-    }
 
     /**
      * Basic sensor control: turn power and notifications on and off.
@@ -421,25 +418,6 @@ public class BluetoothLEService extends Service {
     }
 
     /**
-     * @param s
-     * @param power
-     * @param notification
-     */
-    private void updateLists(Sensor s, boolean power, boolean notification) {
-        if (power) {
-            enabledSensors.add(s);
-        } else {
-            enabledSensors.remove(s);
-            notifyingSensors.remove(s);
-        }
-        if (notification) {
-            notifyingSensors.add(s);
-        } else {
-            notifyingSensors.remove(s);
-        }
-    }
-
-    /**
      * Wrapper for a blocking write: Either execute if the Queue is empty and no write is currently
      * going on or enqueue the write task.
      *
@@ -485,32 +463,50 @@ public class BluetoothLEService extends Service {
     }
 
     /**
-     *
+     * Only needed if multiple sensors are supported by the -GUI, -Record, -WebVR
+     * @param s Sensor that has changed its state
+     * @param power new power value (on/off?)
+     * @param notification new notification status (on/off?)
      */
-    public ArrayList<Sensor> getEnabledSensors() {
-        return enabledSensors;
+    private void updateLists(Sensor s, boolean power, boolean notification) {
+        if (power) {
+            enabledSensors.add(s);
+        } else {
+            enabledSensors.remove(s);
+            notifyingSensors.remove(s);
+        }
+        if (notification) {
+            notifyingSensors.add(s);
+        } else {
+            notifyingSensors.remove(s);
+        }
     }
 
-    /**
-     *
+    /*
+        Methods for multiple data visualization, atm not implemented by GUI, recording and WebVR
      */
-    public ArrayList<Sensor> getNotifyingSensors() {
-        return notifyingSensors;
-    }
 
     /**
+     * Only needed if multiple sensors are supported by the -GUI, -Record, -WebVR
+     * Read a sensor value, giving the sensor name as parameter instead of a characteristic.
      *
+     * @param s A sensor, listed in the Sensor enum
      */
-    class LocalBinder extends Binder {
+    public void readFromSensor(Sensor s) {
+        if (mBtAdapter == null || mGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return;
+        }
+        BluetoothGattService sensorService = mGatt.getService(s.getServiceUUID());
+        mGatt.readCharacteristic(sensorService.getCharacteristic(s.getDataUUID()));
+    }
+
+    public class LocalBinder extends Binder {
         /**
          * returns the reference to the service object
          */
-        BluetoothLEService getService() {
+        public BluetoothLEService getService() {
             return BluetoothLEService.this;
         }
     }
 }
-
-
-
-

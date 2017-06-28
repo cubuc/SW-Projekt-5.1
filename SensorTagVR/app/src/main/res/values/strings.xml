@@ -26,7 +26,7 @@
     <string name="callibrate">Calibrate</string>
     <string name="record">Record Data</string>
     <string name="title_activity_apsettings">AP Settings</string>
-
+    <string name="label_loc">Location</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

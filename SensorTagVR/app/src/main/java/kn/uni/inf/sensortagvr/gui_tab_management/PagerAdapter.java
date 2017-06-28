@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
 
@@ -27,6 +28,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new VRFragment();
             case 2:
+                return new LiveDataFragment();
+            case 3:
                 return new SettingsFragment();
             default:
                 return null;

@@ -6,6 +6,10 @@
             name="deviceItem"
             type="kn.uni.inf.sensortagvr.ble.ScanListItem" />
 
+        <variable
+            name="connecter"
+            type="kn.uni.inf.sensortagvr.ble.LeDeviceListAdapter.ViewHolder" />
+
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -35,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:onClick="@{(v) -> deviceItem.onClick(v) }"
+            android:onClick="@{(v) -> connecter.onClick(v) }"
             android:text="@string/connect" />
     </LinearLayout>
 </layout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="kn.uni.inf.sensortagvr.gui_tab_management.VRFragment">
+    tools:context="kn.uni.inf.sensortagvr.VRFragment">
 
     <Button
         android:id="@+id/start_VR"

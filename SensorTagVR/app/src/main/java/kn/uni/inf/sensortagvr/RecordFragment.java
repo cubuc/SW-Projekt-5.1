@@ -1,4 +1,4 @@
-package kn.uni.inf.sensortagvr.gui_tab_management;
+package kn.uni.inf.sensortagvr;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
 import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 

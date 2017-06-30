@@ -293,9 +293,8 @@ public class BluetoothLEService extends Service {
         if (mBtAdapter == null) {
             Log.e(TAG, "No BluetoothAdapter detected");
             stopSelf();
-        }
 
-        if (!mBtAdapter.isEnabled()) mBtAdapter.enable();
+        } else if (!mBtAdapter.isEnabled()) mBtAdapter.enable();
 
         Log.i(TAG, "OnStart finished");
         return START_NOT_STICKY;

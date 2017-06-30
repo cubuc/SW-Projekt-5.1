@@ -1,6 +1,5 @@
 package kn.uni.inf.sensortagvr.ble;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -26,11 +25,7 @@ import java.util.List;
 
 import kn.uni.inf.sensortagvr.R;
 
-
-/**
- *
- */
-public class ScanListActivity extends AppCompatActivity {
+public class ScanListTemp extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
     static RecyclerView mDeviceList;
     private final int REQUEST_ENABLE_BT = 1;
@@ -86,10 +81,6 @@ public class ScanListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar ab = getActionBar();
-        if (ab != null)
-            ab.setTitle(R.string.title_devices);
-
         // Sets up UI references.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setContentView(R.layout.activity_scanlist);
@@ -195,8 +186,6 @@ public class ScanListActivity extends AppCompatActivity {
         }
         invalidateOptionsMenu();
     }
-
-
 }
 
 

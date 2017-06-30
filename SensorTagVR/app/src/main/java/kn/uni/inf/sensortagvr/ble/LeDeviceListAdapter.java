@@ -150,9 +150,9 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         public void onClick(View v) {
             final BluetoothDevice device = binding.getDeviceItem().getDevice();
             if (device == null) return;
-            final Intent intent = new Intent(v.getContext(), LiveDataActivity.class);
-            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
-            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+            final Intent intent = new Intent(v.getContext(), LiveDataTemp.class);
+            intent.putExtra(LiveDataTemp.EXTRAS_DEVICE_NAME, device.getName());
+            intent.putExtra(LiveDataTemp.EXTRAS_DEVICE_ADDRESS, device.getAddress());
             v.getContext().startActivity(intent);
         }
     }

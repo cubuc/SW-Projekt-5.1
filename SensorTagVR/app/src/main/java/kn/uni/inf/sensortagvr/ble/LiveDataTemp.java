@@ -30,10 +30,10 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
  * communicates with {@code BluetoothLEService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class LiveDataActivity extends AppCompatActivity {
+public class LiveDataTemp extends AppCompatActivity {
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-    private final static String TAG = LiveDataActivity.class.getSimpleName();
+    private final static String TAG = LiveDataTemp.class.getSimpleName();
     LocalBroadcastManager mLocalBroadcastManager;
     SensorDataListAdapter adapter = new SensorDataListAdapter();
     private TextView mConnectionState;

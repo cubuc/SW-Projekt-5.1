@@ -1,4 +1,4 @@
-package kn.uni.inf.sensortagvr.gui_tab_management;
+package kn.uni.inf.sensortagvr;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import kn.uni.inf.sensortagvr.R;
 
 public class VRFragment extends Fragment implements View.OnClickListener{
 

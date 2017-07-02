@@ -34,24 +34,12 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />
-        <activity android:name=".ble.LiveDataActivity" />
         <activity android:name=".tracking.APSettingsActivity"/>
-
-        <activity
-            android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".gui_tab_management.TabActivity"></activity>
-
 
         <service
             android:name=".ble.BluetoothLEService"

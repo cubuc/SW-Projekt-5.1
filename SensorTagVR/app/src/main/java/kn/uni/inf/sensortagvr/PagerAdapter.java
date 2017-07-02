@@ -1,4 +1,4 @@
-package kn.uni.inf.sensortagvr.gui_tab_management;
+package kn.uni.inf.sensortagvr;
 
 /**
  * Created by Lisa-Maria on 24/06/2017.
@@ -24,13 +24,14 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new RecordFragment();
+                //return new RecordFragment();
             case 1:
                 return new VRFragment();
             case 2:
                 return new LiveDataFragment();
             case 3:
-                return new SettingsFragment();
+                return new BLEScanFragment();
+            //return new SettingsFragment();
             default:
                 return null;
         }

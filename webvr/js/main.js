@@ -28,6 +28,7 @@ function init() {
 
   dollyCam = new THREE.PerspectiveCamera();
   dollyCam.add(camera);
+  dollyCam.position.x = 5;
   scene.add(dollyCam);
   // enable gamepad controlls
 
@@ -40,7 +41,7 @@ function init() {
   document.body.appendChild(stats.domElement);
 
   //load the data from file
-  var loading = $.getJSON("files/data.json");
+  var loading = $.getJSON("data.json");
   //wait for the loading to be done to continue using the file
   loading.done(function(loaded) {
     // load and diplay the data we got from the sensor

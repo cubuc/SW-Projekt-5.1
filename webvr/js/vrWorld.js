@@ -17,6 +17,10 @@ createRoom = function(scene) {
   var light = new THREE.HemisphereLight( 0xffffff, 0x080820, 1 );
   scene.add( light );
 
+  var ambLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+  scene.add( ambLight );
+
+
 
   var mtlLoader = new THREE.MTLLoader();
   mtlLoader.setPath('files/');

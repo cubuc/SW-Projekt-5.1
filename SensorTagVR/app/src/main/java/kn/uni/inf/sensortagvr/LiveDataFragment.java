@@ -163,16 +163,14 @@ public class LiveDataFragment extends Fragment {
         mLiveDataList.setAdapter(adapter);
         mLiveDataList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
         return v;
     }
 
-    public void onResume() {
+   /* public void onResume() {
         super.onResume();
         mLocalBroadcastManager.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
 
-
-    }
+    }*/
 
 
     /**

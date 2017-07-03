@@ -24,14 +24,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                //return new RecordFragment();
+                return new RecordFragment();
             case 1:
                 return new VRFragment();
             case 2:
-                return new LiveDataFragment();
-            case 3:
-                return new BLEScanFragment();
-            //return new SettingsFragment();
+                return new SettingsFragment();
             default:
                 return null;
         }
@@ -39,7 +36,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-
         return mNumOfTabs;
     }
 }

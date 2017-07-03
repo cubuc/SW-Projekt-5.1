@@ -7,6 +7,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
-import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 public class RecordFragment extends Fragment implements View.OnClickListener{
 
@@ -32,7 +33,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
             storageServiceBound = false;
         }
     };
@@ -44,18 +44,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
         final Button calibrateButton = (Button) view.findViewById(R.id.callibrate);
         calibrateButton.setOnClickListener(this);
 
-       // final Button calibrateButton = (Button) view.findViewById(R.id.callibrate);
-       // calibrateButton.setOnClickListener(this);
-
         Intent bindStorService = new Intent(getActivity(), StorageMainService.class);
         getActivity().bindService(bindStorService, storageConnection, Context.BIND_AUTO_CREATE);
 
-
-
-       // final Button buttonCal = (Button) getView().findViewById(R.id.callibrate);
-       // buttonCal.setOnClickListener(new View.OnClickListener() {
-           //onclick
-       // });
 
         final Button buttonMD = (Button) view.findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
@@ -78,11 +69,17 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
             }
         }); */
 
-        final Button trackingButton = (Button) view.findViewById(R.id.location);
-        trackingButton.setOnClickListener(new View.OnClickListener() {
+        final Button liveDataButt = (Button) view.findViewById(R.id.button_liveData);
+        liveDataButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity().getApplicationContext(), TrackingTestActivity.class));
+                Fragment fragment = new LiveDataFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(((ViewGroup)getView().getParent()).getId(), fragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
             }
         });
 
@@ -97,8 +94,5 @@ public class RecordFragment extends Fragment implements View.OnClickListener{
             Toast.makeText(getActivity().getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
     }
 
-   /* @Override
-    public void onClick(View v) {
 
-    }*/
 }

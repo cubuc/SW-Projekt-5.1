@@ -4,68 +4,62 @@ package kn.uni.inf.sensortagvr;
  * Created by Lisa-Maria on 24/06/2017.
  */
 
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.view.View;
+        import android.widget.ImageButton;
+
+        import kn.uni.inf.sensortagvr.TabActivity;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static int firstActiveTab = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab);
+        setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        final Intent startTabs = new Intent(MainActivity.this, TabActivity.class);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        ImageButton recButt = (ImageButton) findViewById(R.id.recordButton);
+        ImageButton vrButt = (ImageButton) findViewById(R.id.vrButton);
+        ImageButton setButt = (ImageButton) findViewById(R.id.settingsButton);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Record"));
-        tabLayout.addTab(tabLayout.newTab().setText("VR View"));
-        tabLayout.addTab(tabLayout.newTab().setText("LiveData"));
-        tabLayout.addTab(tabLayout.newTab().setText("Scan"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        viewPager.setCurrentItem(3); // BLEScanFragment; TODO Settings flow
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        recButt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onClick(View v) {
+                firstActiveTab = 0;
+                startActivity(startTabs);
             }
         });
+
+        vrButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firstActiveTab = 1;
+                startActivity(startTabs);
+            }
+        });
+
+        setButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firstActiveTab = 2;
+                startActivity(startTabs);
+            }
+        });
+
     }
 
-/*
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
-
-        return super.onOptionsItemSelected(item);
     }
-  */
 }

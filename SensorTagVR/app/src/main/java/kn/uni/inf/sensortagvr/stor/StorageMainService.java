@@ -263,7 +263,7 @@ public class StorageMainService extends IntentService {
         double minData = calculateMinDataVal(list);
         double dataFactor = maxData - minData;
 
-        // Rebases the set of data points, thus no point has a negative X or Y value
+        // Rebases the settings of data points, thus no point has a negative X or Y value
         if (REBASE){
             double[] minVals = calculateMinValues(list);
 
@@ -373,7 +373,25 @@ public class StorageMainService extends IntentService {
     }
 
     /**
-     * 
+     *
+     */
+    private void uploadFile() {
+        AsyncTask<String, Boolean, Integer> up = new Uploader();
+        up.execute(path);
+
+    }
+
+    public void createDummyData() {
+        dataMeasured.add(new CompactData(0, 0, 23));
+        dataMeasured.add(new CompactData(4, 0, 25));
+        dataMeasured.add(new CompactData(0, 5, 20));
+        dataMeasured.add(new CompactData(0, 7, 24));
+        dataMeasured.add(new CompactData(4, 7, 22));
+        dataMeasured.add(new CompactData(4, 5, 20));
+    }
+
+    /**
+     *
      */
     public class StorageBinder extends Binder {
         /**
@@ -382,15 +400,6 @@ public class StorageMainService extends IntentService {
         public StorageMainService getService() {
             return StorageMainService.this;
         }
-    }
-
-    /**
-     *
-     */
-    private void uploadFile() {
-        AsyncTask<String, Boolean, Integer> up = new Uploader();
-        up.execute(path);
-
     }
 
     /**
@@ -453,15 +462,6 @@ public class StorageMainService extends IntentService {
                 Toast.makeText(getApplicationContext(), "Upload successfull", Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    public void createDummyData() {
-        dataMeasured.add(new CompactData(0,0, 23));
-        dataMeasured.add(new CompactData(4,0, 25));
-        dataMeasured.add(new CompactData(0,5, 20));
-        dataMeasured.add(new CompactData(0,7, 24));
-        dataMeasured.add(new CompactData(4,7, 22));
-        dataMeasured.add(new CompactData(4,5, 20));
     }
 
 }

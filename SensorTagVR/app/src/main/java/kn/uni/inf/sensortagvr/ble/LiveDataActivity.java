@@ -63,7 +63,7 @@ public class LiveDataActivity extends AppCompatActivity {
 
         /**
          * @param componentName not used
-         * set the current {@link BluetoothLEService} instance to null if the service connection
+         * settings the current {@link BluetoothLEService} instance to null if the service connection
          *  is shutdown
          */
         @Override

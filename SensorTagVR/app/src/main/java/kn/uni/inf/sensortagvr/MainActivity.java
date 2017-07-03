@@ -12,11 +12,8 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import kn.uni.inf.sensortagvr.ble.ScanListActivity;
-import kn.uni.inf.sensortagvr.stor.RecordActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static int firstActiveTab = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,19 +21,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ImageButton recButt = (ImageButton) findViewById(R.id.recordButton);
-        ImageButton vrButt = (ImageButton) findViewById(R.id.vrButton);
-        ImageButton setButt = (ImageButton) findViewById(R.id.settingsButton);
+        ImageButton vrButton = (ImageButton) findViewById(R.id.vrButton);
+        ImageButton mLiveDataButton = (ImageButton) findViewById(R.id.LiveDataButton);
+        ImageButton setButton = (ImageButton) findViewById(R.id.settingsButton);
 
 
-        vrButt.setOnClickListener(new View.OnClickListener() {
+        vrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), VRActivity.class));
             }
         });
 
-        recButt.setOnClickListener(new View.OnClickListener() {
+        mLiveDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), RecordActivity.class));
@@ -44,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        setButt.setOnClickListener(new View.OnClickListener() {
+        setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), ScanListActivity.class));

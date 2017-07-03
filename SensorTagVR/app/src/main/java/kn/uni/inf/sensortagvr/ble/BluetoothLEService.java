@@ -465,7 +465,7 @@ public class BluetoothLEService extends Service {
     }
 
     /**
-     * Blocking write; Sets isWriting to true (onWriteCharacteristic/Descriptor set it to false when
+     * Blocking write; Sets isWriting to true (onWriteCharacteristic/Descriptor settings it to false when
      * finished)
      *
      * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the

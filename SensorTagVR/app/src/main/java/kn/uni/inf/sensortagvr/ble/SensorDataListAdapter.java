@@ -33,7 +33,7 @@ public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAd
      * <p>
      * The new ViewHolder will be used to display items of the adapter using
      * onBindViewHolder(ViewHolder, int, List). Since it will be re-used to display
-     * different items in the data set, it is a good idea to cache references to sub views of
+     * different items in the data settings, it is a good idea to cache references to sub views of
      * the View to avoid unnecessary {@link View#findViewById(int)} calls.
      *
      * @return A new ViewHolder that holds a View of the given view type.
@@ -51,13 +51,13 @@ public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAd
     /**
      * Called by RecyclerView to display the data at the specified position. This method should
      * @param holder   The ViewHolder which should be updated to represent the contents of the
-     * @param position The position of the item within the adapter's data set.
-     * item at the given position in the data set.
+     * @param position The position of the item within the adapter's data settings.
+     * item at the given position in the data settings.
      * update the contents of the {@link ViewHolder#itemView} to reflect the item at the given
      * position.
      * <p>
      * Note that unlike {@link ListView}, RecyclerView will not call this method
-     * again if the position of the item changes in the data set unless the item itself is
+     * again if the position of the item changes in the data settings unless the item itself is
      * invalidated or the new position cannot be determined. For this reason, you should only
      * use the <code>position</code> parameter while acquiring the related data item inside
      * this method and should not keep a copy of it. If you need the position of an item later
@@ -103,7 +103,7 @@ public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAd
     }
 
     /**
-     * Returns the total number of items in the data set held by the adapter.
+     * Returns the total number of items in the data settings held by the adapter.
      *
      * @return The total number of items in this adapter.
      */

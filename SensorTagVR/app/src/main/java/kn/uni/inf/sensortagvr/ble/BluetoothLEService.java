@@ -12,10 +12,12 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -267,21 +269,28 @@ public class BluetoothLEService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         mLocalBroadcastManager =
                 LocalBroadcastManager.getInstance(this);
-        BluetoothManager mBtManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        if (mBtManager != null) {
-            mBtAdapter = mBtManager.getAdapter();
-        } else {
-            Log.e(TAG, "Unable to initialize BluetoothManager.");
-        }
-
-        if (mBtAdapter == null) {
-            Log.e(TAG, "No BluetoothAdapter detected");
+        // BLE available on this device?
+        if (!(getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE))) {
+            Toast.makeText(this, "BLE Not Supported",
+                    Toast.LENGTH_SHORT).show();
             stopSelf();
+        } else {
+            BluetoothManager mBtManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            if (mBtManager != null) {
+                mBtAdapter = mBtManager.getAdapter();
+            } else {
+                Log.e(TAG, "Unable to initialize BluetoothManager.");
+            }
+
+            if (mBtAdapter == null) {
+                Log.e(TAG, "No BluetoothAdapter detected");
+                stopSelf();
+            } else {
+                mBtAdapter.enable();
+            }
+
+            Log.i(TAG, "OnStart finished");
         }
-
-        if (!mBtAdapter.isEnabled()) mBtAdapter.enable();
-
-        Log.i(TAG, "OnStart finished");
         return START_NOT_STICKY;
     }
 
@@ -293,12 +302,14 @@ public class BluetoothLEService extends Service {
      */
     @Override
     public void onDestroy() {
-        for (Sensor s : Sensor.SENSOR_LIST)
-            controlSensor(s, false, false);
-        if (mGatt == null) {
-            return;
+        if (mBtAdapter != null) {
+            for (Sensor s : Sensor.SENSOR_LIST)
+                controlSensor(s, false, false);
+            if (mGatt == null) {
+                return;
+            }
+            mGatt.close();
         }
-        mGatt.close();
         mGatt = null;
         super.onDestroy();
     }

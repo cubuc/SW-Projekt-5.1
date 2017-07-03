@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
+import kn.uni.inf.sensortagvr.ble.LiveDataActivity;
 import kn.uni.inf.sensortagvr.ble.ScanListActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
         vrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), VRActivity.class));
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), RecordActivity.class));
             }
         });
 
         mLiveDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), RecordActivity.class));
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), LiveDataActivity.class));
             }
         });
 

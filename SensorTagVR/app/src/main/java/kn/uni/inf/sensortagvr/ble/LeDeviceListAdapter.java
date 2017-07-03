@@ -18,7 +18,7 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
 /**
  *
  */
-class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
+public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
     private ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
     /**
@@ -32,7 +32,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
     /**
      * @param device Bluetooth device to add
      */
-    void addDevice(BluetoothDevice device) {
+    public void addDevice(BluetoothDevice device) {
         for (ScanListItem li : deviceSet) {
             if (li.getDeviceAddress().equals(device.getAddress()))
                 return;
@@ -48,7 +48,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
     /**
      *
      */
-    void clear() {
+    public void clear() {
         deviceSet.clear();
     }
 
@@ -123,7 +123,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
     /**
      *
      */
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ListitemDeviceBinding binding;
 
         /**
@@ -137,7 +137,7 @@ class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewH
         /**
          * @param li
          */
-        void bind(ScanListItem li) {
+        public void bind(ScanListItem li) {
             binding.setDeviceItem(li);
         }
 

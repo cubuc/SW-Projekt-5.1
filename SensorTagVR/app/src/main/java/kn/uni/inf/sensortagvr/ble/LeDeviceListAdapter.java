@@ -18,7 +18,7 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
 /**
  *
  */
-public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
+class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
     private ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
     /**
@@ -32,7 +32,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     /**
      * @param device Bluetooth device to add
      */
-    public void addDevice(BluetoothDevice device) {
+    void addDevice(BluetoothDevice device) {
         for (ScanListItem li : deviceSet) {
             if (li.getDeviceAddress().equals(device.getAddress()))
                 return;
@@ -48,7 +48,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     /**
      *
      */
-    public void clear() {
+    void clear() {
         deviceSet.clear();
     }
 
@@ -123,7 +123,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     /**
      *
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ListitemDeviceBinding binding;
 
         /**
@@ -150,9 +150,9 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         public void onClick(View v) {
             final BluetoothDevice device = binding.getDeviceItem().getDevice();
             if (device == null) return;
-            final Intent intent = new Intent(v.getContext(), LiveDataTemp.class);
-            intent.putExtra(LiveDataTemp.EXTRAS_DEVICE_NAME, device.getName());
-            intent.putExtra(LiveDataTemp.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+            final Intent intent = new Intent(v.getContext(), LiveDataActivity.class);
+            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
+            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
             v.getContext().startActivity(intent);
         }
     }

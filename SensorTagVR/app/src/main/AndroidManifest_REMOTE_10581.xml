@@ -27,7 +27,7 @@
         </activity>
  		<activity android:name=".RecordActivity" />
         <activity android:name=".ble.ScanListActivity" />
-        <activity android:name="kn.uni.inf.sensortagvr.ble.LiveDataActivity" />
+        <activity android:name="kn.uni.inf.sensortagvr.ble.LiveDataTemp" />
         <service
             android:name=".ble.BluetoothLEService"
             android:enabled="true"

@@ -44,7 +44,7 @@
         <activity android:name=".tracking.TrackingTestActivity" />
 
 =======
-        <activity android:name="kn.uni.inf.sensortagvr.ble.LiveDataActivity" />
+        <activity android:name="kn.uni.inf.sensortagvr.ble.LiveDataTemp" />
 >>>>>>> 09702f437bc9c3d7e0d828b26131e758158814c1
         <service
             android:name=".ble.BluetoothLEService"

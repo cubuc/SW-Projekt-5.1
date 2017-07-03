@@ -16,7 +16,7 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDataBinding;
 /**
  *
  */
-public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAdapter.ViewHolder> {
+class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAdapter.ViewHolder> {
 
     private List<DataListItem> dataList = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAd
     /**
      * @param list
      */
-    public void setDataList(List<DataListItem> list) {
+    void setDataList(List<DataListItem> list) {
         this.dataList = list;
         notifyDataSetChanged();
     }
@@ -85,7 +85,7 @@ public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAd
      * @param s
      * @param data
      */
-    public void addItem(Sensor s, float[] data) {
+    void addItem(Sensor s, float[] data) {
         int k = 0;
         for (DataListItem i : dataList) {
             if (i.getSensorName().equals(s)) {
@@ -115,7 +115,7 @@ public class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAd
     /**
      *
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private final ListitemDataBinding binding;
 
         /**

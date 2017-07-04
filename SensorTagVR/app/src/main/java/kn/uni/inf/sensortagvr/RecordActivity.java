@@ -7,12 +7,12 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
-//import kn.uni.inf.sensortagvr.tracking.TrackingManagerService; TODO Johannes (& Gero) interviwe calibration
 
 /**
  * Activity that binds to tracking and storage service to calibrate the start position, record data
@@ -22,7 +22,6 @@ import kn.uni.inf.sensortagvr.stor.StorageMainService;
 public class RecordActivity extends Activity {
 
     private StorageMainService storageService;
-    //private TrackingManagerService trackingService; // TODO Johannes (& Gero) interviwe calibration
 
     private final ServiceConnection storageConnection = new ServiceConnection() {
         /**
@@ -32,6 +31,7 @@ public class RecordActivity extends Activity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             StorageMainService.StorageBinder binder = (StorageMainService.StorageBinder) service;
             storageService = binder.getService();
+            Log.i(getLocalClassName(), "connected to stor svc");
         }
 
         /**
@@ -43,26 +43,6 @@ public class RecordActivity extends Activity {
         }
     };
 
-    // // TODO Johannes (& Gero) interviwe calibration
-   /* private final ServiceConnection trackingConnection = new ServiceConnection() {
-        *//*
-         * {@inheritDoc}
-         *//*
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
-            trackingService = binder.getService();
-        }
-
-        *//*
-         * {@inheritDoc}
-         *//*
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            trackingService = null;
-        }
-    };*/
-
     /**
      * {@inheritDoc}
      */
@@ -71,23 +51,8 @@ public class RecordActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        // TODO Johannes (& Gero) interviwe calibration
-/*        final Button caliButton = (Button) findViewById(R.id.calibrate);
-        caliButton.setOnClickListener(new View.OnClickListener() {
-            *//*
-             * {@inheritDoc}
-             *//*
-            @Override
-            public void onClick(View v) {
-                if (trackingService != null)
-                    try {
-                        trackingService.calibrateOrigin();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-            }
-        });*/
-
+        bindService(new Intent(this, StorageMainService.class), storageConnection, BIND_AUTO_CREATE);
+        Log.i(getLocalClassName(), "bound Stor Svc");
 
         final Button buttonMD = (Button) findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +68,8 @@ public class RecordActivity extends Activity {
             }
         });
 
-        final Button VRbutton = (Button) findViewById(R.id.start_VR);
-        VRbutton.setOnClickListener(new View.OnClickListener() {
+        final Button vrButton = (Button) findViewById(R.id.start_VR);
+        vrButton.setOnClickListener(new View.OnClickListener() {
             /**
              * {@inheritDoc}
              */
@@ -119,24 +84,14 @@ public class RecordActivity extends Activity {
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        bindService(new Intent(this, StorageMainService.class), storageConnection, 0);
-        // bindService(new Intent(this, TrackingManagerService.class), trackingConnection, 0); TODO Johannes (& Gero) interviwe calibration
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected void onPause() {
-        super.onPause();
+        Log.i(getLocalClassName(), "unbound Stor Svc");
         unbindService(storageConnection);
-        // unbindService(trackingConnection); // TODO Johannes (& Gero) interviwe calibration
+        super.onPause();
     }
 }

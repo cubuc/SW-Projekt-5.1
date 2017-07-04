@@ -35,6 +35,7 @@ public enum Sensor {
          *
          * @param value byte measured by the TI CC2650 MCU temperature sensor
          */
+        @Override
         public float[] convert(final byte[] value) {
 
 			/*
@@ -264,9 +265,9 @@ public enum Sensor {
                 } else return new float[]{0, 0, 0};
             }
         }*/;
-    
 
-    public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
+
+    protected static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
     private static final byte ENABLE_SENSOR_CODE = 1;
     private final String name;
     private final UUID service;

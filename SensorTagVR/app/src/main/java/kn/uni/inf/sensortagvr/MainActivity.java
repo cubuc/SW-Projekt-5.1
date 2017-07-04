@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         ImageButton vrButton = (ImageButton) findViewById(R.id.vrButton);
         ImageButton mLiveDataButton = (ImageButton) findViewById(R.id.LiveDataButton);
         ImageButton setButton = (ImageButton) findViewById(R.id.settingsButton);

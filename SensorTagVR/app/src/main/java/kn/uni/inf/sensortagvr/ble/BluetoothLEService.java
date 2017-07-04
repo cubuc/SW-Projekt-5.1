@@ -39,18 +39,18 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
  */
 public class BluetoothLEService extends Service {
     /* Broadcast intent actions that are sent;  */
-    public final static String ACTION_GATT_CONNECTED =
+    public static final String ACTION_GATT_CONNECTED =
             "kn.uni.inf.sensortagvr.ble.ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_DISCONNECTED =
+    public static final String ACTION_GATT_DISCONNECTED =
             "kn.uni.inf.sensortagvr.ble:ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_DATA_AVAILABLE =
+    public static final String ACTION_DATA_AVAILABLE =
             "kn.uni.inf.sensortagvr.ble.ACTION_DATA_AVAILABLE";
     /* Data Contained in Intent.putExtra() when ACTION_DATA_AVAILABLE */
-    public final static String EXTRA_SENSOR =
+    public static final String EXTRA_SENSOR =
             "kn.uni.inf.sensortagvr.ble.EXTRA_SENSOR";
-    public final static String EXTRA_DATA =
+    public static final String EXTRA_DATA =
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
-    private final String TAG = "BluetoothLEService";
+    private static final String TAG = "BluetoothLEService";
     private final IBinder mBinder = new LocalBinder();
     private final ArrayList<Sensor> enabledSensors = new ArrayList<>();
     private final ArrayList<Sensor> notifyingSensors = new ArrayList<>();
@@ -153,10 +153,12 @@ public class BluetoothLEService extends Service {
         }
 
         /**
+         * {@inheritDoc}
          * @param gatt GATT server the characteristic is associated with
          * @param characteristic the characteristic that was written
          * @param status status of the gatt server
          */
+        @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic
                 characteristic, int status) {
             Log.v(TAG, "onCharacteristicWrite: " + status);
@@ -290,7 +292,6 @@ public class BluetoothLEService extends Service {
             } else {
                 mBtAdapter.enable();
             }
-
             Log.i(TAG, "OnStart finished");
         }
         return START_NOT_STICKY;

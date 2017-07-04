@@ -1,6 +1,5 @@
 package kn.uni.inf.sensortagvr.ble;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -19,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,10 +33,11 @@ import kn.uni.inf.sensortagvr.R;
  */
 public class ScanListActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
-    private final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothLeScanner mLEScanner;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
+    private Button scanButton;
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private LeDeviceListAdapter mLeDeviceListAdapter;
@@ -66,7 +68,6 @@ public class ScanListActivity extends AppCompatActivity {
         public void onBatchScanResults(List<ScanResult> results) {
             for (ScanResult sr : results) {
                 Log.i("onBatchScanResult", sr.toString());
-                super.onBatchScanResults(results);
             }
         }
 
@@ -77,7 +78,6 @@ public class ScanListActivity extends AppCompatActivity {
         @Override
         public void onScanFailed(int errorCode) {
             Log.e("Scan Failed", "Error Code: " + errorCode);
-            super.onScanFailed(errorCode);
         }
     };
 
@@ -87,9 +87,6 @@ public class ScanListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar ab = getActionBar();
-        if (ab != null)
-            ab.setTitle(R.string.title_devices);
 
         // Sets up UI references.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
@@ -97,6 +94,7 @@ public class ScanListActivity extends AppCompatActivity {
         RecyclerView mDeviceList = (RecyclerView) findViewById(R.id.scanlist);
         mDeviceList.setAdapter(mLeDeviceListAdapter);
         mDeviceList.setLayoutManager(new LinearLayoutManager(this));
+        scanButton = (Button) findViewById(R.id.scan_toggle);
 
         mHandler = new Handler();
 
@@ -110,7 +108,6 @@ public class ScanListActivity extends AppCompatActivity {
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-
 
     }
 
@@ -141,10 +138,13 @@ public class ScanListActivity extends AppCompatActivity {
                 filters = new ArrayList<>();
                 filters.add(fi);
             }
-
-                scanLeDevice(true);
+            scanButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    scanLeDevice(true);
+                }
+            });
         }
-
     }
 
     /**
@@ -152,9 +152,9 @@ public class ScanListActivity extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        super.onPause();
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
+        super.onPause();
     }
 
     /**
@@ -190,7 +190,6 @@ public class ScanListActivity extends AppCompatActivity {
         } else {
             mLEScanner.stopScan(mScanCallback);
         }
-        invalidateOptionsMenu();
     }
 
 

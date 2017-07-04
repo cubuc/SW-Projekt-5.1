@@ -8,10 +8,17 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private static final String[] permissions = {Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     /**
      * {@inheritDoc}
@@ -20,44 +27,44 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(getLocalClassName(), "just b4 checkPermissions");
         checkPermissions();
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0) {
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED)
+                    finishAndRemoveTask();
+            }
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private void checkPermissions() {
-        String[] permissions = {Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        String[] deniedPermissions = new String[8];
-        int i = -1;
-
+        final ArrayList<String> deniedPermissions = new ArrayList<>();
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED)
-                deniedPermissions[++i] = permission;
+            if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+                deniedPermissions.add(permission);
+
+            } else Log.i(getLocalClassName(), "permission" + permission + "granted");
         }
-        if (i > -1) {
-            ActivityCompat.requestPermissions(this, deniedPermissions, 0);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (!(grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-
-            Toast.makeText(this, "Not all necessary permissions were granted, " +
-                    "please grant them to use the app!", Toast.LENGTH_LONG).show();
-            finishAndRemoveTask();
-
+        if (!deniedPermissions.isEmpty()) {
+            final String[] denied = new String[deniedPermissions.size()];
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ActivityCompat.requestPermissions(SplashActivity.this, deniedPermissions.toArray(denied), 0);
+                }
+            });
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
+
 }

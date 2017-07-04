@@ -30,7 +30,7 @@ public class TrackingManagerService extends Service {
     private WifiTracker wifiTracker;
 
     private Location lastGPSPosition = new Location("TRACKING_MANAGER");
-    private final LocationListener locationListener = new LocationListener() {
+    private LocationListener locationListener = new LocationListener() {
         /**
          * @param location
          */
@@ -117,8 +117,9 @@ public class TrackingManagerService extends Service {
     public boolean onUnbind(Intent intent) {
         if(locationManager != null) {
             locationManager.removeUpdates(locationListener);
+            locationListener = null;
         }
-
+        super.onUnbind(intent);
         return false;
     }
 
@@ -187,16 +188,7 @@ public class TrackingManagerService extends Service {
         return lastGPSPosition;
     }*/
 
-    public class TrackingBinder extends Binder {
-        /**
-         *
-         */
-        public TrackingManagerService getService() {
-            return TrackingManagerService.this;
-        }
-    }
-
-    private class LocationUpdater implements Runnable {
+    private static class LocationUpdater implements Runnable {
 
         private final Handler handler;
         private final WifiTracker wifiTracker;
@@ -214,6 +206,15 @@ public class TrackingManagerService extends Service {
             this.handler.postDelayed(this, 500);
 
             wifiTracker.update();
+        }
+    }
+
+    public class TrackingBinder extends Binder {
+        /**
+         *
+         */
+        public TrackingManagerService getService() {
+            return TrackingManagerService.this;
         }
     }
 }

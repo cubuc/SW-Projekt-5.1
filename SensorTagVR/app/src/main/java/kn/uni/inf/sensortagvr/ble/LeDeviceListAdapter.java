@@ -21,16 +21,16 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
 public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
     private final ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
-/*    *//*
+    /*
     public void setDeviceSet(ArraySet<ScanListItem> deviceSet) {
         this.deviceSet = deviceSet;
         notifyDataSetChanged();
-    }*/
+    }
 
     /**
      * @param device Bluetooth device to add
      */
-    void addDevice(BluetoothDevice device) {
+    public void addDevice(BluetoothDevice device) {
         for (ScanListItem li : deviceSet) {
             if (li.getDeviceAddress().equals(device.getAddress()))
                 return;
@@ -46,7 +46,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     /**
      *
      */
-    void clear() {
+    public void clear() {
         deviceSet.clear();
     }
 
@@ -98,7 +98,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
          *                for more information dive into the official documentation and have a look
          *                at the activity_scanlist.xml
          */
-        ViewHolder(ListitemDeviceBinding binding) {
+        public ViewHolder(ListitemDeviceBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -107,7 +107,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
          * @param li a list item (in this case a device entry on the list) that shall be bound to
          *           the view by using the data binding library
          */
-        void bind(ScanListItem li) {
+        public void bind(ScanListItem li) {
             binding.setDeviceItem(li);
         }
 

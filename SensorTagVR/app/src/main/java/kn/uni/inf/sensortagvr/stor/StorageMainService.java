@@ -139,14 +139,16 @@ public class StorageMainService extends IntentService {
     /**
      *
      */
-    public void continueSession() {
+    public void continueSession() throws IOException {
 
         File data = new File(path);
-
+        JsonReader reader = null;
+        FileReader fileReader = null;
         if(data.isFile()) {
             try {
                 Gson gson = new Gson();
-                JsonReader reader = new JsonReader(new FileReader(path));
+                fileReader = new FileReader(path);
+                reader = new JsonReader(fileReader);
 
                 CompactData[] datas = gson.fromJson(reader, CompactData[].class);
                 dataMeasured = new ArrayList<>(Arrays.asList(datas));
@@ -154,6 +156,14 @@ public class StorageMainService extends IntentService {
                 sessionStarted = true;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            } finally {
+                if (fileReader != null) {
+                    fileReader.close();
+                }
+                if (reader != null) {
+                    reader.close();
+                }
+
             }
         } else
             Toast.makeText(getApplicationContext(), "No old session found", Toast.LENGTH_SHORT).show();
@@ -163,13 +173,16 @@ public class StorageMainService extends IntentService {
      * Unregisters the bleReceiver and unbind trackingmngrService when the Service gets DESTROYED
      */
     @Override
-    public void onDestroy() {
+    public boolean onUnbind(Intent intent) {
 
         if (trackingServiceBound) {
             unbindService(mConnection);
+            stopService(new Intent(this, TrackingManagerService.class));
             trackingServiceBound = false;
+            Log.i(this.toString(), "unbound & stopped tracking manager");
         }
-        super.onDestroy();
+        super.onUnbind(intent);
+        return false;
     }
 
     /**

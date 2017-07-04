@@ -89,6 +89,10 @@ public class TrackingTestActivity extends AppCompatActivity {
         bindService(intent, mConnection, 0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void onPause() {
         super.onPause();
         unbindService(mConnection);

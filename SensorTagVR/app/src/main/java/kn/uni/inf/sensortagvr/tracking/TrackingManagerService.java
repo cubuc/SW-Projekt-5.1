@@ -29,11 +29,8 @@ public class TrackingManagerService extends Service {
 
     private WifiTracker wifiTracker;
 
-    private Location origin = null;
     private Location lastGPSPosition = new Location("TRACKING_MANAGER");
-
-    private LocationManager locationManager = null;
-    private LocationListener locationListener = new LocationListener() {
+    private final LocationListener locationListener = new LocationListener() {
         /**
          * @param location
          */
@@ -64,6 +61,7 @@ public class TrackingManagerService extends Service {
         public void onProviderDisabled(String provider) {
         }
     };
+    private LocationManager locationManager = null;
 
     /**
      * {@inheritDoc}
@@ -182,14 +180,12 @@ public class TrackingManagerService extends Service {
         return loc;
     }*/
 
-    public Location calibrateOrigin() throws Exception{
-        if(lastGPSPosition != null)
-            origin = lastGPSPosition;
-        else
+ /*   public Location calibrateOrigin() throws Exception{
+        if(lastGPSPosition == null)
             throw new Exception("No position could be determined by GPS or network!");
 
         return lastGPSPosition;
-    }
+    }*/
 
     public class TrackingBinder extends Binder {
         /**
@@ -202,8 +198,8 @@ public class TrackingManagerService extends Service {
 
     private class LocationUpdater implements Runnable {
 
-        private Handler handler;
-        private WifiTracker wifiTracker;
+        private final Handler handler;
+        private final WifiTracker wifiTracker;
 
         LocationUpdater(Handler handler, WifiTracker wifiTracker) {
             this.handler = handler;

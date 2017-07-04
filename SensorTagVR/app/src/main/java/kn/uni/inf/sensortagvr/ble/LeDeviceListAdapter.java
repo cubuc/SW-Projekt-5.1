@@ -19,7 +19,7 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
  *
  */
 public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
-    private ArraySet<ScanListItem> deviceSet = new ArraySet<>();
+    private final ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
 /*    *//*
     public void setDeviceSet(ArraySet<ScanListItem> deviceSet) {

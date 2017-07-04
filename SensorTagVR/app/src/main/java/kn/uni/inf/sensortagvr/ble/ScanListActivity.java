@@ -33,8 +33,7 @@ import kn.uni.inf.sensortagvr.R;
 public class ScanListActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
     private final int REQUEST_ENABLE_BT = 1;
-    RecyclerView mDeviceList;
-    BluetoothLeScanner mLEScanner;
+    private BluetoothLeScanner mLEScanner;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
     private ScanSettings settings;
@@ -95,7 +94,7 @@ public class ScanListActivity extends AppCompatActivity {
         // Sets up UI references.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setContentView(R.layout.activity_scanlist);
-        mDeviceList = (RecyclerView) findViewById(R.id.scanlist);
+        RecyclerView mDeviceList = (RecyclerView) findViewById(R.id.scanlist);
         mDeviceList.setAdapter(mLeDeviceListAdapter);
         mDeviceList.setLayoutManager(new LinearLayoutManager(this));
 

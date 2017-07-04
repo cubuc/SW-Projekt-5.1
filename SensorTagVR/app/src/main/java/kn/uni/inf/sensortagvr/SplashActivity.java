@@ -27,7 +27,7 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 
-    void checkPermissions() {
+    private void checkPermissions() {
         String[] permissions = {Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_NETWORK_STATE,

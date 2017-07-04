@@ -27,10 +27,10 @@ import kn.uni.inf.sensortagvr.tracking.TrackingManagerService.TrackingBinder;
 
 public class TrackingTestActivity extends AppCompatActivity {
 
-    public final int AP_SETTINGS_REQUEST = 1;
-    protected ListView lv;
+    private final int AP_SETTINGS_REQUEST = 1;
+    private ListView lv;
     private TrackingManagerService trackingService = null;
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         /**
          * {@inheritDoc}
@@ -145,10 +145,10 @@ public class TrackingTestActivity extends AppCompatActivity {
     }
 
     private class LocationUpdater implements Runnable {
-        private Handler handler;
-        private TextView textView;
-        private WifiAPAdapter adapter;
-        private TrackingManagerService trackingService;
+        private final Handler handler;
+        private final TextView textView;
+        private final WifiAPAdapter adapter;
+        private final TrackingManagerService trackingService;
 
         LocationUpdater(Handler handler, TextView textView, ListView list, TrackingManagerService trackingService) {
             this.handler = handler;

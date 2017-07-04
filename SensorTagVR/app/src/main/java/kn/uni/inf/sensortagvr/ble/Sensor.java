@@ -100,19 +100,16 @@ public enum Sensor {
     ACCELEROMETER("Accelerometer", UUID.fromString(UUID_ACC_SERV), UUID.fromString(UUID_ACC_DATA), UUID.fromString(UUID_ACC_CONF), (byte) 3) {
 
         /**
+         *  The accelerometer has the range [-2g, 2g] with unit (1/64)g.
+         * To convert from unit (1/64)g to unit g we divide by 64.
+         * (g = 9.81 m/s^2); Range 8G bc we use the 2650STK
+         * The z value is multiplied with -1 to coincide with how we have arbitrarily defined the positive y direction. (illustrated by the apps accelerometer
+         * image)
          *
          * @param value byte measured by the TI CC2650 MCU accelerometer
          */
         @Override
         public float[] convert(final byte[] value) {
-            /*
-			 * The accelerometer has the range [-2g, 2g] with unit (1/64)g.
-			 * To convert from unit (1/64)g to unit g we divide by 64.
-			 * (g = 9.81 m/s^2)
-			 * The z value is multiplied with -1 to coincide with how we have arbitrarily defined the positive y direction. (illustrated by the apps accelerometer
-			 * image)
-			 */
-            // Range 8G bc we use the 2650STK
             final float SCALE = (float) 4096.0;
 
             int x = (value[0] << 8) + value[1];
@@ -269,11 +266,13 @@ public enum Sensor {
         }*/;
     
 
-    public static final byte ENABLE_SENSOR_CODE = 1;
     public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
-    public final String name;
-    public final UUID service, data, config;
-    private byte enableCode; // See getEnableSensorCode for explanation.
+    private static final byte ENABLE_SENSOR_CODE = 1;
+    private final String name;
+    private final UUID service;
+    private final UUID data;
+    private final UUID config;
+    private final byte enableCode; // See getEnableSensorCode for explanation.
     /**
      * Constructor called by the Gyroscope and Accelerometer because it more than a boolean enable
      * code.
@@ -350,7 +349,7 @@ public enum Sensor {
     /**
      *
      * @param c some byte
-     * @param offset some offset
+     * @param offset some offset (always 2)
      */
     private static Integer twentyFourBitUnsignedAtOffset(byte[] c, int offset) {
         Integer lowerByte = (int) c[offset] & 0xFF;
@@ -382,10 +381,12 @@ public enum Sensor {
         return name;
     }
 
+
     /** @param value raw characteristic data */
     public float[] convert(byte[] value) {
         throw new UnsupportedOperationException("Error: the individual enum classes are supposed to override this method.");
     }
+
 }
 
 

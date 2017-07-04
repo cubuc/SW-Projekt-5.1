@@ -8,7 +8,7 @@ import android.content.Intent;
 
 public class WifiScanBroadcastReceiver extends BroadcastReceiver {
 
-    private WifiTracker wifiTracker;
+    private final WifiTracker wifiTracker;
 
     WifiScanBroadcastReceiver(WifiTracker tracker) {
         wifiTracker = tracker;

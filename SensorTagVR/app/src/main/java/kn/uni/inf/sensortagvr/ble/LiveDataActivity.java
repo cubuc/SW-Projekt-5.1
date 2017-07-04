@@ -34,8 +34,8 @@ public class LiveDataActivity extends AppCompatActivity {
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private final static String TAG = LiveDataActivity.class.getSimpleName();
-    LocalBroadcastManager mLocalBroadcastManager;
-    SensorDataListAdapter adapter = new SensorDataListAdapter();
+    private final SensorDataListAdapter adapter = new SensorDataListAdapter();
+    private LocalBroadcastManager mLocalBroadcastManager;
     private TextView mConnectionState;
     private String mDeviceAddress;
     private BluetoothLEService mBluetoothLEService;
@@ -185,14 +185,6 @@ public class LiveDataActivity extends AppCompatActivity {
         super.onPause();
         mLocalBroadcastManager.unregisterReceiver(mGattUpdateReceiver);
         unbindService(mServiceConnection);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     /**

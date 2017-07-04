@@ -23,18 +23,19 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/vr_app_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/vr_app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".RecordActivity" />
         <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />

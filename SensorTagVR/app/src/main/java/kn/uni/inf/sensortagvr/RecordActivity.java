@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
-import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
+//import kn.uni.inf.sensortagvr.tracking.TrackingManagerService; TODO Johannes (& Gero) interviwe calibration
 
 /**
  * Activity that binds to tracking and storage service to calibrate the start position, record data
@@ -21,10 +21,10 @@ import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
 public class RecordActivity extends Activity {
 
-    StorageMainService storageService;
-    TrackingManagerService trackingService;
+    private StorageMainService storageService;
+    //private TrackingManagerService trackingService; // TODO Johannes (& Gero) interviwe calibration
 
-    private ServiceConnection storageConnection = new ServiceConnection() {
+    private final ServiceConnection storageConnection = new ServiceConnection() {
         /**
          * {@inheritDoc}
          */
@@ -43,24 +43,25 @@ public class RecordActivity extends Activity {
         }
     };
 
-    private ServiceConnection trackingConnection = new ServiceConnection() {
-        /**
+    // // TODO Johannes (& Gero) interviwe calibration
+   /* private final ServiceConnection trackingConnection = new ServiceConnection() {
+        *//*
          * {@inheritDoc}
-         */
+         *//*
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
             trackingService = binder.getService();
         }
 
-        /**
+        *//*
          * {@inheritDoc}
-         */
+         *//*
         @Override
         public void onServiceDisconnected(ComponentName name) {
             trackingService = null;
         }
-    };
+    };*/
 
     /**
      * {@inheritDoc}
@@ -70,11 +71,12 @@ public class RecordActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        final Button caliButton = (Button) findViewById(R.id.calibrate);
+        // TODO Johannes (& Gero) interviwe calibration
+/*        final Button caliButton = (Button) findViewById(R.id.calibrate);
         caliButton.setOnClickListener(new View.OnClickListener() {
-            /**
+            *//*
              * {@inheritDoc}
-             */
+             *//*
             @Override
             public void onClick(View v) {
                 if (trackingService != null)
@@ -84,7 +86,7 @@ public class RecordActivity extends Activity {
                         e.printStackTrace();
                     }
             }
-        });
+        });*/
 
 
         final Button buttonMD = (Button) findViewById(R.id.measure);
@@ -125,7 +127,7 @@ public class RecordActivity extends Activity {
         super.onResume();
 
         bindService(new Intent(this, StorageMainService.class), storageConnection, 0);
-        bindService(new Intent(this, TrackingManagerService.class), trackingConnection, 0);
+        // bindService(new Intent(this, TrackingManagerService.class), trackingConnection, 0); TODO Johannes (& Gero) interviwe calibration
     }
 
     /**
@@ -135,6 +137,6 @@ public class RecordActivity extends Activity {
     protected void onPause() {
         super.onPause();
         unbindService(storageConnection);
-        unbindService(trackingConnection);
+        // unbindService(trackingConnection); // TODO Johannes (& Gero) interviwe calibration
     }
 }

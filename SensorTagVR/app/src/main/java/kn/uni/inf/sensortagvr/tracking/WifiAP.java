@@ -104,14 +104,13 @@ class WifiAP implements Parcelable {
         n = varN;
     }
 
-    boolean update(ScanResult scan) {
+    void update(ScanResult scan) {
         if(!BSSID.equals(scan.BSSID))
-            return false;
+            return;
 
         SSID = scan.SSID;
         distance = Math.pow(10.0, (A - scan.level) / (10.0 * n));
 
-        return true;
     }
 
     String getSSID() {

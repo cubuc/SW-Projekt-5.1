@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.14"
-            android:text="SSID:"
+            android:text="@string/ssid"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.12"
-            android:text="BSSID:"
+            android:text="@string/bssid"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
@@ -66,7 +66,7 @@
             android:id="@+id/textView3"
             android:layout_width="76dp"
             android:layout_height="wrap_content"
-            android:text="Location:"
+            android:text="@string/location"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     </LinearLayout>
@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="X"
+        android:hint="@string/x"
         android:inputType="textPersonName|numberDecimal" />
 
     <EditText
@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Y"
+        android:hint="@string/y"
         android:inputType="textPersonName|numberDecimal" />
 
     <LinearLayout
@@ -96,10 +96,10 @@
 
         <TextView
             android:id="@+id/textView8"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Parameters:"
+            android:text="@string/parameters"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     </LinearLayout>
@@ -109,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="A"
+        android:hint="@string/a"
         android:inputType="numberDecimal" />
 
     <EditText
@@ -117,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="n"
+        android:hint="@string/n"
         android:inputType="numberDecimal" />
 
     <Button

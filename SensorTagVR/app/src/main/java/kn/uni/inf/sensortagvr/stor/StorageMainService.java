@@ -44,13 +44,11 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 public class StorageMainService extends IntentService {
 
 
-    IBinder binder = new StorageBinder();
-
-
+    private final IBinder binder = new StorageBinder();
+    private final boolean DISTORT = false;
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
     private boolean trackingServiceBound = false;
-
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -76,20 +74,13 @@ public class StorageMainService extends IntentService {
             trackingServiceBound = false;
         }
     };
-
     // Saves all measured data in a session
     private ArrayList<CompactData> dataMeasured;
     private boolean sessionStarted = false;
-
     // Path a data.json file is saved to
     private String path = null;
     private Intent lastReceivedData;
-
-
-    private double SCALEFACTOR_X = 30;
     private double SCALEFACTOR_Y = 20;
-    private boolean REBASE = false;
-    private boolean DISTORT = false;
 
     /**
      * 
@@ -138,7 +129,7 @@ public class StorageMainService extends IntentService {
     /**
      *
      */
-    public void createNewSession() {
+    private void createNewSession() {
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
 
@@ -265,6 +256,7 @@ public class StorageMainService extends IntentService {
         double dataFactor = maxData - minData;
 
         // Rebases the settings of data points, thus no point has a negative X or Y value
+        boolean REBASE = false;
         if (REBASE){
             double[] minVals = calculateMinValues(list);
 
@@ -278,7 +270,9 @@ public class StorageMainService extends IntentService {
         // any axis is calculated afterwards
         double[] maxDist = calculateMaxDistance(list);
 
+        double SCALEFACTOR_X = 30;
         if (!DISTORT) {
+            //noinspection SuspiciousNameCombination
             SCALEFACTOR_Y = SCALEFACTOR_X;
         }
 

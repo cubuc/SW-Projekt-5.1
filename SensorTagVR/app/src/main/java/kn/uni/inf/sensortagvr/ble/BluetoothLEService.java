@@ -52,14 +52,13 @@ public class BluetoothLEService extends Service {
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
     private final String TAG = "BluetoothLEService";
     private final IBinder mBinder = new LocalBinder();
-    public boolean bound = false;
-    public boolean isWriting = false;
-    ArrayList<Sensor> enabledSensors = new ArrayList<>();
-    ArrayList<Sensor> notifyingSensors = new ArrayList<>();
-    LocalBroadcastManager mLocalBroadcastManager;
+    private final ArrayList<Sensor> enabledSensors = new ArrayList<>();
+    private final ArrayList<Sensor> notifyingSensors = new ArrayList<>();
+    private final ConcurrentLinkedQueue<Object> mRWQueue = new ConcurrentLinkedQueue<>();
+    private boolean bound = false;
+    private boolean isWriting = false;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private BluetoothGatt mGatt;
-    private BluetoothAdapter mBtAdapter;
-    private ConcurrentLinkedQueue<Object> mRWQueue = new ConcurrentLinkedQueue<>();
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         /**
          * {@inheritDoc}
@@ -179,6 +178,7 @@ public class BluetoothLEService extends Service {
         }
 
     };
+    private BluetoothAdapter mBtAdapter;
 
     /**
      *  Empty constructor required because we're androids.
@@ -394,7 +394,7 @@ public class BluetoothLEService extends Service {
      * @param power      true = on, false=off
      * @param notification true = enabled, false=off
      */
-    public void controlSensor(Sensor s, boolean power, boolean notification) {
+    private void controlSensor(Sensor s, boolean power, boolean notification) {
         if (Arrays.asList(Sensor.SENSOR_LIST).contains(s)) {
 
             byte[] val = new byte[1];

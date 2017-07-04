@@ -26,7 +26,7 @@ import java.util.Map;
 
 class WifiTracker {
 
-    private WifiManager wifiManager;
+    private final WifiManager wifiManager;
     private Map<String, WifiAP> aps = new HashMap<>();
 
     /**

@@ -19,7 +19,7 @@ public class APSettingsActivity extends AppCompatActivity {
     private WifiAP wifiAP;
 
     /**
-     * @param savedInstanceState
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class APSettingsActivity extends AppCompatActivity {
         final Button trackButton = (Button) findViewById(R.id.track);
         trackButton.setOnClickListener(new View.OnClickListener() {
             /**
-             * @param v
+             * {@inheritDoc}
              */
             @Override
             public void onClick(View v) {
@@ -52,7 +52,7 @@ public class APSettingsActivity extends AppCompatActivity {
         untrackButton.setOnClickListener(new View.OnClickListener() {
             /**
              *
-             * @param v
+             * {@inheritDoc}
              */
             @Override
             public void onClick(View v) {

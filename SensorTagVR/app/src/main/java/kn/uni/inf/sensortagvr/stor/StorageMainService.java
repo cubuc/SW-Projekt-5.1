@@ -57,8 +57,7 @@ public class StorageMainService extends IntentService {
     private final ServiceConnection mConnection = new ServiceConnection() {
 
         /**
-         * @param className ComponentName
-         * @param service IBinder
+         * {@inheritDoc}
          */
         @Override
         public void onServiceConnected(ComponentName className,
@@ -70,7 +69,7 @@ public class StorageMainService extends IntentService {
         }
 
         /**
-         * @param arg0 ComponentName
+         * {@inheritDoc}
          */
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
@@ -99,7 +98,7 @@ public class StorageMainService extends IntentService {
         super("StorageMainService");
     }
 
-    /**
+    /** {@inheritDoc}
      * On Creating the service, the broadcast receiver will registered with an proper intent filter
      * The TrackingManagerService gets bound to this service, thus the getCurrentLocation() can be
      * accessed.
@@ -116,7 +115,11 @@ public class StorageMainService extends IntentService {
 
     }
 
-    /** @param intent intent that shall be handled */
+    /**
+     * {@inheritDoc}
+     *
+     * @param intent intent that shall be handled
+     */
     @Override
     public void onHandleIntent(Intent intent) {
             this.lastReceivedData = intent;
@@ -124,9 +127,7 @@ public class StorageMainService extends IntentService {
 
     /**
      * The service is bound by the RecordDataActivity for creating a measurement session.
-     *
-     * @param intent intent
-     * @return binder
+     * {@inheritDoc}
      */
     @Override
     public IBinder onBind(Intent intent) {
@@ -167,7 +168,7 @@ public class StorageMainService extends IntentService {
             Toast.makeText(getApplicationContext(), "No old session found", Toast.LENGTH_SHORT).show();
     }
 
-    /**
+    /** {@inheritDoc}
      * Unregisters the bleReceiver and unbind trackingmngrService when the Service gets DESTROYED
      */
     @Override
@@ -406,6 +407,9 @@ public class StorageMainService extends IntentService {
      *
      */
     private class Uploader extends AsyncTask<String, Boolean, Integer> {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Integer doInBackground(String... strings) {
             FTPClient con;
@@ -454,6 +458,9 @@ public class StorageMainService extends IntentService {
             return 0;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 1)

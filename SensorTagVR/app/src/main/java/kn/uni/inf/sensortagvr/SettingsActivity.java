@@ -11,11 +11,13 @@ import kn.uni.inf.sensortagvr.ble.ScanListActivity;
 import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 /**
- * Created by Sara ich liebe dich on 04.07.2017.
+ * Activity for control flow reasons: Navigates to the set-ups of the tracking system and the ble set up
  */
 
 public class SettingsActivity extends AppCompatActivity {
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +25,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         Button trackButton = (Button) findViewById(R.id.button_track);
         trackButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), TrackingTestActivity.class));
@@ -30,6 +35,9 @@ public class SettingsActivity extends AppCompatActivity {
         });
         Button scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), ScanListActivity.class));

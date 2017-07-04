@@ -37,9 +37,7 @@ public class LiveDataActivity extends AppCompatActivity {
     LocalBroadcastManager mLocalBroadcastManager;
     SensorDataListAdapter adapter = new SensorDataListAdapter();
     private TextView mConnectionState;
-    private String mDeviceName;
     private String mDeviceAddress;
-    private RecyclerView mLiveDataList;
     private BluetoothLEService mBluetoothLEService;
     /**
      * Handles the connection with the BluetoothLEService
@@ -47,6 +45,7 @@ public class LiveDataActivity extends AppCompatActivity {
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
         /**
+         * {@inheritDoc}
          * connects to the tapped device when the service connection is established.
          *
          * @param componentName not used
@@ -61,7 +60,8 @@ public class LiveDataActivity extends AppCompatActivity {
             Log.d(TAG, "Connect request result=" + result);
         }
 
-        /**
+        /** {@inheritDoc}
+         *
          * @param componentName not used
          * settings the current {@link BluetoothLEService} instance to null if the service connection
          *  is shutdown
@@ -82,9 +82,7 @@ public class LiveDataActivity extends AppCompatActivity {
      */
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         /**
-         *
-         * @param context
-         * @param intent
+         * {@inheritDoc}
          */
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -131,7 +129,7 @@ public class LiveDataActivity extends AppCompatActivity {
     }
 
     /**
-     * @param savedInstanceState used by OS to save the app state
+     * {@inheritDoc}
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,12 +141,12 @@ public class LiveDataActivity extends AppCompatActivity {
                 LocalBroadcastManager.getInstance(this);
 
         final Intent intent = getIntent();
-        mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
+        String mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
         // Sets up UI references.
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
-        mLiveDataList = (RecyclerView) findViewById(R.id.data_list);
+        RecyclerView mLiveDataList = (RecyclerView) findViewById(R.id.data_list);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mLiveDataList.setAdapter(adapter);
         mLiveDataList.setLayoutManager(new LinearLayoutManager(this));
@@ -165,7 +163,7 @@ public class LiveDataActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * {@inheritDoc}
      */
     @Override
     protected void onResume() {
@@ -180,7 +178,7 @@ public class LiveDataActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * {@inheritDoc}
      */
     @Override
     protected void onPause() {
@@ -190,14 +188,16 @@ public class LiveDataActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * {@inheritDoc}
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
-    /** @param menu */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.services, menu);
@@ -211,7 +211,9 @@ public class LiveDataActivity extends AppCompatActivity {
         return true;
     }
 
-    /** @param item */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -228,7 +230,7 @@ public class LiveDataActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** @param resourceId */
+    /** @param resourceId either R.string.connected or R.string.disconnected */
     private void updateConnectionState(final int resourceId) {
         mConnectionState.setText(resourceId);
     }

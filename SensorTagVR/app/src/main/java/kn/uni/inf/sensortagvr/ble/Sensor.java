@@ -22,9 +22,6 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_SERV;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_CONF;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_SERV;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MOV_CONF;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MOV_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MOV_SERV;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_CONF;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_SERV;
@@ -36,7 +33,7 @@ public enum Sensor {
         /**
          * converts the raw data to a float[3]
          *
-         * @param value the value that was read from the Sensor.
+         * @param value byte measured by the TI CC2650 MCU temperature sensor
          */
         public float[] convert(final byte[] value) {
 
@@ -54,7 +51,7 @@ public enum Sensor {
 
 
         /**
-         * @param v
+         * @param v byte measured by the TI CC2650 MCU temperature sensor
          */
         private float extractAmbientTemperature(byte[] v) {
             int offset = 2;
@@ -63,8 +60,8 @@ public enum Sensor {
 
 
         /**
-         * @param v
-         * @param ambient
+         * @param v byte measured by the TI CC2650 MCU temperature sensor
+         * @param ambient the calculated ambient temperature for byte v
          */
         private float extractTargetTemperature(byte[] v, double ambient) {
             Integer twoByteValue = shortSignedAtOffset(v, 0);
@@ -92,7 +89,7 @@ public enum Sensor {
 
 
         /**
-         * @param v
+         * @param v byte measured by the TI CC2650 MCU temperature sensor
          */
         private float extractTargetTemperatureTMP007(byte[] v) {
             int offset = 0;
@@ -100,57 +97,11 @@ public enum Sensor {
         }
     },
 
-    MOVEMENT_ACC("MOV_Accelerometer", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
-        /**
-         * @param value
-         */
-        public float[] convert(final byte[] value) {
-            // Range 8G
-            final float SCALE = (float) 4096.0;
-
-            int x = (value[7] << 8) + value[6];
-            int y = (value[9] << 8) + value[8];
-            int z = (value[11] << 8) + value[10];
-            return new float[]{((x / SCALE) * -1), y / SCALE, ((z / SCALE) * -1)};
-        }
-    },
-    MOVEMENT_GYRO("MOV_Gyroscope", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
-        /**
-         * @param value
-         */
-        @Override
-        public float[] convert(final byte[] value) {
-
-            final float SCALE = (float) 128.0;
-
-            int x = (value[1] << 8) + value[0];
-            int y = (value[3] << 8) + value[2];
-            int z = (value[5] << 8) + value[4];
-            return new float[]{x / SCALE, y / SCALE, z / SCALE};
-        }
-    },
-    MOVEMENT_MAG("MOV_Magmetometer", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
-
-        /**
-         *
-         * @param value
-         */
-        @Override
-        public float[] convert(final byte[] value) {
-            final float SCALE = (float) (32768 / 4912);
-            if (value.length >= 18) {
-                int x = (value[13] << 8) + value[12];
-                int y = (value[15] << 8) + value[14];
-                int z = (value[17] << 8) + value[16];
-                return new float[]{x / SCALE, y / SCALE, z / SCALE};
-            } else return new float[]{0, 0, 0};
-        }
-    },
     ACCELEROMETER("Accelerometer", UUID.fromString(UUID_ACC_SERV), UUID.fromString(UUID_ACC_DATA), UUID.fromString(UUID_ACC_CONF), (byte) 3) {
 
         /**
          *
-         * @param value
+         * @param value byte measured by the TI CC2650 MCU accelerometer
          */
         @Override
         public float[] convert(final byte[] value) {
@@ -176,7 +127,7 @@ public enum Sensor {
 
         /**
          *
-         * @param value
+         * @param value byte measured by the TI CC2650 MCU humidity sensor
          */
         @Override
         public float[] convert(final byte[] value) {
@@ -189,23 +140,11 @@ public enum Sensor {
             return new float[]{(-6f) + 125f * (a / 65535f), 0, 0};
         }
     },
-    HUMIDITY2("Humidity Sensor 2", UUID.fromString(UUID_HUM_SERV), UUID.fromString(UUID_HUM_DATA), UUID.fromString(UUID_HUM_CONF)) {
 
-        /**
-         *
-         * @param value
-         */
-        @Override
-        public float[] convert(final byte[] value) {
-            int a = shortUnsignedAtOffset(value, 2);
-
-            return new float[]{100f * (a / 65535f), 0, 0};
-        }
-    },
     MAGNETOMETER("Magnetometer", UUID.fromString(UUID_MAG_SERV), UUID.fromString(UUID_MAG_DATA), UUID.fromString(UUID_MAG_CONF)) {
         /**
          *
-         * @param value
+         * @param value byte received by the TI CC2650 MCU magnetometer
          */
         @Override
         public float[] convert(final byte[] value) {
@@ -221,7 +160,7 @@ public enum Sensor {
     LUXMETER("Luxmeter", UUID.fromString(UUID_OPT_SERV), UUID.fromString(UUID_OPT_DATA), UUID.fromString(UUID_OPT_CONF)) {
         /**
          *
-         * @param value
+         * @param value byte received by the TI CC2650 MCU luxmeter
          */
         @Override
         public float[] convert(final byte[] value) {
@@ -243,7 +182,7 @@ public enum Sensor {
     GYROSCOPE("Gyroscope", UUID.fromString(UUID_GYR_SERV), UUID.fromString(UUID_GYR_DATA), UUID.fromString(UUID_GYR_CONF), (byte) 7) {
         /**
          *
-         * @param value
+         * @param value byte received by the TI CC2650 MCU gyroscope
          */
         @Override
         public float[] convert(final byte[] value) {
@@ -258,8 +197,7 @@ public enum Sensor {
 
     BAROMETER("Barometer", UUID.fromString(UUID_BAR_SERV), UUID.fromString(UUID_BAR_DATA), UUID.fromString(UUID_BAR_CONF)) {
         /**
-         *
-         * @param value
+         * @param value byte received by the TI CC2650 MCU barometer
          */
         @Override
         public float[] convert(final byte[] value) {
@@ -281,7 +219,55 @@ public enum Sensor {
                 return new float[]{(float) (output / 100.0f), 0, 0};
             }
         }
-    };
+    }
+    /*, // for future implementations that want to use those sensors
+        MOVEMENT_ACC("MOV_Accelerometer", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
+            *//*
+             * @param value
+             *//*
+            public float[] convert(final byte[] value) {
+                // Range 8G
+                final float SCALE = (float) 4096.0;
+
+                int x = (value[7] << 8) + value[6];
+                int y = (value[9] << 8) + value[8];
+                int z = (value[11] << 8) + value[10];
+                return new float[]{((x / SCALE) * -1), y / SCALE, ((z / SCALE) * -1)};
+            }
+        },
+        MOVEMENT_GYRO("MOV_Gyroscope", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
+            *//*
+             * @param value
+             *//*
+            @Override
+            public float[] convert(final byte[] value) {
+
+                final float SCALE = (float) 128.0;
+
+                int x = (value[1] << 8) + value[0];
+                int y = (value[3] << 8) + value[2];
+                int z = (value[5] << 8) + value[4];
+                return new float[]{x / SCALE, y / SCALE, z / SCALE};
+            }
+        },
+        MOVEMENT_MAG("MOV_Magmetometer", UUID.fromString(UUID_MOV_SERV), UUID.fromString(UUID_MOV_DATA), UUID.fromString(UUID_MOV_CONF), (byte) 3) {
+
+            *//*
+             *
+             * @param value
+             *//*
+            @Override
+            public float[] convert(final byte[] value) {
+                final float SCALE = (float) (32768 / 4912);
+                if (value.length >= 18) {
+                    int x = (value[13] << 8) + value[12];
+                    int y = (value[15] << 8) + value[14];
+                    int z = (value[17] << 8) + value[16];
+                    return new float[]{x / SCALE, y / SCALE, z / SCALE};
+                } else return new float[]{0, 0, 0};
+            }
+        }*/;
+    
 
     public static final byte ENABLE_SENSOR_CODE = 1;
     public static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
@@ -291,7 +277,7 @@ public enum Sensor {
     /**
      * Constructor called by the Gyroscope and Accelerometer because it more than a boolean enable
      * code.
-     * @param name
+     * @param name the name of the according sensor
      * @param service The UUID of the GATT Service of the sensor
      * @param data The UUID of the Characteristic of the sensor data
      * @param config The UUID of the configuration characteristic
@@ -307,7 +293,7 @@ public enum Sensor {
     }
     /**
      * Constructor called by all the sensors except Gyroscope
-     * @param name
+     * @param name the name of the according sensor
      * @param service The UUID of the GATT Service of the sensor
      * @param data The UUID of the Characteristic of the sensor data
      * @param config The UUID of the configuration characteristic
@@ -321,10 +307,10 @@ public enum Sensor {
         // This is the sensor enable code for all sensors except the gyroscope
     }
 
-    /**
+/*    *//*
      * @param uuid A UUID, no matter if the one of the service, the config or the data
      * characteristic.
-     */
+     *//*
     public static Sensor getSensorFromUuid(UUID uuid) {
         for (Sensor s : Sensor.values()) {
             if (s.getDataUUID().equals(uuid) || s.getServiceUUID().equals(uuid) ||
@@ -333,15 +319,15 @@ public enum Sensor {
             }
         }
         throw new RuntimeException("unable to find UUID.");
-    }
+    }*/
 
     /**
      * Gyroscope, Magnetometer, Barometer, IR temperature all store 16 bit two's complement values as LSB MSB, which cannot be directly parsed
      * as getIntValue(FORMAT_SINT16, offset) because the bytes are stored as little-endian.
      *
      * This function extracts these 16 bit two's complement values.
-     * @param c
-     * @param offset
+     * @param c some byte
+     * @param offset some offset
      */
     private static Integer shortSignedAtOffset(byte[] c, int offset) {
         Integer lowerByte = (int) c[offset] & 0xFF;
@@ -352,8 +338,8 @@ public enum Sensor {
 
     /**
      *
-     * @param c
-     * @param offset
+     * @param c some byte
+     * @param offset some offset
      */
     private static Integer shortUnsignedAtOffset(byte[] c, int offset) {
         Integer lowerByte = (int) c[offset] & 0xFF;
@@ -363,8 +349,8 @@ public enum Sensor {
 
     /**
      *
-     * @param c
-     * @param offset
+     * @param c some byte
+     * @param offset some offset
      */
     private static Integer twentyFourBitUnsignedAtOffset(byte[] c, int offset) {
         Integer lowerByte = (int) c[offset] & 0xFF;
@@ -373,37 +359,25 @@ public enum Sensor {
         return (upperByte << 16) + (mediumByte << 8) + lowerByte;
     }
 
-    /**
-     *
-     */
     public byte getEnableSensorCode() {
         return enableCode;
     }
 
-    /**
-     *
-     */
+
     public UUID getServiceUUID() {
         return service;
     }
 
-    /**
-     *
-     */
+
     public UUID getDataUUID() {
         return data;
     }
 
-    /**
-     *
-     */
+
     public UUID getConfigUUID() {
         return config;
     }
 
-    /**
-     *
-     */
     public String getName() {
         return name;
     }

@@ -2,8 +2,6 @@ package kn.uni.inf.sensortagvr.ble;
 
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
-import android.view.View;
 
 /**
  *
@@ -14,14 +12,14 @@ public class ScanListItem {
     /**
      *
      */
-    public BluetoothDevice getDevice() {
+    BluetoothDevice getDevice() {
         return device;
     }
 
     /**
-     * @param device
+     * @param device set the device for a list entry in the ScanListActivity
      */
-    public void setDevice(BluetoothDevice device) {
+    void setDevice(BluetoothDevice device) {
         this.device = device;
     }
 
@@ -39,14 +37,14 @@ public class ScanListItem {
         return device.getAddress();
     }
 
-    public void onClick(View view) {
+   /* public void onClick(View view) {
         final BluetoothDevice device = this.getDevice();
         if (device == null) return;
         final Intent intent = new Intent(view.getContext(), LiveDataActivity.class);
         intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         view.getContext().startActivity(intent);
-    }
+    }*/
 }
 
 

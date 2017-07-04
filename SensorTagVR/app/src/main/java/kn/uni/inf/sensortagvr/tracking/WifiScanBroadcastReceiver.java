@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-/**
- * Created by ojo on 08.06.17.
- */
+
 
 public class WifiScanBroadcastReceiver extends BroadcastReceiver {
 
@@ -16,6 +14,9 @@ public class WifiScanBroadcastReceiver extends BroadcastReceiver {
         wifiTracker = tracker;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         wifiTracker.update();

@@ -21,18 +21,16 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
 public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
     private ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
-    /**
-     * @param deviceSet
-     */
+/*    *//*
     public void setDeviceSet(ArraySet<ScanListItem> deviceSet) {
         this.deviceSet = deviceSet;
         notifyDataSetChanged();
-    }
+    }*/
 
     /**
      * @param device Bluetooth device to add
      */
-    public void addDevice(BluetoothDevice device) {
+    void addDevice(BluetoothDevice device) {
         for (ScanListItem li : deviceSet) {
             if (li.getDeviceAddress().equals(device.getAddress()))
                 return;
@@ -48,26 +46,12 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     /**
      *
      */
-    public void clear() {
+    void clear() {
         deviceSet.clear();
     }
 
     /**
-     * @param parent   The ViewGroup into which the new View will be added after it is bound to
-     * @param viewType The view type of the new View.
-     *                 an adapter position.
-     *                 Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
-     *                 an item.
-     *                 <p>
-     *                 This new ViewHolder should be constructed with a new View that can represent the items
-     *                 of the given type. You can either create a new View manually or inflate it from an XML
-     *                 layout file.
-     *                 <p>
-     *                 The new ViewHolder will be used to display items of the adapter using
-     *                 onBindViewHolder(ViewHolder, int, List). Since it will be re-used to display
-     *                 different items in the data settings, it is a good idea to cache references to sub views of
-     *                 the View to avoid unnecessary {@link View#findViewById(int)} calls.
-     * @return A new ViewHolder that holds a View of the given view type.
+     * {@inheritDoc}
      */
     @Override
     public LeDeviceListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,24 +62,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     }
 
     /**
-     * Called by RecyclerView to display the data at the specified position. This method should
-     * update the contents of the ViewHolder#itemView to reflect the item at the given
-     * position.
-     * <p>
-     * Note that unlike ListView, RecyclerView will not call this method
-     * again if the position of the item changes in the data settings unless the item itself is
-     * invalidated or the new position cannot be determined. For this reason, you should only
-     * use the <code>position</code> parameter while acquiring the related data item inside
-     * this method and should not keep a copy of it. If you need the position of an item later
-     * on (e.g. in a click listener), use ViewHolder#getAdapterPosition() which will
-     * have the updated adapter position.
-     * <p>
-     * Override  #onBindViewHolder(ViewHolder, int, List) instead if Adapter can
-     * handle efficient partial bind.
-     *
-     * @param holder   The ViewHolder which should be updated to represent the contents of the
-     * @param position The position of the item within the adapter's data settings.
-     *                 item at the given position in the data settings.
+     * {@inheritDoc}
      */
     @Override
     public void onBindViewHolder(LeDeviceListAdapter.ViewHolder holder, int position) {
@@ -103,7 +70,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     }
 
     /**
-     * @param i position of the item
+     * {@inheritDoc}
      */
     @Override
     public long getItemId(int i) {
@@ -111,9 +78,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     }
 
     /**
-     * Returns the total number of items in the data settings held by the adapter.
-     *
-     * @return The total number of items in this adapter.
+     * {@inheritDoc}
      */
     @Override
     public int getItemCount() {
@@ -127,7 +92,11 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         private final ListitemDeviceBinding binding;
 
         /**
-         * @param binding
+         * @param binding fill the data in using the data binding library, therefore a generated
+         *                binding class is used
+         *
+         *                for more information dive into the official documentation and have a look
+         *                at the activity_scanlist.xml
          */
         ViewHolder(ListitemDeviceBinding binding) {
             super(binding.getRoot());
@@ -135,13 +104,15 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         }
 
         /**
-         * @param li
+         * @param li a list item (in this case a device entry on the list) that shall be bound to
+         *           the view by using the data binding library
          */
-        public void bind(ScanListItem li) {
+        void bind(ScanListItem li) {
             binding.setDeviceItem(li);
         }
 
         /**
+         * {@inheritDoc}
          * Called when a view has been clicked.
          *
          * @param v The view that was clicked.

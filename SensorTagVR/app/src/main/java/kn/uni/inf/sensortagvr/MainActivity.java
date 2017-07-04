@@ -1,9 +1,5 @@
 package kn.uni.inf.sensortagvr;
 
-/**
- * Created by Lisa-Maria on 24/06/2017.
- */
-
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +11,9 @@ import kn.uni.inf.sensortagvr.ble.LiveDataActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         vrButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), RecordActivity.class));
@@ -34,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mLiveDataButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), LiveDataActivity.class));
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         setButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(View v) {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), SettingsActivity.class));

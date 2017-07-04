@@ -20,9 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.List;
 
-/**
- * Created by ojo on 09.05.17.
- */
+
 
 public class TrackingManagerService extends Service {
 
@@ -68,7 +66,7 @@ public class TrackingManagerService extends Service {
     };
 
     /**
-     *
+     * {@inheritDoc}
      */
     @Override
     public void onCreate(){
@@ -91,6 +89,9 @@ public class TrackingManagerService extends Service {
         this.registerReceiver(br, filter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IBinder onBind(Intent intent) {
         try {
@@ -112,7 +113,7 @@ public class TrackingManagerService extends Service {
 
     /**
      *
-     * @param intent
+     * {@inheritDoc}
      */
     @Override
     public boolean onUnbind(Intent intent) {
@@ -123,6 +124,9 @@ public class TrackingManagerService extends Service {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -159,7 +163,7 @@ public class TrackingManagerService extends Service {
         return lastPostion == null ? new PointF(0, 0) : lastPostion;
     }
 
-    public Location getAbsolutePosition() throws Exception {
+   /* public Location getAbsolutePosition() throws Exception {
         //Earth’s radius, sphere
         final double R = 6378137.0;
         Location loc = new Location("TrackingManager");
@@ -176,7 +180,7 @@ public class TrackingManagerService extends Service {
         loc.setLongitude(origin.getLongitude() + dLon * 180.0 / Math.PI );
 
         return loc;
-    }
+    }*/
 
     public Location calibrateOrigin() throws Exception{
         if(lastGPSPosition != null)
@@ -196,16 +200,19 @@ public class TrackingManagerService extends Service {
         }
     }
 
-    class LocationUpdater implements Runnable {
+    private class LocationUpdater implements Runnable {
 
         private Handler handler;
         private WifiTracker wifiTracker;
 
-        public LocationUpdater(Handler handler, WifiTracker wifiTracker) {
+        LocationUpdater(Handler handler, WifiTracker wifiTracker) {
             this.handler = handler;
             this.wifiTracker = wifiTracker;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void run() {
             this.handler.postDelayed(this, 500);

@@ -62,8 +62,8 @@ class TIUUIDs {
 
     UUID_KEY_SERV = "0000ffe0-0000-1000-8000-00805f9b34fb",
             UUID_KEY_DATA = "0000ffe1-0000-1000-8000-00805f9b34fb";
-    static HashSet<UUID> config = new HashSet<>();
-    static HashSet<UUID> data = new HashSet<>();
+    private static HashSet<UUID> config = new HashSet<>();
+    private static HashSet<UUID> data = new HashSet<>();
     private static HashMap<String, String> attributes = new HashMap<>();
 
     static {
@@ -140,8 +140,8 @@ class TIUUIDs {
     }
 
     /**
-     * @param uuid
-     * @param defaultName
+     * @param uuid uuio to look up in the dictionary (UUID, Sti
+     * @param defaultName a default name to be set if the uuid doesn't match a sting in the dictionary
      */
     static String lookup(String uuid, String defaultName) {
         String name = attributes.get(uuid);

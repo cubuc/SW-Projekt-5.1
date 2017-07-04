@@ -32,25 +32,25 @@ import kn.uni.inf.sensortagvr.R;
  */
 public class ScanListActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
-    static RecyclerView mDeviceList;
     private final int REQUEST_ENABLE_BT = 1;
+    RecyclerView mDeviceList;
     BluetoothLeScanner mLEScanner;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
-    private boolean mScanning;
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private final ScanCallback mScanCallback = new ScanCallback() {
         /**
-         * @param callbackType
-         * @param result
+         * {@inheritDoc}
          */
         @Override
         public void onScanResult(int callbackType, final ScanResult result) {
             runOnUiThread(new Runnable() {
                 /**
+                 * {@inheritDoc}
                  *
+                 * adds a device to the recycler view if it was found
                  */
                 @Override
                 public void run() {
@@ -61,27 +61,29 @@ public class ScanListActivity extends AppCompatActivity {
 
         /**
          *
-         * @param results
+         * {@inheritDoc}
          */
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             for (ScanResult sr : results) {
                 Log.i("onBatchScanResult", sr.toString());
+                super.onBatchScanResults(results);
             }
         }
 
         /**
          *
-         * @param errorCode
+         * {@inheritDoc}
          */
         @Override
         public void onScanFailed(int errorCode) {
             Log.e("Scan Failed", "Error Code: " + errorCode);
+            super.onScanFailed(errorCode);
         }
     };
 
     /**
-     * @param savedInstanceState
+     * {@inheritDoc}
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,7 @@ public class ScanListActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * {@inheritDoc}
      */
     @Override
     protected void onResume() {
@@ -147,7 +149,7 @@ public class ScanListActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * {@inheritDoc}
      */
     @Override
     protected void onPause() {
@@ -157,9 +159,7 @@ public class ScanListActivity extends AppCompatActivity {
     }
 
     /**
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * {@inheritDoc}
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -172,25 +172,23 @@ public class ScanListActivity extends AppCompatActivity {
     }
 
     /**
-     * @param enable
+     * @param enable if true the scan will start and stop after 5 seconds
+     *               if false the scan will stop immediately
      */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             mHandler.postDelayed(new Runnable() {
                 /**
-                 *
+                 * {@inheritDoc}
                  */
                 @Override
                 public void run() {
-                    mScanning = false;
                     mLEScanner.stopScan(mScanCallback);
 
                 }
             }, SCAN_PERIOD);
-            mScanning = true;
             mLEScanner.startScan(filters, settings, mScanCallback);
         } else {
-            mScanning = false;
             mLEScanner.stopScan(mScanCallback);
         }
         invalidateOptionsMenu();

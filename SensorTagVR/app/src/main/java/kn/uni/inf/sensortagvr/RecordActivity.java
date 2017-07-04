@@ -2,7 +2,6 @@ package kn.uni.inf.sensortagvr;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
@@ -13,42 +12,89 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
+import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
 /**
- * Created by lisa-maria on 21.05.17.
+ * Activity that binds to tracking and storage service to calibrate the start position, record data
+ * and view them in the WebVR environment via a web browser
  */
 
 public class RecordActivity extends Activity {
 
     StorageMainService storageService;
-    boolean storageServiceBound = false;
+    TrackingManagerService trackingService;
+
     private ServiceConnection storageConnection = new ServiceConnection() {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             StorageMainService.StorageBinder binder = (StorageMainService.StorageBinder) service;
             storageService = binder.getService();
-            storageServiceBound = true;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            storageServiceBound = false;
+            storageService = null;
         }
     };
 
+    private ServiceConnection trackingConnection = new ServiceConnection() {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
+            trackingService = binder.getService();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            trackingService = null;
+        }
+    };
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        Intent bindStorService = new Intent(this, StorageMainService.class);
-        bindService(bindStorService, storageConnection, Context.BIND_AUTO_CREATE);
+        final Button caliButton = (Button) findViewById(R.id.calibrate);
+        caliButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onClick(View v) {
+                if (trackingService != null)
+                    try {
+                        trackingService.calibrateOrigin();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            }
+        });
 
 
         final Button buttonMD = (Button) findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
             public void onClick(View v) {
-                if (storageServiceBound)
+                if (storageService != null)
                     storageService.measureData();
                 else
                     Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
@@ -58,7 +104,7 @@ public class RecordActivity extends Activity {
         final Button VRbutton = (Button) findViewById(R.id.start_VR);
         VRbutton.setOnClickListener(new View.OnClickListener() {
             /**
-             * @param v
+             * {@inheritDoc}
              */
             @Override
             public void onClick(View v) {
@@ -71,4 +117,24 @@ public class RecordActivity extends Activity {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        bindService(new Intent(this, StorageMainService.class), storageConnection, 0);
+        bindService(new Intent(this, TrackingManagerService.class), trackingConnection, 0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(storageConnection);
+        unbindService(trackingConnection);
+    }
 }

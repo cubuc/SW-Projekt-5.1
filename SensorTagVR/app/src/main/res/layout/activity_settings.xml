@@ -12,14 +12,14 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="93dp"
-        android:text="Track" />
+        android:text="@string/tracking_settings" />
 
     <Button
         android:id="@+id/button_scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/button_track"
         android:layout_below="@+id/button_track"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="81dp"
-        android:text="Scan" />
+        android:text="@string/scan" />
 </RelativeLayout>

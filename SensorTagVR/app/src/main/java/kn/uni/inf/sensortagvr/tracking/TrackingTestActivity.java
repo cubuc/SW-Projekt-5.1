@@ -33,11 +33,26 @@ public class TrackingTestActivity extends AppCompatActivity {
 
     public final int FINE_LOCATION_PERMISSION_REQUEST = 0;
     public final int AP_SETTINGS_REQUEST = 1;
-
+    protected ListView lv;
     private TrackingManagerService trackingService = null;
     private boolean mBound = false;
+    private ServiceConnection mConnection = new ServiceConnection() {
 
-    protected ListView lv;
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            TrackingBinder binder = (TrackingBinder) service;
+            trackingService = binder.getService();
+            mBound = true;
+
+            final Handler handler = new Handler();
+            handler.post(new LocationUpdater(handler, (TextView) findViewById(R.id.location), lv, trackingService));
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,32 +97,29 @@ public class TrackingTestActivity extends AppCompatActivity {
                     FINE_LOCATION_PERMISSION_REQUEST);
         }
 
-        Intent intent = new Intent(this, TrackingManagerService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
+        Intent intent = new Intent(this, TrackingManagerService.class);
+        bindService(intent, mConnection, 0);
     }
 
     protected void onPause() {
         super.onPause();
+        unbindService(mConnection);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case FINE_LOCATION_PERMISSION_REQUEST: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
+                if (!(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     Log.e("TarckingManager", "Shutting down due to missing permissions!");
                     finish();
                 }
-                return;
             }
         }
     }
@@ -126,24 +138,6 @@ public class TrackingTestActivity extends AppCompatActivity {
             }
         }
     }
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            TrackingBinder binder = (TrackingBinder) service;
-            trackingService = binder.getService();
-            mBound = true;
-
-            final Handler handler = new Handler();
-            handler.post(new LocationUpdater(handler, (TextView) findViewById(R.id.location), lv, trackingService));
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
 
     public class WifiAPAdapter extends ArrayAdapter<WifiAP> {
 

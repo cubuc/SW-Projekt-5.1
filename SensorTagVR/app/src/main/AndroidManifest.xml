@@ -35,12 +35,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VRActivity" />
         <activity android:name=".RecordActivity" />
         <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />
         <activity android:name=".ble.LiveDataActivity" />
         <activity android:name=".tracking.APSettingsActivity"/>
+        <activity android:name=".SettingsActivity" />
 
         <service
             android:name=".ble.BluetoothLEService"

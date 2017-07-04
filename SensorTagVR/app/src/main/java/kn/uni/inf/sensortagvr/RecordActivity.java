@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
-import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
 
 /**
  * Created by lisa-maria on 21.05.17.
@@ -53,13 +52,6 @@ public class RecordActivity extends Activity {
                     storageService.measureData();
                 else
                     Toast.makeText(getApplicationContext(), "StorageService not connected", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        final Button mTrackingTestButton = (Button) findViewById(R.id.tracking_test);
-        mTrackingTestButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), TrackingTestActivity.class));
             }
         });
 

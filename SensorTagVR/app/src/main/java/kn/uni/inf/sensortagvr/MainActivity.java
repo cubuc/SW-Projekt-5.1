@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import kn.uni.inf.sensortagvr.ble.LiveDataActivity;
-import kn.uni.inf.sensortagvr.ble.ScanListActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), ScanListActivity.class));
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });
 

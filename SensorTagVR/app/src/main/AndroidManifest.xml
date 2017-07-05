@@ -58,10 +58,6 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.WRITE_EXTERNAL_STORAGE">
-            <intent-filter>
-                <action android:name="kn.uni.inf.sensortagvr.ble.ACTION_DATA_AVAILABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </service>
 
     </application>

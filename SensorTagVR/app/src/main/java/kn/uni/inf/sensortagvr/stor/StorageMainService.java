@@ -53,7 +53,6 @@ public class StorageMainService extends Service {
     private final boolean DISTORT = false;
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
-    private boolean trackingServiceBound = false;
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -68,7 +67,6 @@ public class StorageMainService extends Service {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
             trackingService = binder.getService();
-            trackingServiceBound = true;
         }
 
         /**
@@ -76,7 +74,7 @@ public class StorageMainService extends Service {
          */
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            trackingServiceBound = false;
+            trackingService = null;
         }
     };
     // Saves all measured data in a session
@@ -118,10 +116,6 @@ public class StorageMainService extends Service {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
         Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
-        // Binding TrackingManagerService
-        Intent bindTrackService = new Intent(this, TrackingManagerService.class);
-        bindService(bindTrackService, mConnection, BIND_ADJUST_WITH_ACTIVITY);
-
     }
 
     /**
@@ -141,7 +135,7 @@ public class StorageMainService extends Service {
         mLocalBroadcastManager.registerReceiver(mUpdateReceiver, new IntentFilter(ACTION_DATA_AVAILABLE));
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
-
+        bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
         Toast.makeText(getApplicationContext(), "New Session created", Toast.LENGTH_SHORT).show();
     }
 
@@ -184,15 +178,14 @@ public class StorageMainService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
-        if (trackingServiceBound) {
             unbindService(mConnection);
             stopService(new Intent(this, TrackingManagerService.class));
-            trackingServiceBound = false;
             Log.i(this.toString(), "unbound & stopped tracking manager");
-        }
+
         super.onUnbind(intent);
         return false;
     }
+
 
     /**
      * Collects all data received by the ble-service and the loc-service, and saves them into the
@@ -208,11 +201,12 @@ public class StorageMainService extends Service {
                 receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
 
             // get Data from tracking module
-            PointF loc = trackingService.getRelativePosition();
-
-            // receivedData should be scaled between -.5 and 1
-            dataMeasured.add(new CompactData(loc, receivedData[0]));
-            Log.d("StorMan", "Data " + receivedData[0]);
+            if (trackingService != null) {
+                PointF loc = trackingService.getRelativePosition();
+                // receivedData should be scaled between -.5 and 1
+                dataMeasured.add(new CompactData(loc, receivedData[0]));
+                Log.d("StorMan", "Data " + receivedData[0]);
+            }
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
 

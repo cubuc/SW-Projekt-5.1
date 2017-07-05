@@ -2,6 +2,7 @@ package kn.uni.inf.sensortagvr.ble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,13 +20,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
+import static android.bluetooth.BluetoothProfile.GATT_SERVER;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
 
 /**
@@ -59,8 +62,13 @@ public class LiveDataActivity extends AppCompatActivity {
             mBluetoothLEService = ((BluetoothLEService.LocalBinder) service).getService();
             Log.i(TAG, "onServiceConnected");
             // Automatically connects to the device upon successful start-up initialization.
-            final boolean result = mBluetoothLEService.connect(device.getAddress());
-            Log.d(TAG, "Connect request result=" + result);
+            if (device != null) {
+                final boolean result = mBluetoothLEService.connect(device.getAddress());
+                Log.d(TAG, "Connect request result=" + result);
+            } else
+                Toast.makeText(getApplicationContext(), "Please go to the settings, scan for and " +
+                        "connect a device.", Toast.LENGTH_LONG).show();
+            LiveDataActivity.this.finish();
         }
 
         /** {@inheritDoc}
@@ -179,13 +187,19 @@ public class LiveDataActivity extends AppCompatActivity {
         mLocalBroadcastManager =
                 LocalBroadcastManager.getInstance(this);
 
-        Set<BluetoothDevice> btDevices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
-        for (BluetoothDevice btDev : btDevices) {
-            if (btDev.getName().equals("CC2650 SensorTag")) device = btDev;
+        BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter mBtAdapter = bm.getAdapter();
+
+        if (!bm.getConnectedDevices(GATT_SERVER).isEmpty()) {
+            List<BluetoothDevice> btDevices = bm.getConnectedDevices(GATT_SERVER);
+            for (BluetoothDevice btDev : btDevices) {
+                if (btDev.getName().equals("CC2650 SensorTag")) device = btDev;
+            }
         }
-        if (device != null) finish();
-        // Sets up UI references.
-        ((TextView) findViewById(R.id.device_address)).setText(device.getAddress());
+        if (device != null) {
+            // Sets up UI references.
+            ((TextView) findViewById(R.id.device_address)).setText(device.getAddress());
+        }
         RecyclerView mLiveDataList = (RecyclerView) findViewById(R.id.data_list);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         location = (TextView) findViewById(R.id.location);
@@ -222,6 +236,7 @@ public class LiveDataActivity extends AppCompatActivity {
         super.onPause();
         mLocalBroadcastManager.unregisterReceiver(mGattUpdateReceiver);
         unbindService(mServiceConnection);
+        unbindService(mTrackSvcConnection);
     }
 
     /**
@@ -232,7 +247,7 @@ public class LiveDataActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.services, menu);
         if (mConnected) {
             menu.findItem(R.id.menu_connect).setVisible(false);
-            menu.findItem(R.id.menu_disconnect).setVisible(true);
+            menu.findItem(R.id.menu_connect).setVisible(true);
         } else {
             menu.findItem(R.id.menu_connect).setVisible(true);
             menu.findItem(R.id.menu_disconnect).setVisible(false);

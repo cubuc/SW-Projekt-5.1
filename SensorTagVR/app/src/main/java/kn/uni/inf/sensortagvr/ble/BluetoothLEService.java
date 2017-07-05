@@ -306,14 +306,12 @@ public class BluetoothLEService extends Service {
      */
     @Override
     public void onDestroy() {
-        if (mBtAdapter != null) {
-            disconnect();
+        if (mBtAdapter != null && mGatt != null) {
             for (Sensor s : Sensor.SENSOR_LIST)
                 controlSensor(s, false, false);
-            if (mGatt == null) {
-                return;
-            }
-        }
+            disconnect();
+
+        } else if (mGatt != null) disconnect();
         mGatt = null;
         super.onDestroy();
     }

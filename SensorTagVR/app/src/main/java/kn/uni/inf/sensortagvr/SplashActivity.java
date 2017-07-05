@@ -1,18 +1,18 @@
 package kn.uni.inf.sensortagvr;
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -52,7 +52,14 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
     }
 
     private void checkPermissions() {
-
+        if (!(getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) ||
+                !(getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK)) ||
+                !(getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS))) {
+            Toast.makeText(this, "BLE or Location (either GPS or network) not Supported. \n" +
+                            "Sorry you can't use this App without those features!",
+                    Toast.LENGTH_LONG).show();
+            finishAndRemoveTask();
+        }
         final ArrayList<String> deniedPermissions = new ArrayList<>();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
@@ -70,13 +77,18 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
             });
         } else {
             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-
-                startActivity(new Intent(this, MainActivity.class));
+            BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            if (!(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)))
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            if (!(bm.getAdapter().isEnabled())) {
+                bm.getAdapter().enable();
+            } else {
+                bm.getAdapter().disable();
+                bm.getAdapter().enable();
             }
+            }
+
+        startActivity(new Intent(this, MainActivity.class));
         }
     }
 }

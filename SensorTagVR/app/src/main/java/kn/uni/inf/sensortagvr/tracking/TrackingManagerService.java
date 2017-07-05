@@ -119,6 +119,7 @@ public class TrackingManagerService extends Service {
             locationManager.removeUpdates(locationListener);
             locationListener = null;
         }
+        unregisterReceiver(br);
         super.onUnbind(intent);
         return false;
     }

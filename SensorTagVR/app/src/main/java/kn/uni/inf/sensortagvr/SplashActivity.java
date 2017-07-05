@@ -76,16 +76,21 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                 }
             });
         } else {
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            if (!(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)))
-                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            if (!(bm.getAdapter().isEnabled())) {
-                bm.getAdapter().enable();
-            } else {
-                bm.getAdapter().disable();
-                bm.getAdapter().enable();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                    if (!(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)))
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    if (!(bm.getAdapter().isEnabled())) {
+                        bm.getAdapter().enable();
+                    } else {
+                        bm.getAdapter().disable();
+                        bm.getAdapter().enable();
+                    }
+                }
+            });
         }
 
         startActivity(new Intent(this, MainActivity.class));

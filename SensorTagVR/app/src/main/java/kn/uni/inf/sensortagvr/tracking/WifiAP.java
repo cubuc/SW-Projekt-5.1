@@ -10,26 +10,29 @@ import android.util.JsonWriter;
 
 import java.io.IOException;
 
+/**
+ * Created by ojo on 28.05.17.
+ */
 
-class WifiAP implements Parcelable {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public WifiAP createFromParcel(Parcel in) {
-            return new WifiAP(in);
-        }
-
-        public WifiAP[] newArray(int size) {
-            return new WifiAP[size];
-        }
-    };
-    private final String BSSID;
-    private final double A;
-    private final double n;
+public class WifiAP implements Parcelable {
     private String SSID;
+    private final String BSSID;
     private double distance;
     private PointF location;
+
+    private final double A;
+    private final double n;
+
     private boolean tracked = false;
 
-    WifiAP(String SSID, String BSSID, PointF location, double A, double n, boolean tracked) {
+    public WifiAP(String BSSID, PointF location) {
+        this.BSSID = BSSID;
+        this.location = location;
+        this.A = -50.0;
+        this.n = 3.5;
+    }
+
+    public WifiAP(String SSID, String BSSID, PointF location, double A, double n, boolean tracked) {
         this.SSID = SSID;
         this.BSSID = BSSID;
         this.location = location;
@@ -38,7 +41,7 @@ class WifiAP implements Parcelable {
         this.tracked = tracked;
     }
 
-    WifiAP(ScanResult scan) {
+    public WifiAP(ScanResult scan) {
         this.BSSID = scan.BSSID;
         this.location = new PointF();
         this.A = -50.0;
@@ -47,81 +50,25 @@ class WifiAP implements Parcelable {
         update(scan);
     }
 
-    private WifiAP(Parcel in) {
-        SSID = in.readString();
-        BSSID = in.readString();
-        location = in.readParcelable(Location.class.getClassLoader());
-        A = in.readDouble();
-        n = in.readDouble();
-        tracked = (boolean) in.readValue(getClass().getClassLoader());
-    }
-
-    WifiAP(JsonReader reader) throws IOException {
-        float posX = 0;
-        float posY = 0;
-        String bssid = "";
-        double varA = -50.0;
-        double varN = 3.5;
-
-        reader.beginObject();
-
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            switch (name) {
-                case "SSID":
-                    SSID = reader.nextString();
-                    break;
-                case "BSSID":
-                    bssid = reader.nextString();
-                    break;
-                case "posX":
-                    posX = (float) reader.nextDouble();
-                    break;
-                case "posY":
-                    posY = (float) reader.nextDouble();
-                    break;
-                case "A":
-                    varA = reader.nextDouble();
-                    break;
-                case "n":
-                    varN = reader.nextDouble();
-                    break;
-                case "tracked":
-                    tracked = reader.nextBoolean();
-                    break;
-                default:
-                    reader.skipValue();
-                    break;
-            }
-        }
-
-        reader.endObject();
-
-        location = new PointF(posX, posY);
-
-        BSSID = bssid;
-        A = varA;
-        n = varN;
-    }
-
-    void update(ScanResult scan) {
+    public boolean update(ScanResult scan) {
         if(!BSSID.equals(scan.BSSID))
-            return;
+            return false;
 
         SSID = scan.SSID;
         distance = Math.pow(10.0, (A - scan.level) / (10.0 * n));
 
+        return true;
     }
 
-    String getSSID() {
+    public String getSSID() {
         return SSID;
     }
 
-    String getBSSID() {
+    public String getBSSID() {
         return BSSID;
     }
 
-    double getDistance() {
+    public double getDistance() {
         return distance;
     }
 
@@ -133,33 +80,28 @@ class WifiAP implements Parcelable {
         return A;
     }
 
-    double getN() {
+    public double getN() {
         return n;
     }
 
-    boolean isTracked() {
+    public boolean isTracked() {
         return tracked;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public void setTracked(boolean tracked) {
+        this.tracked = tracked;
+    }
+
     @Override
     public String toString() {
         return SSID + "\n" + BSSID + "\nDistance:" + distance;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(SSID);
@@ -170,7 +112,25 @@ class WifiAP implements Parcelable {
         dest.writeValue(tracked);
     }
 
-    void writeToJSON(JsonWriter writer) throws IOException {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public WifiAP createFromParcel(Parcel in) {
+            return new WifiAP(in);
+        }
+        public WifiAP[] newArray(int size) {
+            return new WifiAP[size];
+        }
+    };
+
+    public WifiAP(Parcel in) {
+        SSID = in.readString();
+        BSSID = in.readString();
+        location = in.readParcelable(Location.class.getClassLoader());
+        A = in.readDouble();
+        n = in.readDouble();
+        tracked = (boolean) in.readValue(null);
+    }
+
+    public void writeToJSON(JsonWriter writer) throws IOException{
         writer.beginObject();
         writer.name("SSID").value(SSID);
         writer.name("BSSID").value(BSSID);
@@ -180,5 +140,48 @@ class WifiAP implements Parcelable {
         writer.name("n").value(n);
         writer.name("tracked").value(tracked);
         writer.endObject();
+    }
+
+    public WifiAP(JsonReader reader) throws IOException {
+        float posX = 0;
+        float posY = 0;
+        String bssid = "";
+        double varA = -50.0;
+        double varN = 3.5;
+
+        reader.beginObject();
+
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("SSID")) {
+                SSID = reader.nextString();
+            } else if (name.equals("BSSID")) {
+                bssid = reader.nextString();
+            } else if (name.equals("posX")) {
+                posX = (float)reader.nextDouble();
+            }
+            else if (name.equals("posY")) {
+                posY = (float)reader.nextDouble();
+            }
+            else if (name.equals("A")) {
+                varA = reader.nextDouble();
+            }
+            else if (name.equals("n")) {
+                varN = reader.nextDouble();
+            }
+            else if (name.equals("tracked")) {
+                tracked = reader.nextBoolean();
+            } else {
+                reader.skipValue();
+            }
+        }
+
+        reader.endObject();
+
+        location = new PointF(posX, posY);
+
+        BSSID = bssid;
+        A = varA;
+        n = varN;
     }
 }

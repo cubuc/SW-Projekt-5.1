@@ -19,7 +19,7 @@ public class APSettingsActivity extends AppCompatActivity {
     private WifiAP wifiAP;
 
     /**
-     * {@inheritDoc}
+     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +31,16 @@ public class APSettingsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.ssid)).setText(wifiAP.getSSID());
         ((TextView) findViewById(R.id.bssid)).setText(wifiAP.getBSSID());
 
-        ((EditText) findViewById(R.id.posX)).setText(String.valueOf(wifiAP.getLocation().x));
-        ((EditText) findViewById(R.id.posY)).setText(String.valueOf(wifiAP.getLocation().y));
+        ((EditText) findViewById(R.id.posX)).setText(Double.toString(wifiAP.getLocation().x));
+        ((EditText) findViewById(R.id.posY)).setText(Double.toString(wifiAP.getLocation().y));
 
-        ((EditText) findViewById(R.id.varA)).setText(String.valueOf(wifiAP.getA()));
-        ((EditText) findViewById(R.id.varN)).setText(String.valueOf(wifiAP.getN()));
+        ((EditText) findViewById(R.id.varA)).setText(Double.toString(wifiAP.getA()));
+        ((EditText) findViewById(R.id.varN)).setText(Double.toString(wifiAP.getN()));
 
         final Button trackButton = (Button) findViewById(R.id.track);
         trackButton.setOnClickListener(new View.OnClickListener() {
             /**
-             * {@inheritDoc}
+             * @param v
              */
             @Override
             public void onClick(View v) {
@@ -52,7 +52,7 @@ public class APSettingsActivity extends AppCompatActivity {
         untrackButton.setOnClickListener(new View.OnClickListener() {
             /**
              *
-             * {@inheritDoc}
+             * @param v
              */
             @Override
             public void onClick(View v) {
@@ -82,5 +82,4 @@ public class APSettingsActivity extends AppCompatActivity {
         finish();
     }
 }
-
 

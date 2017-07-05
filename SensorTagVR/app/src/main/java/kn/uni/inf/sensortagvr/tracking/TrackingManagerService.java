@@ -119,6 +119,7 @@ public class TrackingManagerService extends Service {
         if(locationManager != null) {
             locationManager.removeUpdates(locationListener);
         }
+        super.onUnbind(intent);
 
         return false;
     }

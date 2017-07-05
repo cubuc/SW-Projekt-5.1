@@ -12,8 +12,6 @@ import com.lemmingapex.trilateration.TrilaterationFunction;
 
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,28 +23,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by ojo on 28.05.17.
- */
 
-public class WifiTracker {
+class WifiTracker {
 
-    private WifiManager wifiManager;
-    private Map<String, WifiAP> aps = new HashMap<String, WifiAP>();
+    private final WifiManager wifiManager;
+    private Map<String, WifiAP> aps = new HashMap<>();
 
     /**
      * @param wifiManager
      */
-    public WifiTracker(WifiManager wifiManager) {
+    WifiTracker(WifiManager wifiManager) {
         this.wifiManager = wifiManager;
     }
 
     /**
      *
      */
-    public void update() {
+    void update() {
         List<ScanResult> results =  wifiManager.getScanResults();
-        Map<String, WifiAP> newAPs = new HashMap<String, WifiAP>();
+        Map<String, WifiAP> newAPs = new HashMap<>();
 
         for(ScanResult r : results) {
             WifiAP ap = aps.get(r.BSSID);
@@ -74,7 +69,7 @@ public class WifiTracker {
      *
      * @param ap
      */
-    public boolean trackAP(WifiAP ap) {
+    boolean trackAP(WifiAP ap) {
         if(!aps.containsKey(ap.getBSSID()))
             return false;
 
@@ -85,10 +80,10 @@ public class WifiTracker {
     /**
      *
      */
-    public  PointF calculateLocation() {
+    PointF calculateLocation() {
         this.update();
 
-        List<WifiAP> trackedAPs = new ArrayList<WifiAP>();
+        List<WifiAP> trackedAPs = new ArrayList<>();
         for(WifiAP ap : aps.values()) {
             if(ap.isTracked() && ap.getDistance() > 0.0)
                 trackedAPs.add(ap);
@@ -124,12 +119,12 @@ public class WifiTracker {
                 new LevenbergMarquardtOptimizer());
         LeastSquaresOptimizer.Optimum optimum = solver.solve();
 
-        // the answer
+/*        // the answer
         double[] centroid = optimum.getPoint().toArray();
 
         // error and geometry information; may throw SingularMatrixException depending the threshold argument provided
         RealVector standardDeviation = optimum.getSigma(0);
-        RealMatrix covarianceMatrix = optimum.getCovariances(0);
+        RealMatrix covarianceMatrix = optimum.getCovariances(0);*/
 
 
         return new PointF((float)optimum.getPoint().toArray()[0], (float)optimum.getPoint().toArray()[1]);
@@ -139,18 +134,18 @@ public class WifiTracker {
      *
      * @param update
      */
-    public List<WifiAP> getWifiAPs(boolean update) {
+    List<WifiAP> getWifiAPs(boolean update) {
         if(update)
             update();
 
-        return new ArrayList<WifiAP>(aps.values());
+        return new ArrayList<>(aps.values());
     }
 
     /**
      *
      * @param out
      */
-    public void writeToFile(FileOutputStream out) throws IOException{
+    void writeToFile(FileOutputStream out) throws IOException {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(out));
         writer.setIndent("  ");
 
@@ -167,7 +162,7 @@ public class WifiTracker {
      *
      * @param in
      */
-    public void readFromFile(FileInputStream in) throws IOException{
+    void readFromFile(FileInputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in));
 
         reader.beginArray();

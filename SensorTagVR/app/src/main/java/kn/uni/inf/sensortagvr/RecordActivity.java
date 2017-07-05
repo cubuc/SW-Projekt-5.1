@@ -72,10 +72,10 @@ public class RecordActivity extends Activity {
              */
             @Override
             public void onClick(View v) {
-                String url = "http://localhost:12345";
+                String url = "http://kim25.wwwdns.kim.uni-konstanz.de/sp2017_5_1/index.html";
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.setPackage("com.android.chrome");
+                i.setPackage("org.mozilla.firefox");
                 startActivity(i);
             }
         });

@@ -28,7 +28,7 @@ import kn.uni.inf.sensortagvr.tracking.TrackingManagerService.TrackingBinder;
 public class TrackingTestActivity extends AppCompatActivity {
 
     private final int AP_SETTINGS_REQUEST = 1;
-    private ListView lv;
+    protected ListView lv;
     private TrackingManagerService trackingService = null;
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -80,7 +80,6 @@ public class TrackingTestActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -102,9 +101,14 @@ public class TrackingTestActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
         unbindService(mConnection);
         stopService(new Intent(this, TrackingManagerService.class));
     }
+
 
     /**
      * {@inheritDoc}
@@ -116,7 +120,7 @@ public class TrackingTestActivity extends AppCompatActivity {
                 WifiAP ap = data.getParcelableExtra("ACCESS_POINT");
                 trackingService.trackAP(ap);
 
-                if(ap.isTracked())
+                if (ap.isTracked())
                     Toast.makeText(getApplicationContext(), "Now tracking:\n" + ap.toString(), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getApplicationContext(), "Stopped tracking:\n" + ap.toString(), Toast.LENGTH_SHORT).show();
@@ -156,10 +160,10 @@ public class TrackingTestActivity extends AppCompatActivity {
     }
 
     private class LocationUpdater implements Runnable {
-        private final Handler handler;
-        private final TextView textView;
-        private final WifiAPAdapter adapter;
-        private final TrackingManagerService trackingService;
+        private Handler handler;
+        private TextView textView;
+        private WifiAPAdapter adapter;
+        private TrackingManagerService trackingService;
 
         LocationUpdater(Handler handler, TextView textView, ListView list, TrackingManagerService trackingService) {
             this.handler = handler;
@@ -177,7 +181,7 @@ public class TrackingTestActivity extends AppCompatActivity {
         public void run() {
             this.handler.postDelayed(this, 500);
 
-            if(TrackingTestActivity.this.trackingService != null) {
+            if (TrackingTestActivity.this.trackingService != null) {
                 this.textView.setText(TrackingTestActivity.this.trackingService.getRelativePosition().toString());
             } else {
                 this.textView.setText("---");
@@ -189,14 +193,13 @@ public class TrackingTestActivity extends AppCompatActivity {
                 @Override
                 public int compare(WifiAP lhs, WifiAP rhs) {
                     // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                    if(lhs.isTracked()) {
-                        if(rhs.isTracked())
+                    if (lhs.isTracked()) {
+                        if (rhs.isTracked())
                             return 0;
                         else
                             return -1;
-                    }
-                    else {
-                        if(rhs.isTracked())
+                    } else {
+                        if (rhs.isTracked())
                             return 1;
                         else
                             return 0;

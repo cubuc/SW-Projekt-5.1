@@ -1,12 +1,12 @@
 package kn.uni.inf.sensortagvr.ble;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import kn.uni.inf.sensortagvr.R;
@@ -19,9 +19,8 @@ import kn.uni.inf.sensortagvr.databinding.ListitemDeviceBinding;
  *
  */
 public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapter.ViewHolder> {
-    private final ArraySet<ScanListItem> deviceSet = new ArraySet<>();
+    private ArraySet<ScanListItem> deviceSet = new ArraySet<>();
 
-    /*
     public void setDeviceSet(ArraySet<ScanListItem> deviceSet) {
         this.deviceSet = deviceSet;
         notifyDataSetChanged();
@@ -40,6 +39,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         li.setDevice(device);
         this.deviceSet.add(li);
         notifyItemInserted(this.deviceSet.size());
+        Log.i("devlistadapter", "addDevice");
     }
 
 
@@ -54,10 +54,14 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
      * {@inheritDoc}
      */
     @Override
-    public LeDeviceListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        ListitemDeviceBinding binding = DataBindingUtil.inflate(layoutInflater,
+    public LeDeviceListAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        final Context con = parent.getContext();
+
+        LayoutInflater layoutInflater = LayoutInflater.from(con);
+
+        final ListitemDeviceBinding binding = DataBindingUtil.inflate(layoutInflater,
                 R.layout.listitem_device, parent, false);
+
         return new LeDeviceListAdapter.ViewHolder(binding);
     }
 
@@ -88,43 +92,24 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
     /**
      *
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ListitemDeviceBinding binding;
 
         /**
-         * @param binding fill the data in using the data binding library, therefore a generated
-         *                binding class is used
-         *
-         *                for more information dive into the official documentation and have a look
-         *                at the activity_scanlist.xml
+         * @param binding
          */
-        public ViewHolder(ListitemDeviceBinding binding) {
+        ViewHolder(ListitemDeviceBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
         /**
-         * @param li a list item (in this case a device entry on the list) that shall be bound to
-         *           the view by using the data binding library
+         * @param li
          */
-        public void bind(ScanListItem li) {
+        void bind(ScanListItem li) {
             binding.setDeviceItem(li);
         }
 
-        /**
-         * {@inheritDoc}
-         * Called when a view has been clicked.
-         *
-         * @param v The view that was clicked.
-         */
-        @Override
-        public void onClick(View v) {
-            final BluetoothDevice device = binding.getDeviceItem().getDevice();
-            if (device == null) return;
-            final Intent intent = new Intent(v.getContext(), LiveDataActivity.class);
-            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
-            intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-            v.getContext().startActivity(intent);
-        }
+
     }
 }

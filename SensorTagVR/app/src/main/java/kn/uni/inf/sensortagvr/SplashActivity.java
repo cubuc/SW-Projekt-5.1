@@ -1,9 +1,13 @@
 package kn.uni.inf.sensortagvr;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,9 +20,11 @@ import java.util.ArrayList;
 public class SplashActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String[] permissions = {Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.BLUETOOTH_PRIVILEGED,
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int REQUEST_ENABLE_BT = 0;
 
     /**
      * {@inheritDoc}
@@ -41,6 +47,7 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                     finishAndRemoveTask();
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
@@ -62,9 +69,14 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                 }
             });
         } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+
+                startActivity(new Intent(this, MainActivity.class));
+            }
         }
     }
-
 }

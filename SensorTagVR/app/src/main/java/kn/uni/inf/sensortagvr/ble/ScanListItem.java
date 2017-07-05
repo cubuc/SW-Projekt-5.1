@@ -2,11 +2,13 @@ package kn.uni.inf.sensortagvr.ble;
 
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.view.View;
 
 /**
  *
  */
-public class ScanListItem {
+public class ScanListItem implements View.OnClickListener {
     private BluetoothDevice device;
 
     /**
@@ -37,18 +39,15 @@ public class ScanListItem {
         return device.getAddress();
     }
 
-    /**
-     * called by the data binding library/ listitem device
-     * @param view the view in that the item is
-     */
-/*     public void onClick(View view) {
-         Log.i("onClicker", "in the onClick");
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(v.getContext(), LiveDataActivity.class);
+        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE, device);
         if (device == null) return;
-        final Intent intent = new Intent(view.getContext(), LiveDataActivity.class);
-        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        view.getContext().startActivity(intent);
-    }*/
+        v.getContext().startActivity(intent);
+    }
+
 }
 
 

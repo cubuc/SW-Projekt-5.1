@@ -30,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), TrackingTestActivity.class));
+                startActivity(new Intent(getApplicationContext(), TrackingTestActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
             }
         });
         Button scanButton = (Button) findViewById(R.id.button_scan);
@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), ScanListActivity.class));
+                startActivity(new Intent(getApplicationContext(), ScanListActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
             }
         });
     }

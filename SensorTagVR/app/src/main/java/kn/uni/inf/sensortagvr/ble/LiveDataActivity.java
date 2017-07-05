@@ -1,12 +1,14 @@
 package kn.uni.inf.sensortagvr.ble;
 
-import android.app.ActionBar;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -19,8 +21,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.Collections;
+import java.util.Set;
 
 import kn.uni.inf.sensortagvr.R;
+import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
 
@@ -31,13 +35,12 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
  * Bluetooth LE API.
  */
 public class LiveDataActivity extends AppCompatActivity {
-    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
-    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-    private final static String TAG = LiveDataActivity.class.getSimpleName();
+    public static final String EXTRAS_DEVICE = "DEVICE";
+    private static final String TAG = LiveDataActivity.class.getSimpleName();
     private final SensorDataListAdapter adapter = new SensorDataListAdapter();
     private LocalBroadcastManager mLocalBroadcastManager;
     private TextView mConnectionState;
-    private String mDeviceAddress;
+    private BluetoothDevice device;
     private BluetoothLEService mBluetoothLEService;
     /**
      * Handles the connection with the BluetoothLEService
@@ -56,7 +59,7 @@ public class LiveDataActivity extends AppCompatActivity {
             mBluetoothLEService = ((BluetoothLEService.LocalBinder) service).getService();
             Log.i(TAG, "onServiceConnected");
             // Automatically connects to the device upon successful start-up initialization.
-            final boolean result = mBluetoothLEService.connect(mDeviceAddress);
+            final boolean result = mBluetoothLEService.connect(device.getAddress());
             Log.d(TAG, "Connect request result=" + result);
         }
 
@@ -72,6 +75,8 @@ public class LiveDataActivity extends AppCompatActivity {
         }
     };
     private boolean mConnected = false;
+    private TextView location;
+    private TrackingManagerService mTrackingService;
     /**
      * Handles various events fired by the Service.
      * ACTION_GATT_CONNECTED: connected to a GATT server.
@@ -81,6 +86,24 @@ public class LiveDataActivity extends AppCompatActivity {
      * or notification operations.
      */
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        /**
+         * @param resourceId either R.string.connected or R.string.disconnected
+         */
+        private void updateConnectionState(final int resourceId) {
+            mConnectionState.setText(resourceId);
+        }
+
+        private void updateLocation(PointF loc) {
+            location.setText(loc.toString());
+        }
+
+        /**
+         *
+         */
+        private void clearUI() {
+            adapter.setDataList(Collections.<DataListItem>emptyList());
+        }
+
         /**
          * {@inheritDoc}
          */
@@ -102,30 +125,46 @@ public class LiveDataActivity extends AppCompatActivity {
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
                     adapter.addItem(((Sensor) intent.getExtras().get(EXTRA_SENSOR)),
                             intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
+                    if (mTrackingService != null)
+                        updateLocation(mTrackingService.getRelativePosition());
                     break;
                 default:
                     Log.e(TAG, "invalid broadcast received");
             }
         }
     };
-
-
     /**
-     *
+     * Handles the connection to the LocationService
      */
+    private final ServiceConnection mTrackSvcConnection = new ServiceConnection() {
+
+        /**
+         * @param className ComponentName
+         * @param service   IBinder
+         */
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
+            mTrackingService = binder.getService();
+        }
+
+        /**
+         * @param arg0 ComponentName
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mTrackingService = null;
+        }
+    };
+
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothLEService.ACTION_GATT_CONNECTED);
         intentFilter.addAction(BluetoothLEService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(BluetoothLEService.ACTION_DATA_AVAILABLE);
         return intentFilter;
-    }
-
-    /**
-     *
-     */
-    private void clearUI() {
-        adapter.setDataList(Collections.<DataListItem>emptyList());
     }
 
     /**
@@ -140,26 +179,24 @@ public class LiveDataActivity extends AppCompatActivity {
         mLocalBroadcastManager =
                 LocalBroadcastManager.getInstance(this);
 
-        final Intent intent = getIntent();
-        String mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
-        mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-
+        Set<BluetoothDevice> btDevices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
+        for (BluetoothDevice btDev : btDevices) {
+            if (btDev.getName().equals("CC2650 SensorTag")) device = btDev;
+        }
+        if (device != null) finish();
         // Sets up UI references.
-        ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
+        ((TextView) findViewById(R.id.device_address)).setText(device.getAddress());
         RecyclerView mLiveDataList = (RecyclerView) findViewById(R.id.data_list);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
+        location = (TextView) findViewById(R.id.location);
         mLiveDataList.setAdapter(adapter);
         mLiveDataList.setLayoutManager(new LinearLayoutManager(this));
 
 
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setTitle(mDeviceName);
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
         Intent startintent = new Intent(this, BluetoothLEService.class);
         startService(startintent);
         bindService(startintent, mServiceConnection, 0);
+        bindService(new Intent(this, TrackingManagerService.class), mTrackSvcConnection, 0);
     }
 
     /**
@@ -210,7 +247,7 @@ public class LiveDataActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_connect:
-                mBluetoothLEService.connect(mDeviceAddress);
+                mBluetoothLEService.connect(device.getAddress());
                 return true;
             case R.id.menu_disconnect:
                 mBluetoothLEService.disconnect();
@@ -218,14 +255,13 @@ public class LiveDataActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /** @param resourceId either R.string.connected or R.string.disconnected */
-    private void updateConnectionState(final int resourceId) {
-        mConnectionState.setText(resourceId);
-    }
+
 
 }
 

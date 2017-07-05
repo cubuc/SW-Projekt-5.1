@@ -36,17 +36,18 @@ public class ScanListActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothLeScanner mLEScanner;
     private BluetoothAdapter mBluetoothAdapter;
-    private Handler mHandler;
+    private Handler myHandler;
     private Button scanButton;
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private LeDeviceListAdapter mLeDeviceListAdapter;
-    private final ScanCallback mScanCallback = new ScanCallback() {
+    final ScanCallback mScanCallback = new ScanCallback() {
         /**
          * {@inheritDoc}
          */
         @Override
         public void onScanResult(int callbackType, final ScanResult result) {
+            Log.i("ScanListActivity", "onScanResult");
             runOnUiThread(new Runnable() {
                 /**
                  * {@inheritDoc}
@@ -55,6 +56,7 @@ public class ScanListActivity extends AppCompatActivity {
                  */
                 @Override
                 public void run() {
+                    Log.i("ScanListActivity", "runnable");
                     mLeDeviceListAdapter.addDevice(result.getDevice());
                 }
             });
@@ -96,7 +98,7 @@ public class ScanListActivity extends AppCompatActivity {
         mDeviceList.setLayoutManager(new LinearLayoutManager(this));
         scanButton = (Button) findViewById(R.id.scan_toggle);
 
-        mHandler = new Handler();
+        myHandler = new Handler();
 
         // BLE available on this device?
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -117,6 +119,7 @@ public class ScanListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if (mBluetoothAdapter != null && !(mBluetoothAdapter.isEnabled())) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -131,7 +134,6 @@ public class ScanListActivity extends AppCompatActivity {
                         .build();
 
                 fi = new ScanFilter.Builder()
-
                         .setDeviceName("CC2650 SensorTag")
                         .build();
 
@@ -152,8 +154,11 @@ public class ScanListActivity extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        scanLeDevice(false);
-        mLeDeviceListAdapter.clear();
+        if (mBluetoothAdapter != null) {
+            scanLeDevice(false);
+            mLeDeviceListAdapter.clear();
+        }
+
         super.onPause();
     }
 
@@ -176,7 +181,7 @@ public class ScanListActivity extends AppCompatActivity {
      */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
-            mHandler.postDelayed(new Runnable() {
+            myHandler.postDelayed(new Runnable() {
                 /**
                  * {@inheritDoc}
                  */

@@ -1,14 +1,17 @@
 package kn.uni.inf.sensortagvr.stor;
 
-import android.app.IntentService;
+import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,8 +32,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import kn.uni.inf.sensortagvr.ble.BluetoothLEService;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
+import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.ACTION_DATA_AVAILABLE;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 
 
@@ -41,7 +46,7 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
  * Created by Gero on 16.05.17.
  */
 
-public class StorageMainService extends IntentService {
+public class StorageMainService extends Service {
 
 
     private final IBinder binder = new StorageBinder();
@@ -80,14 +85,27 @@ public class StorageMainService extends IntentService {
     // Path a data.json file is saved to
     private String path = null;
     private Intent lastReceivedData;
+    private final BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            switch (action) {
+                case BluetoothLEService.ACTION_GATT_DISCONNECTED:
+                    unregisterReceiver(this);
+                    break;
+                case BluetoothLEService.ACTION_DATA_AVAILABLE:
+                    lastReceivedData = intent;
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private double SCALEFACTOR_Y = 20;
-
-    /**
-     * 
-     */
-    public StorageMainService() {
-        super("StorageMainService");
-    }
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     /** {@inheritDoc}
      * On Creating the service, the broadcast receiver will registered with an proper intent filter
@@ -97,23 +115,13 @@ public class StorageMainService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
         Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
         // Binding TrackingManagerService
         Intent bindTrackService = new Intent(this, TrackingManagerService.class);
-        bindService(bindTrackService, mConnection, Context.BIND_AUTO_CREATE);
+        bindService(bindTrackService, mConnection, BIND_ADJUST_WITH_ACTIVITY);
 
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param intent intent that shall be handled
-     */
-    @Override
-    public void onHandleIntent(Intent intent) {
-            this.lastReceivedData = intent;
     }
 
     /**
@@ -130,6 +138,7 @@ public class StorageMainService extends IntentService {
      *
      */
     private void createNewSession() {
+        mLocalBroadcastManager.registerReceiver(mUpdateReceiver, new IntentFilter(ACTION_DATA_AVAILABLE));
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
 
@@ -174,7 +183,7 @@ public class StorageMainService extends IntentService {
      */
     @Override
     public boolean onUnbind(Intent intent) {
-
+        mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
         if (trackingServiceBound) {
             unbindService(mConnection);
             stopService(new Intent(this, TrackingManagerService.class));
@@ -479,8 +488,3 @@ public class StorageMainService extends IntentService {
     }
 
 }
-
-
-
-
-

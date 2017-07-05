@@ -92,6 +92,7 @@ public class RecordActivity extends Activity {
     protected void onPause() {
         Log.i(getLocalClassName(), "unbound Stor Svc");
         unbindService(storageConnection);
+        stopService(new Intent(this, StorageMainService.class));
         super.onPause();
     }
 }

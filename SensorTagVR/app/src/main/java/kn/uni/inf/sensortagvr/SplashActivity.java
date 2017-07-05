@@ -86,9 +86,8 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                 bm.getAdapter().disable();
                 bm.getAdapter().enable();
             }
-            }
+        }
 
         startActivity(new Intent(this, MainActivity.class));
-        }
     }
 }

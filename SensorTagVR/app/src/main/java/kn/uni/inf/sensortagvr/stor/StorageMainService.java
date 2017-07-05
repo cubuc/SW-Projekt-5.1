@@ -48,7 +48,7 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 
 public class StorageMainService extends Service {
 
-
+    // TODO Lifecycle
     private final IBinder binder = new StorageBinder();
     private final boolean DISTORT = false;
     // instantiate a custom broadcast receiver for the bluetooth broadcast

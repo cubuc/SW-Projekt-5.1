@@ -51,9 +51,6 @@ public class RecordActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        bindService(new Intent(this, StorageMainService.class), storageConnection, BIND_AUTO_CREATE);
-        Log.i(getLocalClassName(), "bound Stor Svc");
-
         final Button buttonMD = (Button) findViewById(R.id.measure);
         buttonMD.setOnClickListener(new View.OnClickListener() {
             /**
@@ -89,10 +86,20 @@ public class RecordActivity extends Activity {
      * {@inheritDoc}
      */
     @Override
+    protected void onResume() {
+        bindService(new Intent(this, StorageMainService.class), storageConnection, BIND_AUTO_CREATE);
+        Log.i(getLocalClassName(), "bound Stor Svc");
+        super.onResume();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void onPause() {
         Log.i(getLocalClassName(), "unbound Stor Svc");
-        unbindService(storageConnection);
-        stopService(new Intent(this, StorageMainService.class));
+        if (storageService != null)
+            unbindService(storageConnection);
         super.onPause();
     }
 }

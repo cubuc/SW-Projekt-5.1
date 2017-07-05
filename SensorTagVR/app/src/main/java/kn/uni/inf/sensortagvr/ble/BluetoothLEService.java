@@ -187,7 +187,7 @@ public class BluetoothLEService extends Service {
      */
     public BluetoothLEService() {
     }
-
+    // TODO Stor Svc connection & lifecycle
     /**
      * Parses the raw data and sends broadcasts dependent on the type of sensor.
      *

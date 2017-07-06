@@ -50,6 +50,8 @@ public class StorageMainService extends Service {
     // TODO Lifecycle
     private final IBinder binder = new StorageBinder();
     private final boolean DISTORT = false;
+    private static final String TAG = "StorageMainService";
+
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
     /**
@@ -123,14 +125,13 @@ public class StorageMainService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
-        createNewSession();
         return binder;
     }
 
     /**
      *
      */
-    private void createNewSession() {
+    public void createNewSession() {
         mLocalBroadcastManager.registerReceiver(mUpdateReceiver, new IntentFilter(ACTION_DATA_AVAILABLE));
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
@@ -198,7 +199,7 @@ public class StorageMainService extends Service {
                 PointF loc = trackingService.getRelativePosition();
                 // receivedData should be scaled between -.5 and 1
                 dataMeasured.add(new CompactData(loc, receivedData[0]));
-                Log.d("StorMan", "Data " + receivedData[0]);
+                Log.d(TAG,  "Data " + receivedData[0]);
             }
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
@@ -222,14 +223,11 @@ public class StorageMainService extends Service {
      */
     public void closeMeasureSession() {
         if (sessionStarted) {
-
             mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
             unbindService(mConnection);
             stopService(new Intent(this, TrackingManagerService.class));
             sessionStarted = false;
-
-            Log.i(this.toString(), "unbound & stopped tracking manager");
-
+            Log.i(TAG, "unbound & stopped tracking manager");
         }
     }
 
@@ -250,7 +248,7 @@ public class StorageMainService extends Service {
         if (!file.isFile() && !file.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
         for (CompactData item : list)
-            Log.d("StorMan", item.toString());
+            Log.d(TAG,  item.toString());
         // Create a FileWriter, use gson to write to it and close it. This essentially creates the file.
         FileWriter writer = new FileWriter(file);
         gson.toJson(list, writer);
@@ -304,7 +302,7 @@ public class StorageMainService extends Service {
             item.setX(item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
             item.setY(item.getOriginalY() / factorY);
             item.setZ((item.getData() - minData) / dataFactor - 1.5);
-            Log.d("StorMan", "z = " + item.getZ());
+            Log.d(TAG,  "z = " + item.getZ());
         }
 
     }
@@ -446,7 +444,7 @@ public class StorageMainService extends Service {
                     FileInputStream in = new FileInputStream(data);
                     boolean result = con.storeFile("/data.json", in);
                     in.close();
-                    if (result) Log.v("upload result", "succeeded");
+                    if (result) Log.v(TAG, "upload successful");
                     else return 1;
                     // close the connection
                     con.logout();
@@ -466,9 +464,9 @@ public class StorageMainService extends Service {
         @Override
         protected void onPostExecute(Integer result) {
             if (result == 1)
-                Toast.makeText(getApplicationContext(), "Upload not successfull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Upload not successful", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(getApplicationContext(), "Upload successfull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Upload successful", Toast.LENGTH_SHORT).show();
         }
 
     }

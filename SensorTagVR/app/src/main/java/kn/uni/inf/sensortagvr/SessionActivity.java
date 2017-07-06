@@ -16,6 +16,7 @@ import kn.uni.inf.sensortagvr.stor.StorageMainService;
 import kn.uni.inf.sensortagvr.stor.UnsavedDataDialog;
 
 /**
+ *
  * Created by gero on 06.07.17.
  */
 
@@ -73,7 +74,7 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
              */
             @Override
             public void onClick(View v) {
-                showDialogAndQuit();
+                showDialog();
             }
         });
 
@@ -85,6 +86,7 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
             @Override
             public void onClick(View v) {
                 storageService.closeMeasureSession();
+                storageService.save();
                 storageService.uploadFile();
                 storageService.continueSession();
             }
@@ -95,34 +97,43 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
      * {@inheritDoc}
      */
     @Override
-    protected void onResume() {
+    protected void onStart() {
         bindService(new Intent(this, StorageMainService.class), storageConnection, BIND_AUTO_CREATE);
         Log.i(getLocalClassName(), "bound Stor Svc");
-        super.onResume();
+
+        unsavedChanges = false;
+        if (getIntent().getBooleanExtra("cont", true)) {
+            storageService.continueSession();
+        } else {
+            storageService.createNewSession();
+        }
+        super.onStart();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onPause() {
+    protected void onStop() {
         Log.i(getLocalClassName(), "unbound Stor Svc");
         if (storageService != null)
             unbindService(storageConnection);
-        super.onPause();
+        super.onStop();
     }
 
 
-    public void showDialogAndQuit() {
+    public void showDialog() {
         if (unsavedChanges) {
             DialogFragment dialog = new UnsavedDataDialog();
             dialog.show(getFragmentManager(), "dialog");
+        } else {
+            finish();
         }
     }
 
     @Override
     public void onBackPressed() {
-        showDialogAndQuit();
+        showDialog();
     }
 
     @Override

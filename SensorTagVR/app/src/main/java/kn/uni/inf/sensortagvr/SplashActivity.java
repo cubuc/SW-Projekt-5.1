@@ -1,6 +1,5 @@
 package kn.uni.inf.sensortagvr;
 
-import android.Manifest;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,12 +18,11 @@ import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private static final String[] permissions = {Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.BLUETOOTH_PRIVILEGED,
-            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE,
-            Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private static final int REQUEST_ENABLE_BT = 0;
+    private static final String[] permissions = {android.Manifest.permission.BLUETOOTH, android.Manifest.permission.BLUETOOTH_ADMIN,
+            android.Manifest.permission.BLUETOOTH_PRIVILEGED,
+            android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_WIFI_STATE,
+            android.Manifest.permission.CHANGE_WIFI_STATE, android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     /**
      * {@inheritDoc}
@@ -44,11 +42,14 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
         if (grantResults.length > 0) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED)
-                    finishAndRemoveTask();
+                    ActivityCompat.requestPermissions(this, permissions, 0);
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             startActivity(new Intent(this, MainActivity.class));
+        } else {
+            Log.i(getLocalClassName(), "permission check failed");
         }
+
     }
 
     private void checkPermissions() {
@@ -60,39 +61,37 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                     Toast.LENGTH_LONG).show();
             finishAndRemoveTask();
         }
+
         final ArrayList<String> deniedPermissions = new ArrayList<>();
+
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 deniedPermissions.add(permission);
 
             } else Log.i(getLocalClassName(), "permission" + permission + "granted");
         }
         if (!deniedPermissions.isEmpty()) {
-            final String[] denied = new String[deniedPermissions.size()];
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ActivityCompat.requestPermissions(SplashActivity.this, deniedPermissions.toArray(denied), 0);
-                }
-            });
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-                    if (!(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)))
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    if (!(bm.getAdapter().isEnabled())) {
-                        bm.getAdapter().enable();
-                    } else {
-                        bm.getAdapter().disable();
-                        bm.getAdapter().enable();
-                    }
-                }
-            });
-        }
 
-        startActivity(new Intent(this, MainActivity.class));
+            for (String p : deniedPermissions)
+                Log.i(getLocalClassName(), "asking for permissions " + p);
+
+            ActivityCompat.requestPermissions(SplashActivity.this, deniedPermissions.toArray(new String[]{}), 0);
+
+        } else {
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+            if (!(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)))
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+            if (!(bm.getAdapter().isEnabled())) {
+                Log.i(getLocalClassName(), "BT is off.cenabling bluetoothAdapter");
+                bm.getAdapter().enable();
+            } else {
+                Log.i(getLocalClassName(), "BT is already on. disabling & enabling bluetoothAdapter ");
+                bm.getAdapter().disable();
+                bm.getAdapter().enable();
+            }
+        }
     }
 }

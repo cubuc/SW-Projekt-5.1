@@ -32,10 +32,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import kn.uni.inf.sensortagvr.ble.BluetoothLEService;
+import kn.uni.inf.sensortagvr.ble.Sensor;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.ACTION_DATA_AVAILABLE;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
+import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
+import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_DATA;
 
 
 /**
@@ -47,11 +50,10 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 
 public class StorageMainService extends Service {
 
+    private static final String TAG = "StorageMainService";
     // TODO Lifecycle
     private final IBinder binder = new StorageBinder();
     private final boolean DISTORT = false;
-    private static final String TAG = "StorageMainService";
-
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
     /**
@@ -93,10 +95,13 @@ public class StorageMainService extends Service {
             final String action = intent.getAction();
             switch (action) {
                 case BluetoothLEService.ACTION_GATT_DISCONNECTED:
-                    unregisterReceiver(this);
                     break;
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
-                    lastReceivedData = intent;
+                    Sensor mSensor = (Sensor) intent.getExtras().get(EXTRA_SENSOR);
+
+                    if (mSensor != null && mSensor.getName().equals(UUID_IRT_DATA))
+                        lastReceivedData = intent;
+
                     break;
                 default:
                     break;
@@ -127,6 +132,7 @@ public class StorageMainService extends Service {
     public IBinder onBind(Intent intent) {
         return binder;
     }
+
 
     /**
      *

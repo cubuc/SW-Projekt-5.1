@@ -33,6 +33,12 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
             StorageMainService.StorageBinder binder = (StorageMainService.StorageBinder) service;
             storageService = binder.getService();
             Log.i(getLocalClassName(), "connected to stor svc");
+
+            if (getIntent().getBooleanExtra("cont", true)) {
+                storageService.continueSession();
+            } else {
+                storageService.createNewSession();
+            }
         }
 
         /**
@@ -98,15 +104,9 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
      */
     @Override
     protected void onStart() {
+        unsavedChanges = false;
         bindService(new Intent(this, StorageMainService.class), storageConnection, BIND_AUTO_CREATE);
         Log.i(getLocalClassName(), "bound Stor Svc");
-
-        unsavedChanges = false;
-        if (getIntent().getBooleanExtra("cont", true)) {
-            storageService.continueSession();
-        } else {
-            storageService.createNewSession();
-        }
         super.onStart();
     }
 

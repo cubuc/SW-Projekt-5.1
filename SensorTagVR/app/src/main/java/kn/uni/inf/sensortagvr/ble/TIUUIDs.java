@@ -9,12 +9,12 @@ import java.util.UUID;
  *
  */
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-class TIUUIDs {
+public class TIUUIDs {
     //TODO LEDs
 
+    public final static String UUID_IRT_DATA = "f000aa01-0451-4000-b000-000000000000";
     final static String UUID_CCC = "00002902-0000-1000-8000-00805f9b34fb";
     final static String UUID_IRT_SERV = "f000aa00-0451-4000-b000-000000000000";
-    final static String UUID_IRT_DATA = "f000aa01-0451-4000-b000-000000000000";
     final static String UUID_IRT_CONF = "f000aa02-0451-4000-b000-000000000000"; // 0: disable, 1: enable
     final static String UUID_ACC_SERV = "f000aa10-0451-4000-b000-000000000000";
     final static String UUID_ACC_DATA = "f000aa11-0451-4000-b000-000000000000";

@@ -1,5 +1,6 @@
 package kn.uni.inf.sensortagvr;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +34,6 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
 
         Log.i(getLocalClassName(), "just b4 checkPermissions");
         checkPermissions();
-
     }
 
     @Override
@@ -45,7 +45,6 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                     ActivityCompat.requestPermissions(this, permissions, 0);
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            startActivity(new Intent(this, MainActivity.class));
         } else {
             Log.i(getLocalClassName(), "permission check failed");
         }
@@ -86,12 +85,10 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
 
             if (!(bm.getAdapter().isEnabled())) {
                 Log.i(getLocalClassName(), "BT is off.cenabling bluetoothAdapter");
-                bm.getAdapter().enable();
-            } else {
-                Log.i(getLocalClassName(), "BT is already on. disabling & enabling bluetoothAdapter ");
-                bm.getAdapter().disable();
-                bm.getAdapter().enable();
-            }
+                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), 0);
+            } else Log.i(getLocalClassName(), "BT is already on. ");
+
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 }

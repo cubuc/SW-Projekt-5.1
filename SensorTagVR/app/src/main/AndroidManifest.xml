@@ -37,6 +37,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".RecordActivity" />
+        <activity android:name=".SessionActivity" />
         <activity android:name=".ble.ScanListActivity" />
         <activity android:name=".tracking.TrackingTestActivity" />
         <activity android:name=".ble.LiveDataActivity" />

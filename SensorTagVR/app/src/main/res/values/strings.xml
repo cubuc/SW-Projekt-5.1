@@ -43,4 +43,8 @@
     <string name="a">A</string>
     <string name="n">n</string>
     <string name="threedashes">---</string>
+    <string name="quit">Quit</string>
+    <string name="upload">Upload</string>
+    <string name="newSession">New Session</string>
+    <string name="cont">Continue Session</string>
 </resources>

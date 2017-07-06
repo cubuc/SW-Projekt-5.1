@@ -25,7 +25,6 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -105,7 +104,8 @@ public class StorageMainService extends Service {
     private double SCALEFACTOR_Y = 20;
     private LocalBroadcastManager mLocalBroadcastManager;
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
      * On Creating the service, the broadcast receiver will registered with an proper intent filter
      * The TrackingManagerService gets bound to this service, thus the getCurrentLocation() can be
      * accessed.
@@ -115,7 +115,6 @@ public class StorageMainService extends Service {
         super.onCreate();
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
-        Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -142,12 +141,15 @@ public class StorageMainService extends Service {
     /**
      *
      */
-    public void continueSession() throws IOException {
+    public void continueSession() {
 
         File data = new File(path);
-        JsonReader reader = null;
-        FileReader fileReader = null;
-        if(data.isFile()) {
+        JsonReader reader;
+        FileReader fileReader;
+        if (data.isFile()) {
+            mLocalBroadcastManager.registerReceiver(mUpdateReceiver, new IntentFilter(ACTION_DATA_AVAILABLE));
+            bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
+
             try {
                 Gson gson = new Gson();
                 fileReader = new FileReader(path);
@@ -157,31 +159,22 @@ public class StorageMainService extends Service {
                 dataMeasured = new ArrayList<>(Arrays.asList(datas));
 
                 sessionStarted = true;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                if (fileReader != null) {
-                    fileReader.close();
-                }
-                if (reader != null) {
-                    reader.close();
-                }
 
+                fileReader.close();
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         } else
             Toast.makeText(getApplicationContext(), "No old session found", Toast.LENGTH_SHORT).show();
     }
 
-    /** {@inheritDoc}
-     * Unregisters the bleReceiver and unbind trackingmngrService when the Service gets DESTROYED
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean onUnbind(Intent intent) {
-        mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
-            unbindService(mConnection);
-            stopService(new Intent(this, TrackingManagerService.class));
-            Log.i(this.toString(), "unbound & stopped tracking manager");
-
         super.onUnbind(intent);
         return false;
     }
@@ -215,19 +208,28 @@ public class StorageMainService extends Service {
     /**
      *
      */
+    public void save() {
+        scaleAll(dataMeasured);
+        try {
+            writeInJsonFile(dataMeasured);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     */
     public void closeMeasureSession() {
         if (sessionStarted) {
-            try {
-                scaleAll(dataMeasured);
-                writeInJsonFile(dataMeasured);
 
-                // Signals a recording session ended
-                sessionStarted = false;
+            mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
+            unbindService(mConnection);
+            stopService(new Intent(this, TrackingManagerService.class));
+            sessionStarted = false;
 
-                //Toast.makeText(getApplicationContext(), "Session closed", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Log.i(this.toString(), "unbound & stopped tracking manager");
+
         }
     }
 
@@ -273,7 +275,7 @@ public class StorageMainService extends Service {
 
         // Rebases the settings of data points, thus no point has a negative X or Y value
         boolean REBASE = false;
-        if (REBASE){
+        if (REBASE) {
             double[] minVals = calculateMinValues(list);
 
             for (CompactData item : list) {
@@ -299,17 +301,19 @@ public class StorageMainService extends Service {
         // Scale the list values with the determined factors
         for (CompactData item : list) {
 
-            item.setX( item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
-            item.setY( item.getOriginalY() / factorY);
-            item.setZ( (item.getData() - minData) / dataFactor - .5);
+            item.setX(item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
+            item.setY(item.getOriginalY() / factorY);
+            item.setZ((item.getData() - minData) / dataFactor - 1.5);
             Log.d("StorMan", "z = " + item.getZ());
         }
 
     }
 
+
     /**
-     *
-     * @param list
+     * Calculates the smallest data-Value in a ArrayList of CompactData and returns it.
+     * @param list ArrayList of CompactData
+     * @return smallest data-Value found as double
      */
     private double calculateMinDataVal(ArrayList<CompactData> list) {
         double min = Double.MAX_VALUE;
@@ -322,8 +326,9 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *
-     * @param list
+     * Calculates the biggest data-Value in a ArrayList of CompactData and returns it.
+     * @param list ArrayList of CompactData
+     * @return biggest data-Value found as double
      */
     private double calculateMaxDataVal(ArrayList<CompactData> list) {
         double max = Double.MIN_VALUE;
@@ -338,14 +343,14 @@ public class StorageMainService extends Service {
 
     /**
      * Determines the biggest distance a point has to the nullpoint.
-     *
+     * <p>
      * If distortion is active, the fi
      *
      * @param list ist of location points
      * @return If distortion is active, the first value of the array is the biggest distance a point
-     *  has on the x-axis and the second value is the biggest distance a point has on the y-axis.
-     *  If distortion is not active, the first value is the biggest distance a point has to any axis.
-     *  (the second value will be like with distortion active)
+     * has on the x-axis and the second value is the biggest distance a point has on the y-axis.
+     * If distortion is not active, the first value is the biggest distance a point has to any axis.
+     * (the second value will be like with distortion active)
      */
     private double[] calculateMaxDistance(ArrayList<CompactData> list) {
 
@@ -366,9 +371,10 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *
-     * @param list
-     * @return
+     * Calculates the smallest X and the smallest Y value in a ArrayList of CompactData.
+     * The smallest X value and the smallest Y value may come from different CompactData-Objects.
+     * @param list ArrayList of CompactData
+     * @return the smallest X and the smallest Y value as an double array, in which the first item is the X value.
      */
     private double[] calculateMinValues(ArrayList<CompactData> list) {
 
@@ -380,29 +386,20 @@ public class StorageMainService extends Service {
             minY = Math.min(minY, item.getOriginalY());
         }
 
-        return new double[] {minX, minY};
+        return new double[]{minX, minY};
     }
 
     /**
-     *
+     *  Uploads the File using Uploader. Note that this method will not save the current Data in the File,
+     *  so be sure to call save() before you call this method.
      */
-    private void uploadFile() {
+    public void uploadFile() {
         AsyncTask<String, Boolean, Integer> up = new Uploader();
         up.execute(path);
-
-    }
-
-    public void createDummyData() {
-        dataMeasured.add(new CompactData(0, 0, 23));
-        dataMeasured.add(new CompactData(4, 0, 25));
-        dataMeasured.add(new CompactData(0, 5, 20));
-        dataMeasured.add(new CompactData(0, 7, 24));
-        dataMeasured.add(new CompactData(4, 7, 22));
-        dataMeasured.add(new CompactData(4, 5, 20));
     }
 
     /**
-     *
+     * {@inheritDoc}
      */
     public class StorageBinder extends Binder {
         /**
@@ -414,7 +411,7 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *
+     *  {@inheritDoc}
      */
     private class Uploader extends AsyncTask<String, Boolean, Integer> {
         /**
@@ -424,21 +421,19 @@ public class StorageMainService extends Service {
         protected Integer doInBackground(String... strings) {
             FTPClient con;
 
-            try
-            {
+            try {
                 // establish a connection
                 con = new FTPClient();
                 con.connect("web.kim.uni-konstanz.de");
 
                 // Try to log in to the server
-                if (con.isConnected() && con.login("softwareproject17", "Cardboard51**"))
-                {
+                if (con.isConnected() && con.login("softwareproject17", "Cardboard51**")) {
                     con.enterLocalPassiveMode(); // important!
                     con.setFileType(FTP.ASCII_FILE_TYPE);
 
                     int reply = con.getReplyCode();
 
-                    if(!FTPReply.isPositiveCompletion(reply))
+                    if (!FTPReply.isPositiveCompletion(reply))
                         return 1;
 
                     // Create the File that gets uploaded
@@ -456,12 +451,9 @@ public class StorageMainService extends Service {
                     // close the connection
                     con.logout();
                     con.disconnect();
-                }
-                else
+                } else
                     return 1;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return 1;
             }

@@ -1,70 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/calibrate"
+        android:id="@+id/continueSession"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="192dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/callibrate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.368"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        android:layout_weight=".4"
+        android:elevation="0dp"
+        android:text="@string/cont"
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/measure"
+        android:id="@+id/newSession"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="192dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/record"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.535"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <Button
-        android:id="@+id/write"
-        android:layout_width="88dp"
-        android:layout_height="86dp"
-        android:text="@string/write"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.816"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        android:layout_weight=".4"
+        android:text="@string/newSession"
+        android:textSize="18sp"
+        tools:text="New session" />
 
     <Button
         android:id="@+id/start_VR"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="240dp"
-        android:layout_height="105dp"
-        android:text="@string/start_vr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/measure"
-        app:layout_constraintVertical_bias="0.46"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintRight_creator="1" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".1"
+        android:text="@string/start_vr" />
+</LinearLayout>

@@ -1,5 +1,6 @@
 package kn.uni.inf.sensortagvr;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -51,6 +52,25 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_CANCELED) {
+            Log.i(getLocalClassName(), "location not enabled.");
+            finish();
+            return;
+        } else if (requestCode == 1 && resultCode == Activity.RESULT_CANCELED) {
+            Log.i(getLocalClassName(), "bluetooth not enabled.");
+            finish();
+            return;
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void checkPermissions() {
         if (!(getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) ||
                 !(getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK)) ||
@@ -81,14 +101,16 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
             BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
             if (!(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)))
-                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+            else if (!(bm.getAdapter().isEnabled())) {
+                Log.i(getLocalClassName(), "BT is off. enabling bluetoothAdapter");
+                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), 1);
+            } else {
+                Log.i(getLocalClassName(), "BT & Location is already on. ");
+                startActivity(new Intent(this, MainActivity.class));
+            }
 
-            if (!(bm.getAdapter().isEnabled())) {
-                Log.i(getLocalClassName(), "BT is off.cenabling bluetoothAdapter");
-                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), 0);
-            } else Log.i(getLocalClassName(), "BT is already on. ");
 
-            startActivity(new Intent(this, MainActivity.class));
         }
     }
 }

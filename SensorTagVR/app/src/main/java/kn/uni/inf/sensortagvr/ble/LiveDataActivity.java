@@ -1,6 +1,5 @@
 package kn.uni.inf.sensortagvr.ble;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
@@ -61,14 +60,22 @@ public class LiveDataActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mBluetoothLEService = ((BluetoothLEService.LocalBinder) service).getService();
             Log.i(TAG, "onServiceConnected");
+
             // Automatically connects to the device upon successful start-up initialization.
-            if (device != null) {
+            if (mBluetoothLEService.getmGatt() != null) {
+
+                device = mBluetoothLEService.getmGatt().getDevice();
+
+            } else if (device != null) {
+
                 final boolean result = mBluetoothLEService.connect(device.getAddress());
                 Log.d(TAG, "Connect request result=" + result);
-            } else
+
+            } else {
                 Toast.makeText(getApplicationContext(), "Please go to the settings, scan for and " +
                         "connect a device.", Toast.LENGTH_LONG).show();
-            LiveDataActivity.this.finish();
+                LiveDataActivity.this.finish();
+            }
         }
 
         /** {@inheritDoc}
@@ -122,12 +129,10 @@ public class LiveDataActivity extends AppCompatActivity {
                 case BluetoothLEService.ACTION_GATT_CONNECTED:
                     mConnected = true;
                     updateConnectionState(R.string.connected);
-                    invalidateOptionsMenu();
                     break;
                 case BluetoothLEService.ACTION_GATT_DISCONNECTED:
                     mConnected = false;
                     updateConnectionState(R.string.disconnected);
-                    invalidateOptionsMenu();
                     clearUI();
                     break;
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
@@ -135,6 +140,7 @@ public class LiveDataActivity extends AppCompatActivity {
                             intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
                     if (mTrackingService != null)
                         updateLocation(mTrackingService.getRelativePosition());
+                    Log.i(getLocalClassName(), "ACTION DATA AVAIL received");
                     break;
                 default:
                     Log.e(TAG, "invalid broadcast received");
@@ -188,13 +194,16 @@ public class LiveDataActivity extends AppCompatActivity {
                 LocalBroadcastManager.getInstance(this);
 
         BluetoothManager bm = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter mBtAdapter = bm.getAdapter();
 
         if (!bm.getConnectedDevices(GATT_SERVER).isEmpty()) {
+            Log.i(getLocalClassName(), "looking for connected devices");
             List<BluetoothDevice> btDevices = bm.getConnectedDevices(GATT_SERVER);
             for (BluetoothDevice btDev : btDevices) {
+                Log.i(getLocalClassName(), "checking device" + btDev.getName());
                 if (btDev.getName().equals("CC2650 SensorTag")) device = btDev;
             }
+        } else if (getIntent().getExtras() != null && getIntent().getExtras().get(EXTRAS_DEVICE) != null) {
+            device = (BluetoothDevice) getIntent().getExtras().get(EXTRAS_DEVICE);
         }
         if (device != null) {
             // Sets up UI references.
@@ -207,11 +216,17 @@ public class LiveDataActivity extends AppCompatActivity {
         mLiveDataList.setLayoutManager(new LinearLayoutManager(this));
 
 
-        Intent startintent = new Intent(this, BluetoothLEService.class);
-        startService(startintent);
-        bindService(startintent, mServiceConnection, 0);
-        bindService(new Intent(this, TrackingManagerService.class), mTrackSvcConnection, 0);
+        if (mBluetoothLEService == null) {
+            Intent startintent = new Intent(this, BluetoothLEService.class);
+            startService(startintent);
+            bindService(startintent, mServiceConnection, 0);
+        }
+        if (mTrackingService == null)
+            bindService(new Intent(this, TrackingManagerService.class), mTrackSvcConnection, 0);
+
+        Log.i(getLocalClassName(), "onCreate finished");
     }
+
 
     /**
      * {@inheritDoc}
@@ -220,12 +235,16 @@ public class LiveDataActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mLocalBroadcastManager.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+
         if (mBluetoothLEService == null) {
             startService(new Intent(this, BluetoothLEService.class));
+            bindService(new Intent(this, BluetoothLEService.class),
+                    mServiceConnection, BIND_AUTO_CREATE);
         }
+        if (mTrackingService == null)
+            bindService(new Intent(this, TrackingManagerService.class), mTrackSvcConnection, BIND_AUTO_CREATE);
 
-        bindService(new Intent(this, BluetoothLEService.class),
-                mServiceConnection, BIND_AUTO_CREATE);
+        Log.i(getLocalClassName(), "onResume finished");
     }
 
     /**
@@ -235,8 +254,12 @@ public class LiveDataActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mLocalBroadcastManager.unregisterReceiver(mGattUpdateReceiver);
+        if (mBluetoothLEService != null)
         unbindService(mServiceConnection);
+        if (mTrackingService != null)
         unbindService(mTrackSvcConnection);
+
+        Log.i(getLocalClassName(), "onPaused finished");
     }
 
     /**
@@ -275,7 +298,6 @@ public class LiveDataActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

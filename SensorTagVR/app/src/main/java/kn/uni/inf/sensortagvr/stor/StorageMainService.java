@@ -38,7 +38,6 @@ import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.ACTION_DATA_AVAILABLE;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_DATA;
 
 
 /**
@@ -98,18 +97,26 @@ public class StorageMainService extends Service {
                     break;
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
                     Sensor mSensor = (Sensor) intent.getExtras().get(EXTRA_SENSOR);
-
-                    if (mSensor != null && mSensor.getName().equals(UUID_IRT_DATA))
+                    if (mSensor != null && mSensor == Sensor.IR_TEMPERATURE) {
                         lastReceivedData = intent;
-
+                        Log.i("StorMainSvc", "received irt broadcast");
+                    }
                     break;
                 default:
+                    Log.i("StorMainSvc", "received any broadcast");
                     break;
             }
         }
     };
     private double SCALEFACTOR_Y = 20;
     private LocalBroadcastManager mLocalBroadcastManager;
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLEService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLEService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
 
     /**
      * {@inheritDoc}
@@ -133,7 +140,6 @@ public class StorageMainService extends Service {
         return binder;
     }
 
-
     /**
      *
      */
@@ -154,7 +160,7 @@ public class StorageMainService extends Service {
         JsonReader reader;
         FileReader fileReader;
         if (data.isFile()) {
-            mLocalBroadcastManager.registerReceiver(mUpdateReceiver, new IntentFilter(ACTION_DATA_AVAILABLE));
+            mLocalBroadcastManager.registerReceiver(mUpdateReceiver, makeGattUpdateIntentFilter());
             bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
 
             try {
@@ -178,16 +184,6 @@ public class StorageMainService extends Service {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onUnbind(Intent intent) {
-        super.onUnbind(intent);
-        return false;
-    }
-
-
-    /**
      * Collects all data received by the ble-service and the loc-service, and saves them into the
      * ArrayList measured
      */
@@ -195,17 +191,26 @@ public class StorageMainService extends Service {
 
         if (sessionStarted) {
             // get data from 'lastReceived'
-            float[] receivedData = {0};
+            float[] receivedData = {0, 0, 0};
 
             if (lastReceivedData != null)
                 receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
 
             // get Data from tracking module
             if (trackingService != null) {
+                Log.i(getClass().getSimpleName(), "l");
                 PointF loc = trackingService.getRelativePosition();
                 // receivedData should be scaled between -.5 and 1
                 dataMeasured.add(new CompactData(loc, receivedData[0]));
+                Log.i(getClass().getSimpleName(), "la");
+                Log.i(getClass().getSimpleName(), "la");
+                Log.i(getClass().getSimpleName(), "la");
+                Log.i(getClass().getSimpleName(), "la");
+                Log.i(getClass().getSimpleName(), "la");
+                Log.i(getClass().getSimpleName(), "la");
                 Log.d(TAG,  "Data " + receivedData[0]);
+            } else {
+                Log.i(getClass().getSimpleName(), "trackManSvc == null");
             }
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();

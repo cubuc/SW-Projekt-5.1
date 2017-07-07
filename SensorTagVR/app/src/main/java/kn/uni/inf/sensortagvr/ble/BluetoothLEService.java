@@ -12,19 +12,17 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import kn.uni.inf.sensortagvr.stor.StorageMainService;
 
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
@@ -98,7 +96,7 @@ public class BluetoothLEService extends Service {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             Log.i("onServicesDiscovered", "");
-            String mDeviceName = mGatt.getDevice().getName();
+            String mDeviceName = getmGatt().getDevice().getName();
             if (mDeviceName != null && ((mDeviceName.equals("SensorTag2")) ||
                     (mDeviceName.equals("CC2650 SensorTag")))) {
                 for (Sensor s : Sensor.SENSOR_LIST)
@@ -148,7 +146,7 @@ public class BluetoothLEService extends Service {
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
             intent.putExtra(EXTRA_SENSOR, "RSSI");
-            intent.putExtra(EXTRA_DATA, new float[] {rssi,0,0});
+            intent.putExtra(EXTRA_DATA, new float[]{rssi, 0, 0});
             mLocalBroadcastManager.sendBroadcast(intent);
         }
 
@@ -180,14 +178,16 @@ public class BluetoothLEService extends Service {
         }
 
     };
+    private BluetoothDevice device;
     private BluetoothAdapter mBtAdapter;
 
     /**
-     *  Empty constructor required because we're androids.
+     * Empty constructor required because we're androids.
      */
     public BluetoothLEService() {
     }
     // TODO Stor Svc connection & lifecycle
+
     /**
      * Parses the raw data and sends broadcasts dependent on the type of sensor.
      *
@@ -223,10 +223,6 @@ public class BluetoothLEService extends Service {
             case UUID_OPT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
-                Intent iSvcIntent = new Intent(this, StorageMainService.class);
-                iSvcIntent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
-                iSvcIntent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
-                startService(iSvcIntent);
                 break;
             default:
                 Log.i(TAG, "no valid data characteristic");
@@ -236,8 +232,9 @@ public class BluetoothLEService extends Service {
 
     /**
      * {@inheritDoc}
+     *
      * @param intent The intent that the service was started with; explicitly:
-     * bindService(new Intent(this, BluetoothLEService.class)
+     *               bindService(new Intent(this, BluetoothLEService.class)
      */
     @Override
     public IBinder onBind(Intent intent) {
@@ -248,6 +245,7 @@ public class BluetoothLEService extends Service {
     /**
      * {@inheritDoc}
      * Called if the service is unbound (if unbindService(...) is called)
+     *
      * @param intent internally handled by Android
      */
     @Override
@@ -260,40 +258,28 @@ public class BluetoothLEService extends Service {
         return false;
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
      * Callback! Don't call it directly;
      * Initialization sequence
-     *
+     * <p>
      * params according to startService(...)
-     * @param intent The intent this service was started with: (this, BluetoothLEService.class)
-     * @param flags The flags this service was started with
+     *
+     * @param intent  The intent this service was started with: (this, BluetoothLEService.class)
+     * @param flags   The flags this service was started with
      * @param startId ask the documentation, we actually don't care atm.
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mLocalBroadcastManager =
                 LocalBroadcastManager.getInstance(this);
-        // BLE available on this device?
-        if (!(getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE))) {
-            Toast.makeText(this, "BLE Not Supported",
-                    Toast.LENGTH_SHORT).show();
-            stopSelf();
-        } else {
-            BluetoothManager mBtManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            if (mBtManager != null) {
-                mBtAdapter = mBtManager.getAdapter();
-            } else {
-                Log.e(TAG, "Unable to initialize BluetoothManager.");
-            }
 
-            if (mBtAdapter == null) {
-                Log.e(TAG, "No BluetoothAdapter detected");
-                stopSelf();
-            } else {
-                mBtAdapter.enable();
-            }
-            Log.i(TAG, "OnStart finished");
+        BluetoothManager mBtManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        if (mBtManager != null) {
+            mBtAdapter = mBtManager.getAdapter();
         }
+        Log.i(TAG, "OnStart finished");
+
         return START_NOT_STICKY;
     }
 
@@ -306,16 +292,16 @@ public class BluetoothLEService extends Service {
      */
     @Override
     public void onDestroy() {
-        if (mBtAdapter != null && mGatt != null) {
+        if (mBtAdapter != null && getmGatt() != null) {
             for (Sensor s : Sensor.SENSOR_LIST)
                 controlSensor(s, false, false);
             disconnect();
 
-        } else if (mGatt != null) disconnect();
+        } else if (getmGatt() != null) disconnect();
         mGatt = null;
         super.onDestroy();
     }
-    
+
     /**
      * connects to the gatt server hosted on the bluetooth le device.
      *
@@ -332,7 +318,8 @@ public class BluetoothLEService extends Service {
         }
 
 
-        final BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
+        device = mBtAdapter.getRemoteDevice(address);
+
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");
             return false;
@@ -351,12 +338,21 @@ public class BluetoothLEService extends Service {
      * callback.
      */
     public void disconnect() {
-        if (mBtAdapter == null || mGatt == null) {
+        if (mBtAdapter == null || getmGatt() == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        mGatt.disconnect();
-        mGatt.close();
+        getmGatt().disconnect();
+        getmGatt().close();
+
+        try {
+            Method remPairing = device.getClass().getMethod("removeBond", (Class[]) null);
+            remPairing.invoke(device, (Object[]) null);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
         mGatt = null;
     }
 
@@ -391,7 +387,7 @@ public class BluetoothLEService extends Service {
      * Basic sensor control: turn power and notifications on and off.
      *
      * @param s            Sensor enum: IR_TEMPERATURE || BAROMETER || LUXMETER || ...
-     * @param power      true = on, false=off
+     * @param power        true = on, false=off
      * @param notification true = enabled, false=off
      */
     private void controlSensor(Sensor s, boolean power, boolean notification) {
@@ -399,7 +395,7 @@ public class BluetoothLEService extends Service {
 
             byte[] val = new byte[1];
             val[0] = power ? s.getEnableSensorCode() : 0x00;
-            BluetoothGattService sensorService = mGatt.getService(s.getServiceUUID());
+            BluetoothGattService sensorService = getmGatt().getService(s.getServiceUUID());
 
             if (sensorService != null) {
 
@@ -416,7 +412,7 @@ public class BluetoothLEService extends Service {
 
                     if (config != null) {
 
-                        mGatt.setCharacteristicNotification(sensorCharacteristic, notification);
+                        getmGatt().setCharacteristicNotification(sensorCharacteristic, notification);
                         sensorConf.setValue(val);
                         write(sensorConf);
 
@@ -458,8 +454,8 @@ public class BluetoothLEService extends Service {
      * going on or enqueue the write task.
      *
      * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the
-     * sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
-     * Config descriptor, to en-/disable the notifications).
+     *          sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
+     *          Config descriptor, to en-/disable the notifications).
      */
     private synchronized void write(Object o) {
         if (mRWQueue.isEmpty() && !isWriting) {
@@ -483,19 +479,23 @@ public class BluetoothLEService extends Service {
      * finished)
      *
      * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the
-     * sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
-     * Config descriptor, to en-/disable the notifications).
+     *          sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
+     *          Config descriptor, to en-/disable the notifications).
      */
     private synchronized void doWrite(Object o) {
         if (o instanceof BluetoothGattCharacteristic) {
             isWriting = true;
-            mGatt.writeCharacteristic((BluetoothGattCharacteristic) o);
+            getmGatt().writeCharacteristic((BluetoothGattCharacteristic) o);
         } else if (o instanceof BluetoothGattDescriptor) {
             isWriting = true;
-            mGatt.writeDescriptor((BluetoothGattDescriptor) o);
+            getmGatt().writeDescriptor((BluetoothGattDescriptor) o);
         } else {
             nextWrite();
         }
+    }
+
+    public BluetoothGatt getmGatt() {
+        return mGatt;
     }
 /*
 

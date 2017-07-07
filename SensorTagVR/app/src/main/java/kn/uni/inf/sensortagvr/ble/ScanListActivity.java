@@ -1,6 +1,5 @@
 package kn.uni.inf.sensortagvr.ble;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -9,8 +8,6 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +43,6 @@ public class ScanListActivity extends AppCompatActivity {
          */
         @Override
         public void onScanResult(int callbackType, final ScanResult result) {
-            Log.i("ScanListActivity", "onScanResult");
             runOnUiThread(new Runnable() {
                 /**
                  * {@inheritDoc}
@@ -56,7 +51,6 @@ public class ScanListActivity extends AppCompatActivity {
                  */
                 @Override
                 public void run() {
-                    Log.i("ScanListActivity", "runnable");
                     mLeDeviceListAdapter.addDevice(result.getDevice());
                 }
             });
@@ -100,12 +94,7 @@ public class ScanListActivity extends AppCompatActivity {
 
         myHandler = new Handler();
 
-        // BLE available on this device?
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "BLE Not Supported",
-                    Toast.LENGTH_SHORT).show();
-            finish();
-        }
+
         // Initializes a Bluetooth adapter.
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -120,33 +109,28 @@ public class ScanListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (mBluetoothAdapter != null && !(mBluetoothAdapter.isEnabled())) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        if (Build.VERSION.SDK_INT >= 21 && mBluetoothAdapter != null) {
+            mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
+            ScanFilter fi;
 
-        } else {
-            if (Build.VERSION.SDK_INT >= 21 && mBluetoothAdapter != null) {
-                mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
-                ScanFilter fi;
+            settings = new ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+                    .build();
 
-                settings = new ScanSettings.Builder()
-                        .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-                        .build();
+            fi = new ScanFilter.Builder()
+                    .setDeviceName("CC2650 SensorTag")
+                    .build();
 
-                fi = new ScanFilter.Builder()
-                        .setDeviceName("CC2650 SensorTag")
-                        .build();
-
-                filters = new ArrayList<>();
-                filters.add(fi);
-            }
-            scanButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    scanLeDevice(true);
-                }
-            });
+            filters = new ArrayList<>();
+            filters.add(fi);
         }
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanLeDevice(true);
+            }
+        });
+
     }
 
     /**
@@ -160,19 +144,6 @@ public class ScanListActivity extends AppCompatActivity {
         }
 
         super.onPause();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            //Bluetooth not enabled.
-            finish();
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

@@ -33,7 +33,7 @@ public class RecordActivity extends FragmentActivity implements NewSessionDialog
              */
             @Override
             public void onClick(View v) {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), SessionActivity.class).putExtra("cont", true));
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), SessionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("cont", true));
             }
         });
 
@@ -68,7 +68,7 @@ public class RecordActivity extends FragmentActivity implements NewSessionDialog
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        getApplicationContext().startActivity((new Intent(getApplicationContext(), SessionActivity.class)).putExtra("cont", false));
+        getApplicationContext().startActivity((new Intent(getApplicationContext(), SessionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)).putExtra("cont", false));
     }
 
     @Override

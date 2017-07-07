@@ -2,6 +2,9 @@
  * @author Alexej Gluschkow
  */
 
+
+ //Old file no longer used at all
+
 //used to see if the variance in one coordinate is very small
 var eps = 0.05;
 

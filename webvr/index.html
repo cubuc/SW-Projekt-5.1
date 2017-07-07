@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
-<title>Web VR a first test</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<link href="css/main.css" rel="stylesheet">
+  <title>Web VR a first test</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link href="css/main.css" rel="stylesheet">
 
 </head>
 
 <body>
 
   <div id="buttons">
-    <button id="vr" class="vr-button" ><img src="icons/cardboard64.png"><br> Enter VR</button>
+    <button id="vr" class="vr-button"><img src="icons/cardboard64.png"><br> Enter VR</button>
   </div>
 
 </body>
 
 <script>
-WebVRConfig = {
-  BUFFER_SCALE: 0.5,
-  // Forces availability of VR mode, even for non-mobile devices.
-  //FORCE_ENABLE_VR: true // Default: false.
+  WebVRConfig = {
+    BUFFER_SCALE: 0.5,
+    // Forces availability of VR mode, even for non-mobile devices.
+    //FORCE_ENABLE_VR: true // Default: false.
 
 
-};
+  };
 
-document.addEventListener('touchmove', function(e) {
-  e.preventDefault();
-});
+  document.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  });
 </script>
 
 <!-- jquery -->
@@ -51,32 +52,36 @@ document.addEventListener('touchmove', function(e) {
 
 
 
-
 <!-- VRControls.js applies the WebVR transformations to a three.js camera object. -->
 <script type="text/javascript" src="js/third-party/webVR/VRControls.js"></script>
 
 <!-- VREffect.js handles stereo camera setup and rendering.  -->
-<script  type="text/javascript" src="js/third-party/webVR/VREffect.js"></script>
+<script type="text/javascript" src="js/third-party/webVR/VREffect.js"></script>
 
 <!-- A polyfill for the WebVR API.  -->
 <script type="text/javascript" src="js/third-party/webVR/webvr-polyfill.min.js"></script>
 
 <!-- load the movement Controlls-->
-<script type="text/javascript" src="js/controls.js"> </script>
+<script type="text/javascript" src="js/controls.js">
+</script>
 
 <!-- load the 3d World-->
-<script type="text/javascript" src="js/vrWorld.js"> </script>
+<script type="text/javascript" src="js/vrWorld.js">
+</script>
 
 
-<!-- load the Data from the sensor-->
-<script type="text/javascript" src="js/sortData.js"> </script>
+<!-- interpole the Data from the sensor-->
+<script type="text/javascript" src="js/interpoleData.js">
+</script>
 
 <!-- display the Data from the sensor-->
-<script type="text/javascript" src="js/displayData.js"> </script>
+<script type="text/javascript" src="js/displayData.js">
+</script>
 
 
 <!-- the main class to render the scene-->
-<script type="text/javascript" src="js/main.js"> </script>
+<script type="text/javascript" src="js/main.js">
+</script>
 
 
 </html>

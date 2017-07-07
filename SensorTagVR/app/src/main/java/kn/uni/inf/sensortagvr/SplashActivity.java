@@ -46,8 +46,10 @@ public class SplashActivity extends AppCompatActivity implements ActivityCompat.
                     ActivityCompat.requestPermissions(this, permissions, 0);
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            checkPermissions();
         } else {
             Log.i(getLocalClassName(), "permission check failed");
+            checkPermissions();
         }
 
     }

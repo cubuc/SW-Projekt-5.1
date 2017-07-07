@@ -23,6 +23,9 @@ function idwInterpol(data, x, y) {
   var sumWeights = 0;
   // calculate the sum of w[i]*data[i].z and w[i]
   for (var i = 0; i < data.length; i++) {
+    if(data[i].x == x && data[i].y==y){
+      return data[i].z;
+    }
     weights[i] = 1 / Math.pow(distance(data[i], x, y),2);
     sumWeights += weights[i];
     value += weights[i] * data[i].z;

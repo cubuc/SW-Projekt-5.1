@@ -55,6 +55,7 @@ public class StorageMainService extends Service {
     private final boolean DISTORT = false;
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
+    private boolean mBound=false;
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -66,9 +67,11 @@ public class StorageMainService extends Service {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
+
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
             trackingService = binder.getService();
+            mBound = true;
         }
 
         /**
@@ -77,6 +80,7 @@ public class StorageMainService extends Service {
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             trackingService = null;
+            mBound = false;
         }
     };
     // Saves all measured data in a session
@@ -129,6 +133,17 @@ public class StorageMainService extends Service {
         super.onCreate();
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
+        Intent intent = new Intent(this, TrackingManagerService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    public void onStop(){
+        super.onDestroy();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     /**
@@ -202,7 +217,7 @@ public class StorageMainService extends Service {
                 PointF loc = trackingService.getRelativePosition();
                 // receivedData should be scaled between -.5 and 1
                 dataMeasured.add(new CompactData(loc, receivedData[0]));
-                Log.i(getClass().getSimpleName(), "la");
+                Log.i(getClass().getSimpleName(), loc.toString());
                 Log.i(getClass().getSimpleName(), "la");
                 Log.i(getClass().getSimpleName(), "la");
                 Log.i(getClass().getSimpleName(), "la");

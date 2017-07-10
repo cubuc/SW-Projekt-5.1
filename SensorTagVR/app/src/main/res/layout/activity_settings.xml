@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="SettingsActivity">
+    android:orientation="vertical">
 
+    <Button
+        android:id="@+id/button_track"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_weight=".4"
+        android:textSize="18sp"
+        android:text="@string/tracking_settings" />
+
+    <Button
+        android:id="@+id/button_scan"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".4"
+        android:textSize="18sp"
+        android:layout_below="@+id/button_track"
+        android:layout_centerHorizontal="true"
+        android:text="@string/scan" />
 </LinearLayout>
+

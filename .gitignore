@@ -32,6 +32,8 @@
 *.fls
 *.aux
 *.out
+*.nav
+*.snm
 
 ## File-based project format:
 *.iws

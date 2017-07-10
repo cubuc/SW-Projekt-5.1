@@ -8,7 +8,7 @@ import android.view.View;
 /**
  *
  */
-public class ScanListItem {
+public class ScanListItem implements View.OnClickListener {
     private BluetoothDevice device;
 
     /**
@@ -19,7 +19,7 @@ public class ScanListItem {
     }
 
     /**
-     * @param device
+     * @param device set the device for a list entry in the ScanListActivity
      */
     public void setDevice(BluetoothDevice device) {
         this.device = device;
@@ -39,14 +39,15 @@ public class ScanListItem {
         return device.getAddress();
     }
 
-    public void onClick(View view) {
-        final BluetoothDevice device = this.getDevice();
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(v.getContext(), LiveDataActivity.class);
+        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE, device);
         if (device == null) return;
-        final Intent intent = new Intent(view.getContext(), LiveDataActivity.class);
-        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(LiveDataActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        view.getContext().startActivity(intent);
+        v.getContext().startActivity(intent);
     }
+
 }
 
 

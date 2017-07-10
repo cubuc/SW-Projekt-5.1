@@ -119,6 +119,7 @@ public class TrackingManagerService extends Service {
         if(locationManager != null) {
             locationManager.removeUpdates(locationListener);
         }
+        super.onUnbind(intent);
 
         return false;
     }
@@ -208,7 +209,8 @@ public class TrackingManagerService extends Service {
 
         @Override
         public void run() {
-            this.handler.postDelayed(this, 500);
+            // TODO remove Infinite loop
+            this.handler.postDelayed(this, 1000);
 
             wifiTracker.update();
         }

@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="MainActivity">
@@ -13,29 +14,12 @@
         android:id="@+id/logo"
         android:layout_width="0dp"
         android:layout_height="250dp"
-
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/logo"
         android:src="@mipmap/vr_app_logo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/recordButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="35dp"
-        android:contentDescription="@string/rec_title"
-        android:src="@drawable/rec"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
-
 
     <ImageButton
         android:id="@+id/vrButton"
@@ -48,10 +32,26 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="35dp"
         android:contentDescription="@string/vr_title"
-        android:src="@drawable/vr"
+        android:src="@drawable/rec_vr"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recordButton" />
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <ImageButton
+        android:id="@+id/LiveDataButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="35dp"
+        android:contentDescription="@string/rec_title"
+        android:src="@drawable/live_data"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vrButton" />
 
     <ImageButton
         android:id="@+id/settingsButton"
@@ -65,11 +65,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="35dp"
         android:contentDescription="@string/settings_title"
-        android:src="@drawable/set"
+        android:src="@drawable/settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vrButton"
+        app:layout_constraintTop_toBottomOf="@+id/LiveDataButton"
         app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

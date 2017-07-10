@@ -2,6 +2,7 @@
  * @author Alexej Gluschkow
  */
 
+
 //create the scene we want to explore the data in
 createRoom = function(scene) {
   //createGround();
@@ -14,54 +15,39 @@ createRoom = function(scene) {
   var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
 
   //createWalls();
-  var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-  scene.add( light );
+  var light = new THREE.HemisphereLight(0xffffff, 0x080820, 1);
+  scene.add(light);
+
+  var ambLight = new THREE.AmbientLight(0x404040); // soft white light
+  scene.add(ambLight);
 
 
+  // load the model form a .obj and .mtl file
   var mtlLoader = new THREE.MTLLoader();
   mtlLoader.setPath('files/');
-  mtlLoader.load('sporthalle1.mtl', function(materials) {
+  mtlLoader.load('sporthalle4.mtl', function(materials) {
     materials.preload();
     var objLoader = new THREE.OBJLoader();
     objLoader.setMaterials(materials);
     objLoader.setPath('files/');
-    objLoader.load('sporthalle1.obj', function(object) {
+    objLoader.load('sporthalle4.obj', function(object) {
       object.position.y = -2;
       scene.add(object);
     }, onProgress, onError);
   });
-/*
-  var objLoader = new THREE.OBJLoader();
-  var mat = new THREE.MeshBasicMaterial({
-    color: 0x8c8c8c,
-    wireframe: true,
-
-    side: THREE.DoubleSide
-  });
-  objLoader.load('files/sporthalle.obj', function(obj) {
-    obj.traverse(function(child) {
-      if (child instanceof THREE.Mesh) {
-        child.material = mat;
-      }
-
-    });
-    obj.position.y = -2;
-    scene.add(obj);
-  });*/
-
-
   scene.add(skyBox);
 };
 
-var onProgress = function ( xhr ) {
-  if ( xhr.lengthComputable ) {
+// logs the loading progress for debugging
+var onProgress = function(xhr) {
+  if (xhr.lengthComputable) {
     var percentComplete = xhr.loaded / xhr.total * 100;
-    console.log( Math.round(percentComplete, 2) + '% downloaded' );
+    console.log(Math.round(percentComplete, 2) + '% downloaded');
   }
 };
-var onError = function ( xhr ) { };
-
-
+var onError = function(xhr) {};
+//old unused stuff
+/*
 //create all the walls
 function createWalls() {
   var wallColor = 0x8c8c8c;
@@ -118,3 +104,4 @@ function createWall(col, xRot, yRot, xPos, yPos, zPos, length) {
   wall.position.set(xPos, yPos, zPos);
   scene.add(wall);
 }
+*/

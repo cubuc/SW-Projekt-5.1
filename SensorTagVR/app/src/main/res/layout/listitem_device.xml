@@ -6,6 +6,7 @@
             name="deviceItem"
             type="kn.uni.inf.sensortagvr.ble.ScanListItem" />
 
+
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +32,7 @@
             android:visibility="visible" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

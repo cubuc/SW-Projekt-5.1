@@ -18,7 +18,7 @@ public class DataListItem {
     }
 
     /**
-     * @param data
+     * @param data a float array with 3 values received from one of the sensors on the ti cc2650 mcu
      */
     public void setData(float[] data) {
         this.data0 = data[0];
@@ -50,7 +50,7 @@ public class DataListItem {
 
     /**
      *
-     * @param sensorName
+     * @param sensorName the name of the sensor
      */
     void setSensorName(Sensor sensorName) {
         this.sensorName = sensorName;

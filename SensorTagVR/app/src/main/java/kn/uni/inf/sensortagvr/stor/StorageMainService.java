@@ -137,15 +137,6 @@ public class StorageMainService extends Service {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void onStop() {
-        super.onDestroy();
-        // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
-    }
-
     /**
      * The service is bound by the RecordDataActivity for creating a measurement session.
      * {@inheritDoc}
@@ -218,18 +209,15 @@ public class StorageMainService extends Service {
             if (trackingService != null) {
                 Log.i(getClass().getSimpleName(), "l");
                 PointF loc = trackingService.getRelativePosition();
-                // receivedData should be scaled between -1.5 and -.5
+
+                // receivedData will be scaled between -1.5 and -.5
                 dataMeasured.add(new CompactData(loc, receivedData[0]));
-                Log.i(getClass().getSimpleName(), loc.toString());
-                Log.i(getClass().getSimpleName(), "la");
-                Log.i(getClass().getSimpleName(), "la");
-                Log.i(getClass().getSimpleName(), "la");
-                Log.i(getClass().getSimpleName(), "la");
-                Log.i(getClass().getSimpleName(), "la");
+                Log.d(getClass().getSimpleName(), loc.toString());
                 Log.d(TAG, "Data " + receivedData[0]);
             } else {
                 Log.i(getClass().getSimpleName(), "trackManSvc == null");
             }
+
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
 
@@ -299,6 +287,8 @@ public class StorageMainService extends Service {
         double maxData = calculateMaxDataVal(list);
         double minData = calculateMinDataVal(list);
         double dataFactor = maxData - minData;
+        if (dataFactor == 0)
+            dataFactor = maxData;
 
         // Rebases the settings of data points, thus no point has a negative X or Y value
         boolean REBASE = false;
@@ -322,16 +312,21 @@ public class StorageMainService extends Service {
         }
 
         double factorX = maxDist[0] / SCALEFACTOR_X;
+        if ( factorX == 0)
+            factorX = 1;
+
         double factorY = maxDist[1] / SCALEFACTOR_Y;
+        if (factorY == 0)
+            factorY = 1;
 
 
         // Scale the list values with the determined factors
         for (CompactData item : list) {
-
             item.setX(item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
             item.setY(item.getOriginalY() / factorY);
             item.setZ((item.getData() - minData) / dataFactor - 1.5);
             Log.d(TAG, "z = " + item.getZ());
+            Log.d(TAG, "" + dataFactor);
         }
 
     }

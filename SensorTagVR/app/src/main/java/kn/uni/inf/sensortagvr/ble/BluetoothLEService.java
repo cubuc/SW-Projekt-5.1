@@ -514,7 +514,7 @@ public class BluetoothLEService extends Service {
     /**
      *
      */
-    class LocalBinder extends Binder {
+    public class LocalBinder extends Binder {
         /**
          * returns the reference to the service object
          */

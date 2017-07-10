@@ -6,6 +6,7 @@
 
     <Button
         android:id="@+id/scan_toggle"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/toggle_scan" />

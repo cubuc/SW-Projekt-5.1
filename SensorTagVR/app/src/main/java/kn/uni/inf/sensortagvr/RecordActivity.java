@@ -59,7 +59,7 @@ public class RecordActivity extends FragmentActivity implements NewSessionDialog
                 String url = "http://kim25.wwwdns.kim.uni-konstanz.de/sp2017_5_1/index.html";
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.setPackage("org.mozilla.firefox");
+                i.setPackage("com.android.chrome");
                 startActivity(i);
             }
         });

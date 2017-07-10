@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import kn.uni.inf.sensortagvr.stor.StorageMainService;
 import kn.uni.inf.sensortagvr.stor.UnsavedDataDialog;
 
@@ -35,7 +37,13 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
             Log.i(getLocalClassName(), "connected to stor svc");
 
             if (getIntent().getBooleanExtra("cont", true)) {
-                storageService.continueSession();
+                try{
+                    storageService.continueSession();
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "Failed to continue Session", Toast.LENGTH_SHORT);
+                    finish();
+                }
+
             } else {
                 storageService.createNewSession();
             }
@@ -94,7 +102,13 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
                 storageService.closeMeasureSession();
                 storageService.save();
                 storageService.uploadFile();
-                storageService.continueSession();
+                try{
+                    storageService.continueSession();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
     }

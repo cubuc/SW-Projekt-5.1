@@ -25,6 +25,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,12 +51,11 @@ import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
 public class StorageMainService extends Service {
 
     private static final String TAG = "StorageMainService";
-    // TODO Lifecycle
     private final IBinder binder = new StorageBinder();
-    private final boolean DISTORT = false;
+    private final boolean DISTORT = true;
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
-    private boolean mBound=false;
+    private boolean mBound = false;
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -112,7 +112,7 @@ public class StorageMainService extends Service {
             }
         }
     };
-    private double SCALEFACTOR_Y = 20;
+    private double SCALEFACTOR_Y = 29;
     private LocalBroadcastManager mLocalBroadcastManager;
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -137,7 +137,7 @@ public class StorageMainService extends Service {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void onStop(){
+    public void onStop() {
         super.onDestroy();
         // Unbind from the service
         if (mBound) {
@@ -169,11 +169,11 @@ public class StorageMainService extends Service {
     /**
      *
      */
-    public void continueSession() {
+    public void continueSession() throws IOException {
 
         File data = new File(path);
-        JsonReader reader;
-        FileReader fileReader;
+        JsonReader reader = null;
+        FileReader fileReader = null;
         if (data.isFile()) {
             mLocalBroadcastManager.registerReceiver(mUpdateReceiver, makeGattUpdateIntentFilter());
             bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
@@ -188,10 +188,13 @@ public class StorageMainService extends Service {
 
                 sessionStarted = true;
 
-                fileReader.close();
-                reader.close();
-            } catch (IOException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            } finally {
+                if (fileReader != null)
+                    fileReader.close();
+                if (reader != null)
+                    reader.close();
             }
 
         } else
@@ -215,7 +218,7 @@ public class StorageMainService extends Service {
             if (trackingService != null) {
                 Log.i(getClass().getSimpleName(), "l");
                 PointF loc = trackingService.getRelativePosition();
-                // receivedData should be scaled between -.5 and 1
+                // receivedData should be scaled between -1.5 and -.5
                 dataMeasured.add(new CompactData(loc, receivedData[0]));
                 Log.i(getClass().getSimpleName(), loc.toString());
                 Log.i(getClass().getSimpleName(), "la");
@@ -223,7 +226,7 @@ public class StorageMainService extends Service {
                 Log.i(getClass().getSimpleName(), "la");
                 Log.i(getClass().getSimpleName(), "la");
                 Log.i(getClass().getSimpleName(), "la");
-                Log.d(TAG,  "Data " + receivedData[0]);
+                Log.d(TAG, "Data " + receivedData[0]);
             } else {
                 Log.i(getClass().getSimpleName(), "trackManSvc == null");
             }
@@ -274,7 +277,7 @@ public class StorageMainService extends Service {
         if (!file.isFile() && !file.createNewFile())
             Toast.makeText(getApplicationContext(), "data.json could not be created", Toast.LENGTH_SHORT).show();
         for (CompactData item : list)
-            Log.d(TAG,  item.toString());
+            Log.d(TAG, item.toString());
         // Create a FileWriter, use gson to write to it and close it. This essentially creates the file.
         FileWriter writer = new FileWriter(file);
         gson.toJson(list, writer);
@@ -312,7 +315,7 @@ public class StorageMainService extends Service {
         // any axis is calculated afterwards
         double[] maxDist = calculateMaxDistance(list);
 
-        double SCALEFACTOR_X = 30;
+        double SCALEFACTOR_X = 49;
         if (!DISTORT) {
             //noinspection SuspiciousNameCombination
             SCALEFACTOR_Y = SCALEFACTOR_X;
@@ -328,7 +331,7 @@ public class StorageMainService extends Service {
             item.setX(item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
             item.setY(item.getOriginalY() / factorY);
             item.setZ((item.getData() - minData) / dataFactor - 1.5);
-            Log.d(TAG,  "z = " + item.getZ());
+            Log.d(TAG, "z = " + item.getZ());
         }
 
     }
@@ -336,6 +339,7 @@ public class StorageMainService extends Service {
 
     /**
      * Calculates the smallest data-Value in a ArrayList of CompactData and returns it.
+     *
      * @param list ArrayList of CompactData
      * @return smallest data-Value found as double
      */
@@ -351,6 +355,7 @@ public class StorageMainService extends Service {
 
     /**
      * Calculates the biggest data-Value in a ArrayList of CompactData and returns it.
+     *
      * @param list ArrayList of CompactData
      * @return biggest data-Value found as double
      */
@@ -397,6 +402,7 @@ public class StorageMainService extends Service {
     /**
      * Calculates the smallest X and the smallest Y value in a ArrayList of CompactData.
      * The smallest X value and the smallest Y value may come from different CompactData-Objects.
+     *
      * @param list ArrayList of CompactData
      * @return the smallest X and the smallest Y value as an double array, in which the first item is the X value.
      */
@@ -414,8 +420,8 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *  Uploads the File using Uploader. Note that this method will not save the current Data in the File,
-     *  so be sure to call save() before you call this method.
+     * Uploads the File using Uploader. Note that this method will not save the current Data in the File,
+     * so be sure to call save() before you call this method.
      */
     public void uploadFile() {
         AsyncTask<String, Boolean, Integer> up = new Uploader();
@@ -435,7 +441,7 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *  {@inheritDoc}
+     * {@inheritDoc}
      */
     private class Uploader extends AsyncTask<String, Boolean, Integer> {
         /**

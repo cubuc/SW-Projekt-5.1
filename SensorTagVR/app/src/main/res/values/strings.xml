@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SensorTagVR</string>
-    <string name="scan">Scan and Connect to a TI CC2650</string>
-    <string name="start_vr">Open VR view in browser…</string>
+    <string name="scan">Scan and Connect to \n Sensor Device</string>
+    <string name="start_vr">Open VR view in browser</string>
 
     <string name="toggle_scan">Toggle Scan</string>
     <string name="Services">Services</string>
@@ -30,8 +30,7 @@
     <string name="settings_title">Settings</string>
     <string name="connect">Connect</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="tracking_settings">Trackingsettings</string>
+    <string name="tracking_settings">Track Phone Location</string>
     <string name="write">Write</string>
     <string name="logo">logo</string>
     <string name="ssid">SSID:</string>

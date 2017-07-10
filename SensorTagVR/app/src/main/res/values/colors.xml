@@ -2,5 +2,6 @@
 <resources>
 
     <color name="black">#000000</color>
+    <color name="accent_material_light">#61c8bf</color>
 
 </resources>

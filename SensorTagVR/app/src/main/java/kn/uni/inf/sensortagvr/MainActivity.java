@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         setButton.setOnClickListener(new View.OnClickListener() {
             /**
              * {@inheritDoc}

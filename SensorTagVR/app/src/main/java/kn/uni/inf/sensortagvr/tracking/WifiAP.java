@@ -19,6 +19,7 @@ public class WifiAP implements Parcelable {
     private final String BSSID;
     private double distance;
     private PointF location;
+    private int RSSI = 0;
 
     private final double A;
     private final double n;
@@ -55,6 +56,7 @@ public class WifiAP implements Parcelable {
             return false;
 
         SSID = scan.SSID;
+        RSSI = scan.level;
         distance = Math.pow(10.0, (A - scan.level) / (10.0 * n));
 
         return true;
@@ -88,13 +90,17 @@ public class WifiAP implements Parcelable {
         return tracked;
     }
 
+    public int getRSSI() {
+        return RSSI;
+    }
+
     public void setTracked(boolean tracked) {
         this.tracked = tracked;
     }
 
     @Override
     public String toString() {
-        return SSID + "\n" + BSSID + "\nDistance:" + distance;
+        return SSID + "\n" + BSSID + "\nRSSI:" + RSSI + "\nDistance:" + distance;
     }
 
     @Override

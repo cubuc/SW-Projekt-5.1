@@ -197,26 +197,25 @@ public class StorageMainService extends Service {
      * ArrayList measured
      */
     public void measureData() {
+        PointF loc;
 
         if (sessionStarted) {
             // get data from 'lastReceived'
-            float[] receivedData = {0, 0, 0};
-
-            if (lastReceivedData != null)
-                receivedData = lastReceivedData.getFloatArrayExtra(EXTRA_DATA);
+            float receivedData = lastReceivedData.getFloatExtra(EXTRA_DATA, 0);
 
             // get Data from tracking module
             if (trackingService != null) {
-                Log.i(getClass().getSimpleName(), "l");
-                PointF loc = trackingService.getRelativePosition();
-
-                // receivedData will be scaled between -1.5 and -.5
-                dataMeasured.add(new CompactData(loc, receivedData[0]));
-                Log.d(getClass().getSimpleName(), loc.toString());
-                Log.d(TAG, "Data " + receivedData[0]);
+                loc = trackingService.getRelativePosition();
             } else {
                 Log.i(getClass().getSimpleName(), "trackManSvc == null");
+                loc = new PointF(0, 0);
             }
+
+                // receivedData will be scaled between -1.5 and -.5
+            dataMeasured.add(new CompactData(loc, receivedData));
+                Log.d(getClass().getSimpleName(), loc.toString());
+            Log.d(TAG, "Data " + receivedData);
+
 
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();

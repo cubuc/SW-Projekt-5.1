@@ -50,7 +50,7 @@ class SensorDataListAdapter extends RecyclerView.Adapter<SensorDataListAdapter.V
      * @param s sensor to be added to the live data activity view
      * @param data data according to the sensor on the ti cc2650 mcu
      */
-    void addItem(Sensor s, float[] data) {
+    void addItem(Sensor s, float data) {
         int k = 0;
         for (DataListItem i : dataList) {
             if (i.getSensorName().equals(s)) {

@@ -137,7 +137,7 @@ public class LiveDataActivity extends AppCompatActivity {
                     break;
                 case BluetoothLEService.ACTION_DATA_AVAILABLE:
                     adapter.addItem(((Sensor) intent.getExtras().get(EXTRA_SENSOR)),
-                            intent.getFloatArrayExtra(BluetoothLEService.EXTRA_DATA));
+                            intent.getFloatExtra(BluetoothLEService.EXTRA_DATA, 0));
                     if (mTrackingService != null)
                         updateLocation(mTrackingService.getRelativePosition());
                     Log.i(getLocalClassName(), "ACTION DATA AVAIL received");
@@ -255,9 +255,10 @@ public class LiveDataActivity extends AppCompatActivity {
         super.onPause();
         mLocalBroadcastManager.unregisterReceiver(mGattUpdateReceiver);
         if (mBluetoothLEService != null)
-        unbindService(mServiceConnection);
+            unbindService(mServiceConnection);
         if (mTrackingService != null)
-        unbindService(mTrackSvcConnection);
+            unbindService(mTrackSvcConnection);
+
 
         Log.i(getLocalClassName(), "onPaused finished");
     }

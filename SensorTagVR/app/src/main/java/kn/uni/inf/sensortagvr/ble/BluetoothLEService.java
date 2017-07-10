@@ -24,12 +24,9 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_ACC_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_BAR_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_GYR_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_HUM_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_IRT_DATA;
-import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_MAG_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
 
 /**
@@ -200,26 +197,26 @@ public class BluetoothLEService extends Service {
                 intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
                 intent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));
                 break;
-            case UUID_ACC_DATA:
+/*            case UUID_ACC_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.ACCELEROMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.ACCELEROMETER.convert(characteristic.getValue()));
-                break;
+                break;*/
             case UUID_BAR_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.BAROMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.BAROMETER.convert(characteristic.getValue()));
                 break;
-            case UUID_GYR_DATA:
+/*            case UUID_GYR_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.GYROSCOPE);
                 intent.putExtra(EXTRA_DATA, Sensor.GYROSCOPE.convert(characteristic.getValue()));
-                break;
+                break;*/
             case UUID_HUM_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.HUMIDITY);
                 intent.putExtra(EXTRA_DATA, Sensor.HUMIDITY.convert(characteristic.getValue()));
                 break;
-            case UUID_MAG_DATA:
+/*            case UUID_MAG_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.MAGNETOMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.MAGNETOMETER.convert(characteristic.getValue()));
-                break;
+                break;*/
             case UUID_OPT_DATA:
                 intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
                 intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));

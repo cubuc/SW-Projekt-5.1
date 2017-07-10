@@ -102,6 +102,7 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
                 storageService.closeMeasureSession();
                 storageService.save();
                 storageService.uploadFile();
+                unsavedChanges = false;
                 try{
                     storageService.continueSession();
                 } catch (IOException e) {

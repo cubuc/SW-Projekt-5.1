@@ -290,10 +290,12 @@ public class StorageMainService extends Service {
         if (dataFactor == 0)
             dataFactor = maxData;
 
+
+        double[] minVals = calculateMinValues(list);
+
         // Rebases the settings of data points, thus no point has a negative X or Y value
         boolean REBASE = true;
         if (REBASE) {
-            double[] minVals = calculateMinValues(list);
 
             for (CompactData item : list) {
                 item.setX(item.getOriginalX() - minVals[0]);
@@ -311,19 +313,18 @@ public class StorageMainService extends Service {
             SCALEFACTOR_Y = SCALEFACTOR_X;
         }
 
-        double factorX = maxDist[0] / SCALEFACTOR_X;
+        double factorX = (maxDist[0] - minVals[0]) / SCALEFACTOR_X;
         if ( factorX == 0)
             factorX = 1;
 
-        double factorY = maxDist[1] / SCALEFACTOR_Y;
+        double factorY = (maxDist[1] - minVals[1]) / SCALEFACTOR_Y;
         if (factorY == 0)
             factorY = 1;
 
-
         // Scale the list values with the determined factors
         for (CompactData item : list) {
-            item.setX(item.getOriginalX() / factorX); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
-            item.setY(item.getOriginalY() / factorY);
+            item.setX( (item.getOriginalX() - minVals[0]) / factorX + .5); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
+            item.setY( (item.getOriginalY() - minVals[1]) / factorY + .5);
             item.setZ((item.getData() - minData) / dataFactor - 1.5);
             Log.d(TAG, "z = " + item.getZ());
             Log.d(TAG, "" + dataFactor);

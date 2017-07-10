@@ -290,7 +290,7 @@ public class StorageMainService extends Service {
             dataFactor = maxData;
 
         // Rebases the settings of data points, thus no point has a negative X or Y value
-        boolean REBASE = false;
+        boolean REBASE = true;
         if (REBASE) {
             double[] minVals = calculateMinValues(list);
 

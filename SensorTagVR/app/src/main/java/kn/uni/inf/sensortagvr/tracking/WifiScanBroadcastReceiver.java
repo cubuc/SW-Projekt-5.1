@@ -21,7 +21,6 @@ public class WifiScanBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         wifiTracker.update();
 
-        //Log.e("TRACKING_MANAGER", "WifiScan completed!");
     }
 
 }

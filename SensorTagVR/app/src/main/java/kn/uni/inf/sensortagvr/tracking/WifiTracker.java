@@ -94,13 +94,6 @@ class WifiTracker {
             return null;
         }
 
-        /*Collections.sort(trackedAPs, new Comparator<WifiAP>() {
-            @Override
-            public int compare(WifiAP lhs, WifiAP rhs) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return lhs.getDistance() <= rhs.getDistance() ? -1 : 1;
-            }
-        });*/
 
         double[][] positions = new double[trackedAPs.size()][2];
         double[] distances = new double[trackedAPs.size()];
@@ -118,13 +111,6 @@ class WifiTracker {
                 new TrilaterationFunction(positions, distances),
                 new LevenbergMarquardtOptimizer());
         LeastSquaresOptimizer.Optimum optimum = solver.solve();
-
-/*        // the answer
-        double[] centroid = optimum.getPoint().toArray();
-
-        // error and geometry information; may throw SingularMatrixException depending the threshold argument provided
-        RealVector standardDeviation = optimum.getSigma(0);
-        RealMatrix covarianceMatrix = optimum.getCovariances(0);*/
 
 
         return new PointF((float)optimum.getPoint().toArray()[0], (float)optimum.getPoint().toArray()[1]);

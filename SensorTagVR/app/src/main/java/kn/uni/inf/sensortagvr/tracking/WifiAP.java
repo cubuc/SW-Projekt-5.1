@@ -144,13 +144,6 @@ class WifiAP implements Parcelable {
         return tracked;
     }
 
-    public int getRSSI() {
-        return RSSI;
-    }
-
-    public void setTracked(boolean tracked) {
-        this.tracked = tracked;
-    }
 
     /**
      * {@inheritDoc}

@@ -87,22 +87,8 @@ public class TrackingTestActivity extends AppCompatActivity {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mConnection);
@@ -115,8 +101,7 @@ public class TrackingTestActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AP_SETTINGS_REQUEST) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == AP_SETTINGS_REQUEST && resultCode == RESULT_OK) {
                 WifiAP ap = data.getParcelableExtra("ACCESS_POINT");
                 trackingService.trackAP(ap);
 
@@ -124,7 +109,7 @@ public class TrackingTestActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Now tracking:\n" + ap.toString(), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getApplicationContext(), "Stopped tracking:\n" + ap.toString(), Toast.LENGTH_SHORT).show();
-            }
+
         }
     }
 

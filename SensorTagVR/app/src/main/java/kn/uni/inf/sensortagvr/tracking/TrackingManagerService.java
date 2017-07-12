@@ -148,44 +148,10 @@ public class TrackingManagerService extends Service {
         return wifiTracker.trackAP(ap);
     }
 
-    //INTERFACE PROVIDED BY SERVICE:
-    //get the current location of the device
-
-    /**
-     *
-     */
     public PointF getRelativePosition() {
         PointF lastPostion = wifiTracker.calculateLocation();
 
         return lastPostion == null ? new PointF(0, 0) : lastPostion;
-    }
-
-    public Location getAbsolutePosition() throws Exception {
-        //Earth’s radius, sphere
-        final double R = 6378137.0;
-        Location loc = new Location("TrackingManager");
-        PointF lastPostion = getRelativePosition();
-
-        if(origin == null)
-            throw new Exception("No origin was set!");
-
-        //Coordinate offsets in radians
-        double dLat = lastPostion.x/R;
-        double dLon = lastPostion.y/(R*Math.cos( Math.PI * origin.getLatitude() / 180.0));
-
-        loc.setLatitude(origin.getLatitude() + dLat * 180.0 / Math.PI);
-        loc.setLongitude(origin.getLongitude() + dLon * 180.0 / Math.PI );
-
-        return loc;
-    }
-
-    public Location calibrateOrigin() throws Exception{
-        if(lastGPSPosition != null)
-            origin = lastGPSPosition;
-        else
-            throw new Exception("No position could be determined by GPS or network!");
-
-        return lastGPSPosition;
     }
 
     public class TrackingBinder extends Binder {
@@ -209,7 +175,6 @@ public class TrackingManagerService extends Service {
 
         @Override
         public void run() {
-            // TODO remove Infinite loop
             this.handler.postDelayed(this, 1000);
 
             wifiTracker.update();

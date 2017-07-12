@@ -19,7 +19,6 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -47,8 +46,6 @@ public class BluetoothLEService extends Service {
             "kn.uni.inf.sensortagvr.ble.EXTRA_DATA";
     private static final String TAG = "BluetoothLEService";
     private final IBinder mBinder = new LocalBinder();
-    private final ArrayList<Sensor> enabledSensors = new ArrayList<>();
-    private final ArrayList<Sensor> notifyingSensors = new ArrayList<>();
     private final ConcurrentLinkedQueue<Object> mRWQueue = new ConcurrentLinkedQueue<>();
     private boolean bound = false;
     private boolean isWriting = false;
@@ -64,20 +61,21 @@ public class BluetoothLEService extends Service {
          */
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.i("onConnectionStateChange", "Status: " + status);
+            final String mTAG = "onConnectionStateChange";
+            Log.i(mTAG, "Status: " + status);
             switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
-                    Log.i("gattCallback", "STATE_CONNECTED");
+                    Log.i(mTAG, "STATE_CONNECTED");
                     mLocalBroadcastManager.sendBroadcast(new Intent(ACTION_GATT_CONNECTED));
                     gatt.discoverServices();
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
-                    Log.e("gattCallback", "STATE_DISCONNECTED");
+                    Log.i(mTAG, "STATE_DISCONNECTED");
                     mLocalBroadcastManager.sendBroadcast(new Intent(ACTION_GATT_DISCONNECTED));
                     stopSelf();
                     break;
                 default:
-                    Log.e("gattCallback", "STATE_OTHER");
+                    Log.e(mTAG, "STATE_OTHER");
                     throw new IllegalStateException();
             }
 
@@ -174,58 +172,50 @@ public class BluetoothLEService extends Service {
             nextWrite();
         }
 
+        /**
+         * Parses the raw data and sends broadcasts dependent on the type of sensor.
+         *
+         * @param characteristic The characteristic that has changed it's value or was read.
+         */
+        private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
+            final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
+            switch (characteristic.getUuid().toString()) {
+                case UUID_IRT_DATA:
+                    intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
+                    intent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));
+                    break;
+
+                case UUID_BAR_DATA:
+                    intent.putExtra(EXTRA_SENSOR, Sensor.BAROMETER);
+                    intent.putExtra(EXTRA_DATA, Sensor.BAROMETER.convert(characteristic.getValue()));
+                    break;
+
+                case UUID_HUM_DATA:
+                    intent.putExtra(EXTRA_SENSOR, Sensor.HUMIDITY);
+                    intent.putExtra(EXTRA_DATA, Sensor.HUMIDITY.convert(characteristic.getValue()));
+                    break;
+
+                case UUID_OPT_DATA:
+                    intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
+                    intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
+                    break;
+                default:
+                    Log.i(TAG, "no valid data characteristic");
+            }
+            mLocalBroadcastManager.sendBroadcast(intent);
+        }
+
     };
     private BluetoothDevice device;
     private BluetoothAdapter mBtAdapter;
+
 
     /**
      * Empty constructor required because we're androids.
      */
     public BluetoothLEService() {
     }
-    // TODO Stor Svc connection & lifecycle
 
-    /**
-     * Parses the raw data and sends broadcasts dependent on the type of sensor.
-     *
-     * @param characteristic The characteristic that has changed it's value or was read.
-     */
-    private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
-        switch (characteristic.getUuid().toString()) {
-            case UUID_IRT_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.IR_TEMPERATURE);
-                intent.putExtra(EXTRA_DATA, Sensor.IR_TEMPERATURE.convert(characteristic.getValue()));
-                break;
-/*            case UUID_ACC_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.ACCELEROMETER);
-                intent.putExtra(EXTRA_DATA, Sensor.ACCELEROMETER.convert(characteristic.getValue()));
-                break;*/
-            case UUID_BAR_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.BAROMETER);
-                intent.putExtra(EXTRA_DATA, Sensor.BAROMETER.convert(characteristic.getValue()));
-                break;
-/*            case UUID_GYR_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.GYROSCOPE);
-                intent.putExtra(EXTRA_DATA, Sensor.GYROSCOPE.convert(characteristic.getValue()));
-                break;*/
-            case UUID_HUM_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.HUMIDITY);
-                intent.putExtra(EXTRA_DATA, Sensor.HUMIDITY.convert(characteristic.getValue()));
-                break;
-/*            case UUID_MAG_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.MAGNETOMETER);
-                intent.putExtra(EXTRA_DATA, Sensor.MAGNETOMETER.convert(characteristic.getValue()));
-                break;*/
-            case UUID_OPT_DATA:
-                intent.putExtra(EXTRA_SENSOR, Sensor.LUXMETER);
-                intent.putExtra(EXTRA_DATA, Sensor.LUXMETER.convert(characteristic.getValue()));
-                break;
-            default:
-                Log.i(TAG, "no valid data characteristic");
-        }
-        mLocalBroadcastManager.sendBroadcast(intent);
-    }
 
     /**
      * {@inheritDoc}
@@ -353,32 +343,6 @@ public class BluetoothLEService extends Service {
         mGatt = null;
     }
 
-    /*
-      Read a BluetoothCharacteristic.
-
-      @param characteristic Characteristic to read
-     */
-/*    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (mBtAdapter == null || mGatt == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
-        }
-        mGatt.readCharacteristic(characteristic);
-    }*/
-
-/*    *//*
-     * Read a sensor value, giving the sensor name as parameter instead of a characteristic.
-     *
-     * @param s A sensor, listed in the Sensor enum
-     *//*
-    public void readFromSensor(Sensor s) {
-        if (mBtAdapter == null || mGatt == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
-        }
-        BluetoothGattService sensorService = mGatt.getService(s.getServiceUUID());
-        mGatt.readCharacteristic(sensorService.getCharacteristic(s.getDataUUID()));
-    }*/
 
     /**
      * Basic sensor control: turn power and notifications on and off.
@@ -419,30 +383,9 @@ public class BluetoothLEService extends Service {
 
                         config.setValue(notify);
                         write(config);
-
-                        updateLists(s, power, notification);
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * @param s
-     * @param power
-     * @param notification
-     */
-    private void updateLists(Sensor s, boolean power, boolean notification) {
-        if (power) {
-            enabledSensors.add(s);
-        } else {
-            enabledSensors.remove(s);
-            notifyingSensors.remove(s);
-        }
-        if (notification) {
-            notifyingSensors.add(s);
-        } else {
-            notifyingSensors.remove(s);
         }
     }
 
@@ -494,22 +437,6 @@ public class BluetoothLEService extends Service {
     public BluetoothGatt getmGatt() {
         return mGatt;
     }
-/*
-
-    */
-/*
-
-    public ArrayList<Sensor> getEnabledSensors() {
-        return enabledSensors;
-    }
-
-    */
-/*
-
-    public ArrayList<Sensor> getNotifyingSensors() {
-        return notifyingSensors;
-    }
-*/
 
     /**
      *

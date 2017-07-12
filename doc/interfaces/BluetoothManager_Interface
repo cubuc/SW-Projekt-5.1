@@ -1,45 +1,400 @@
+public enum Sensor {
+
+    /**
+     * Constructor and main fields;
+     * there is also a constant byte code "ENABLE_CODE" = 0000 0001
+     * @param name the name of the according sensor
+     * @param service The UUID of the GATT Service of the sensor
+     * @param data The UUID of the Characteristic of the sensor data
+     * @param config The UUID of the configuration characteristic
+     */
+   Sensor(String name, UUID service, UUID data, UUID config);
+
+   /**
+    * Used to convert the received binary values into human readable form
+    *
+    * @param the raw byte value of the received Bluetooth characteristic
+    */
+   public float convert(byte[] value) {
+    requires value != null
+      ensures correctly conversion from byte to value in human-readable format
+   }
+
+}
+
+/**
+ * This abstract class is used to implement {@link BluetoothGatt} callbacks.
+ */
+public class BluetoothLEService extends Service {
+
+      /**
+       * Methods overridden from the interface android.app.service
+       */
+
+       /**
+         * Called by the system every time a client explicitly starts the service by calling
+         * {@link android.content.Context#startService}, providing the arguments it supplied and a
+         * unique integer token representing the start request.  Do not call this method directly.
+         *
+         * <p>For backwards compatibility, the default implementation calls
+         * {@link #onStart} and returns either {@link #START_STICKY}
+         * or {@link #START_STICKY_COMPATIBILITY}.
+         *
+         * <p>If you need your application to run on platform versions prior to API
+         * level 5, you can use the following model to handle the older {@link #onStart}
+         * callback in that case.  The <code>handleCommand</code> method is implemented by
+         * you as appropriate:
+         *
+         * {@sample development/samples/ApiDemos/src/com/example/android/apis/app/ForegroundService.java
+         *   start_compatibility}
+         *
+         * <p class="caution">Note that the system calls this on your
+         * service's main thread.  A service's main thread is the same
+         * thread where UI operations take place for Activities running in the
+         * same process.  You should always avoid stalling the main
+         * thread's event loop.  When doing long-running operations,
+         * network calls, or heavy disk I/O, you should kick off a new
+         * thread, or use {@link android.os.AsyncTask}.</p>
+         *
+         * @param intent The Intent supplied to {@link android.content.Context#startService},
+         * as given.  This may be null if the service is being restarted after
+         * its process has gone away, and it had previously returned anything
+         * except {@link #START_STICKY_COMPATIBILITY}.
+         * @param flags Additional data about this start request.  Currently either
+         * 0, {@link #START_FLAG_REDELIVERY}, or {@link #START_FLAG_RETRY}.
+         * @param startId A unique integer representing this specific request to
+         * start.  Use with {@link #stopSelfResult(int)}.
+         *
+         * @return The return value indicates what semantics the system should
+         * use for the service's current started state.  It may be one of the
+         * constants associated with the {@link #START_CONTINUATION_MASK} bits.
+         *
+         * @see #stopSelfResult(int)
+         */
+      public int onStartCommand(Intent, int, int);
+
+      /**
+       * Called by the system to notify a Service that it is no longer used and is being removed.  The
+       * service should clean up any resources it holds (threads, registered
+       * receivers, etc) at this point.  Upon return, there will be no more calls
+       * in to this Service object and it is effectively dead.  Do not call this method directly.
+       */
+      public void onDestroy();
+
+      /**
+        * Return the communication channel to the service.  May return null if
+        * clients can not bind to the service.  The returned
+        * {@link android.os.IBinder} is usually for a complex interface
+        * that has been <a href="{@docRoot}guide/components/aidl.html">described using
+        * aidl</a>.
+        *
+        * <p><em>Note that unlike other application components, calls on to the
+        * IBinder interface returned here may not happen on the main thread
+        * of the process</em>.  More information about the main thread can be found in
+        * <a href="{@docRoot}guide/topics/fundamentals/processes-and-threads.html">Processes and
+        * Threads</a>.</p>
+        *
+        * @param intent The Intent that was used to bind to this service,
+        * as given to {@link android.content.Context#bindService
+        * Context.bindService}.  Note that any extras that were included with
+        * the Intent at that point will <em>not</em> be seen here.
+        *
+        * @return Return an IBinder through which clients can call on to the
+        *         service.
+        */
+      public void onBind(Intent);
+
+      /**
+       * Called when all clients have disconnected from a particular interface
+       * published by the service.  The default implementation does nothing and
+       * returns false.
+       *
+       * @param intent The Intent that was used to bind to this service,
+       * as given to {@link android.content.Context#bindService
+       * Context.bindService}.  Note that any extras that were included with
+       * the Intent at that point will <em>not</em> be seen here.
+       *
+       * @return Return true if you would like to have the service's
+       * {@link #onRebind} method later called when new clients bind to it.
+       */
+      public boolean onUnbind(Intent);
 
 
-Interface of Intent:
+      public class BluetoothGattCallback {
 
-Intent intent = new Intent(String msgcode);
+        /**
+         * Callback indicating when GATT client has connected/disconnected to/from a remote
+         * GATT server.
+         */
+        public void onConnectionStateChange(BluetoothGatt gatt, int status,
+                                            int newState) {
+          ensures sending a broadcast containing the state information
+        }
 
-TI-Example Message Codes
-public final static String ACTION_GATT_CONNECTED = "com.example.ti.ble.common.ACTION_GATT_CONNECTED";
-public final static String ACTION_GATT_DISCONNECTED = "com.example.ti.ble.common.ACTION_GATT_DISCONNECTED";
-public final static String ACTION_GATT_SERVICES_DISCOVERED = "com.example.ti.ble.common.ACTION_GATT_SERVICES_DISCOVERED";
-public final static String ACTION_DATA_READ = "com.example.ti.ble.common.ACTION_DATA_READ";
-public final static String ACTION_DATA_NOTIFY = "com.example.ti.ble.common.ACTION_DATA_NOTIFY";
-public final static String ACTION_DATA_WRITE = "com.example.ti.ble.common.ACTION_DATA_WRITE";
-public final static String EXTRA_DATA = "com.example.ti.ble.common.EXTRA_DATA";
-public final static String EXTRA_UUID = "com.example.ti.ble.common.EXTRA_UUID";
-public final static String EXTRA_STATUS = "com.example.ti.ble.common.EXTRA_STATUS";
-public final static String EXTRA_ADDRESS = "com.example.ti.ble.common.EXTRA_ADDRESS";
-public final static int GATT_TIMEOUT = 150;
+        /**
+         * Callback invoked when the list of remote services, characteristics and descriptors
+         * for the remote device have been updated, ie new services have been discovered.
+         *
+         * @param gatt GATT client invoked {@link BluetoothGatt#discoverServices}
+         * @param status {@link BluetoothGatt#GATT_SUCCESS} if the remote device
+         *               has been explored successfully.
+         */
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+        }
+
+        /**
+         * Callback reporting the result of a characteristic read operation.
+         *
+         * @param gatt GATT client invoked {@link BluetoothGatt#readCharacteristic}
+         * @param characteristic Characteristic that was read from the associated
+         *                       remote device.
+         * @param status {@link BluetoothGatt#GATT_SUCCESS} if the read operation
+         *               was completed successfully.
+         */
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
+                                         int status) {
+        }
+
+        /**
+         * Callback indicating the result of a characteristic write operation.
+         *
+         * <p>If this callback is invoked while a reliable write transaction is
+         * in progress, the value of the characteristic represents the value
+         * reported by the remote device. An application should compare this
+         * value to the desired value to be written. If the values don't match,
+         * the application must abort the reliable write transaction.
+         *
+         * @param gatt GATT client invoked {@link BluetoothGatt#writeCharacteristic}
+         * @param characteristic Characteristic that was written to the associated
+         *                       remote device.
+         * @param status The result of the write operation
+         *               {@link BluetoothGatt#GATT_SUCCESS} if the operation succeeds.
+         */
+        public void onCharacteristicWrite(BluetoothGatt gatt,
+                                          BluetoothGattCharacteristic characteristic, int status) {
+        }
+
+        /**
+         * Callback triggered as a result of a remote characteristic notification.
+         *
+         * @param gatt GATT client the characteristic is associated with
+         * @param characteristic Characteristic that has been updated as a result
+         *                       of a remote notification event.
+         */
+        public void onCharacteristicChanged(BluetoothGatt gatt,
+                                            BluetoothGattCharacteristic characteristic) {
+        }
 
 
-//container keeping the values
-Bundle b = new Bundle();
+        /**
+         * Callback indicating the result of a descriptor write operation.
+         *
+         * @param gatt GATT client invoked {@link BluetoothGatt#writeDescriptor}
+         * @param descriptor Descriptor that was writte to the associated
+         *                   remote device.
+         * @param status The result of the write operation
+         *               {@link BluetoothGatt#GATT_SUCCESS} if the operation succeeds.
+         */
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
+                                      int status) {
+        }
 
-// the name of all available services and if they are 3d or 1d based
-String[] strings = {"TEMP_AM","TEMP_TAR","TEMP_NEWTAR","MOV_ACC x","MOV_ACC y","MOV_ACC z","MOV_GYR x", "MOV_GYR y", \
-"MOV_GYR z", "MOV_MAG x","MOV_MAG y", "MOV_MAG z", "ACC x",  "ACC y",  "ACC z", "HUM", "MAG x",  "MAG y",  "MAG z",\
- "LUX", "GYR x", "GYR y", "GYR z", "BAR x"};
+        /**
+         * Callback reporting the RSSI for a remote device connection.
+         *
+         * This callback is triggered in response to the
+         * readRemoteRssi function.
+         *
+         * @param gatt GATT client invoked {@link BluetoothGatt#readRemoteRssi}
+         * @param rssi The RSSI value for the remote device
+         * @param status {@link BluetoothGatt#GATT_SUCCESS} if the RSSI was read successfully
+         */
+        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+        }
 
- //all sensor value outputs are doubles
-for (float f : SensorOutputs)
-	intent.putFloat(strings[i], float f);
+        /**
+         * Broadcasts the converted Bluetooth characteristic that was read from the sensor.
+         *
+         * @param characteristic Characteristic that has been received from a sensor.
+         */
+        private void broadcastCharacteristic(BluetoothGattCharacteristic characteristic) {
+        }
+      }
 
-// the Values are passed by wrapping them in a bundle and adding this bundle to an intent
-Intent.putExtra(Bundle b);
+      /**
+       * connects through the gatt callback to a  TI CC2650 MCU using its MAC-address
+       *
+       * @param the MAC address of a TI CC2650 MCU
+       */
+      public boolean connect(String address) {
+        requires address != null
+          ensures established connection to the device
+      }
 
-// broadcast the intent
-updateBroadcast(intent);
+      public void disconnect() {
+        ensures disconnection from a connected TI CC2650 MCU
+      }
 
+      /**
+       * Basic sensor control: turn power and notifications on and off.
+       *
+       * @param s            Sensor enum: IR_TEMPERATURE || BAROMETER || LUXMETER || HUMIDITY
+       * @param power        true = on, false=off
+       * @param notification true = enabled, false=off
+       */
+      private void controlSensor(Sensor s, boolean power, boolean notification) {
+       }
 
+      /**
+       * Wrapper for a blocking write: Either execute if the Queue is empty and no write is currently
+       * going on or enqueue the write task.
+       *
+       * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the
+       *          sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
+       *          Config descriptor, to en-/disable the notifications).
+       */
+      private synchronized void write(Object o) {
+      }
 
+      /**
+       * Blocking write; Sets isWriting to true (onWriteCharacteristic/Descriptor settings it to false when
+       * finished)
+       *
+       * @param o Either a BluetoothGATTCharacteristic (e.g. the config characteristic to turn the
+       *          sensor on and off) or a BluetoothGattDescriptor (e.g. the Client Characteristic
+       *          Config descriptor, to en-/disable the notifications).
+       */
+      private synchronized void doWrite(Object o) {
+      }
 
-How to receive?
-Bundle b = Intent.getExtras();
-for (String str : strings)
-	safeToDB(str, b.getFloat(str));
+      /**
+       * Function that is called if a write finishes or has illegal arguments
+       */
+      private synchronized void nextWrite() {
+      }
+
+}
+
+public class ScanListActivity extends AppCompatActivity {
+
+    /**
+     * Methods overridden from the interface import android.support.v7.app.AppCompatActivity;
+     */
+
+    /**
+      * Called when the activity is starting.  This is where most initialization
+      * should go: calling {@link #setContentView(int)} to inflate the
+      * activity's UI, using {@link #findViewById} to programmatically interact
+      * with widgets in the UI, calling
+      * {@link #managedQuery(android.net.Uri , String[], String, String[], String)} to retrieve
+      * cursors for data being displayed, etc.
+      *
+      * <p>You can call {@link #finish} from within this function, in
+      * which case onDestroy() will be immediately called without any of the rest
+      * of the activity lifecycle ({@link #onStart}, {@link #onResume},
+      * {@link #onPause}, etc) executing.
+      *
+      * <p><em>Derived classes must call through to the super class's
+      * implementation of this method.  If they do not, an exception will be
+      * thrown.</em></p>
+      *
+      * @param savedInstanceState If the activity is being re-initialized after
+      *     previously being shut down then this Bundle contains the data it most
+      *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+      *
+      */
+    protected void onCreate(Bundle savedInstanceState) {
+    }
+
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    protected void onResume() {
+    }
+
+    /**
+      * Called as part of the activity lifecycle when an activity is going into
+      * the background, but has not (yet) been killed.  The counterpart to
+      * {@link #onResume}.
+      *
+      * <p>When activity B is launched in front of activity A, this callback will
+      * be invoked on A.  B will not be created until A's {@link #onPause} returns,
+      * so be sure to not do anything lengthy here.
+      *
+      * <p>This callback is mostly used for saving any persistent state the
+      * activity is editing, to present a "edit in place" model to the user and
+      * making sure nothing is lost if there are not enough resources to start
+      * the new activity without first killing this one.  This is also a good
+      * place to do things like stop animations and other things that consume a
+      * noticeable amount of CPU in order to make the switch to the next activity
+      * as fast as possible, or to close resources that are exclusive access
+      * such as the camera.
+      *
+      * <p>In situations where the system needs more memory it may kill paused
+      * processes to reclaim resources.  Because of this, you should be sure
+      * that all of your state is saved by the time you return from
+      * this function.  In general {@link #onSaveInstanceState} is used to save
+      * per-instance state in the activity and this method is used to store
+      * global persistent data (in content providers, files, etc.)
+      *
+      * <p>After receiving this call you will usually receive a following call
+      * to {@link #onStop} (after the next activity has been resumed and
+      * displayed), however in some cases there will be a direct call back to
+      * {@link #onResume} without going through the stopped state.
+      *
+      * <p><em>Derived classes must call through to the super class's
+      * implementation of this method.  If they do not, an exception will be
+      * thrown.</em></p>
+      */
+   protected void onPause() {
+     }
+
+    /**
+     * Bluetooth LE scan callbacks. Scan results are reported using these callbacks.
+     *
+     * @see BluetoothLeScanner#startScan
+     */
+    public abstract class ScanCallback {
+        /**
+         * Callback when a BLE advertisement has been found.
+         *
+         * @param callbackType Determines how this callback was triggered. Could be one of
+         *            {@link ScanSettings#CALLBACK_TYPE_ALL_MATCHES},
+         *            {@link ScanSettings#CALLBACK_TYPE_FIRST_MATCH} or
+         *            {@link ScanSettings#CALLBACK_TYPE_MATCH_LOST}
+         * @param result A Bluetooth LE scan result.
+         */
+        public void onScanResult(int callbackType, ScanResult result) {
+        }
+
+        /**
+         * Callback when batch results are delivered.
+         *
+         * @param results List of scan results that are previously scanned.
+         */
+        public void onBatchScanResults(List<ScanResult> results) {
+        }
+
+        /**
+         * Callback when scan could not be started.
+         *
+         * @param errorCode Error code (one of SCAN_FAILED_*) for scan failure.
+         */
+        public void onScanFailed(int errorCode) {
+        }
+    }
+
+    /**
+     * @param enable if true the scan will start and stop after 5 seconds
+     *               if false the scan will stop immediately
+     */
+    private void scanLeDevice(final boolean enable) {
+    }
+
+}

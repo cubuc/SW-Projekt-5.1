@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconDipSize">
+        <ignore path="src/main/res/mipmap-hdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-hdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-mdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/vr_transparent.png" />
+    </issue>
+    <issue id="IconDuplicatesConfig">
+        <ignore path="src/main/res/mipmap-hdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-hdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-mdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-mdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-xhdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-xxhdpi/vr_transparent.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/vr_app_logo.png" />
+        <ignore path="src/main/res/mipmap-xxxhdpi/vr_transparent.png" />
+    </issue>
+    <issue id="IconLocation">
+        <ignore path="src/main/res/drawable/live_data.png" />
+        <ignore path="src/main/res/drawable/rec_vr.png" />
+        <ignore path="src/main/res/drawable/settings.png" />
+    </issue>
+</lint>

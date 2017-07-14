@@ -17,67 +17,78 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_CONF;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_SERV;
 
+// TODO New Session Toast, keine neg werte APConfigActivity, Temperatur
+
 
 public enum Sensor {
 
     IR_TEMPERATURE("Temperature", UUID.fromString(UUID_IRT_SERV), UUID.fromString(UUID_IRT_DATA), UUID.fromString(UUID_IRT_CONF)) {
         /**
-         * converts the raw data to a float[3]
+         * converts the raw data to a float. The documentation of TI on this is not really accurate on this,
+         * so there are 5 diffrent approaches taken from the TI example app and the CC2650 MCU User's Guide;
+         * none of them is accurate
          *
          * @param value byte measured by the TI CC2650 MCU temperature sensor
          */
         @Override
         public float convert(final byte[] value) {
-
-			/*
+            /*
              * The IR Temperature sensor produces two measurements; Object ( AKA target or IR) Temperature, and Ambient ( AKA die ) temperature.
 			 * Both need some conversion, and Object temperature is dependent on Ambient temperature.
 			 * They are stored as [ObjLSB, ObjMSB, AmbLSB, AmbMSB] (4 bytes) Which means we need to shift the bytes around to get the correct values.
 			 */
+            final double SCALE_LSB = 0.03125;
 
-//            float ambient = extractAmbientTemperature(value);
-//            float target = extractTargetTemperature(value, ambient);
+            byte[] objRaw = new byte[]{value[0], value[1]};
+            byte[] ambRaw = new byte[]{value[2], value[3]};
+
+            double objTemp = (Sensor.shortUnsignedAtOffset(objRaw, 0) >> 2) * SCALE_LSB;
+            double targetTemp = (Sensor.shortUnsignedAtOffset(ambRaw, 0) >> 2) * SCALE_LSB;
+
+
+            float ambient = extractAmbientTemperature(value);
+            float target = extractTargetTemperature(value, ambient);
             float targetNewSensor = extractTargetTemperatureTMP007(value);
-            return targetNewSensor;
+            return targetNewSensor + (targetNewSensor / 15);
         }
 
 
-//        /**
-//         * @param v byte measured by the TI CC2650 MCU temperature sensor
-//         */
-//        private float extractAmbientTemperature(byte[] v) {
-//            int offset = 2;
-//            return (float) (shortUnsignedAtOffset(v, offset) / 128.0);
-//        }
-//
-//
-//        /**
-//         * @param v byte measured by the TI CC2650 MCU temperature sensor
-//         * @param ambient the calculated ambient temperature for byte v
-//         */
-//        private float extractTargetTemperature(byte[] v, double ambient) {
-//            Integer twoByteValue = shortSignedAtOffset(v, 0);
-//
-//            double Vobj2 = twoByteValue.doubleValue();
-//            Vobj2 *= 0.00000015625;
-//
-//            double Tdie = ambient + 273.15;
-//
-//            double S0 = 5.593E-14; // Calibration factor
-//            double a1 = 1.75E-3;
-//            double a2 = -1.678E-5;
-//            double b0 = -2.94E-5;
-//            double b1 = -5.7E-7;
-//            double b2 = 4.63E-9;
-//            double c2 = 13.4;
-//            double Tref = 298.15;
-//            double S = S0 * (1 + a1 * (Tdie - Tref) + a2 * pow((Tdie - Tref), 2));
-//            double Vos = b0 + b1 * (Tdie - Tref) + b2 * pow((Tdie - Tref), 2);
-//            double fObj = (Vobj2 - Vos) + c2 * pow((Vobj2 - Vos), 2);
-//            double tObj = pow(pow(Tdie, 4) + (fObj / S), .25);
-//
-//            return (float) (tObj - 273.15);
-//        }
+        /**
+         * @param v byte measured by the TI CC2650 MCU temperature sensor
+         */
+        private float extractAmbientTemperature(byte[] v) {
+            int offset = 2;
+            return (float) (shortUnsignedAtOffset(v, offset) / 128.0);
+        }
+
+
+        /**
+         * @param v       byte measured by the TI CC2650 MCU temperature sensor
+         * @param ambient the calculated ambient temperature for byte v
+         */
+        private float extractTargetTemperature(byte[] v, double ambient) {
+            Integer twoByteValue = shortSignedAtOffset(v, 0);
+
+            double Vobj2 = twoByteValue.doubleValue();
+            Vobj2 *= 0.00000015625;
+
+            double Tdie = ambient + 273.15;
+
+            double S0 = 5.593E-14; // Calibration factor
+            double a1 = 1.75E-3;
+            double a2 = -1.678E-5;
+            double b0 = -2.94E-5;
+            double b1 = -5.7E-7;
+            double b2 = 4.63E-9;
+            double c2 = 13.4;
+            double Tref = 298.15;
+            double S = S0 * (1 + a1 * (Tdie - Tref) + a2 * pow((Tdie - Tref), 2));
+            double Vos = b0 + b1 * (Tdie - Tref) + b2 * pow((Tdie - Tref), 2);
+            double fObj = (Vobj2 - Vos) + c2 * pow((Vobj2 - Vos), 2);
+            double tObj = pow(pow(Tdie, 4) + (fObj / S), .25);
+
+            return (float) (tObj - 273.15);
+        }
 
 
         /**

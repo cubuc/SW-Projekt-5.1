@@ -134,8 +134,10 @@ public class StorageMainService extends Service {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
         Intent intent = new Intent(this, TrackingManagerService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        if (trackingService == null)
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
+
 
     /**
      * The service is bound by the RecordDataActivity for creating a measurement session.
@@ -144,6 +146,24 @@ public class StorageMainService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        if (trackingService != null)
+            unbindService(mConnection);
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+        bindService(new Intent(this, TrackingManagerService.class), mConnection, BIND_AUTO_CREATE);
+        try {
+            continueSession();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -201,7 +221,9 @@ public class StorageMainService extends Service {
 
         if (sessionStarted) {
             // get data from 'lastReceived'
-            float receivedData = lastReceivedData.getFloatExtra(EXTRA_DATA, 0);
+            float receivedData = 0;
+            if (lastReceivedData != null)
+                receivedData = lastReceivedData.getFloatExtra(EXTRA_DATA, 0);
 
             // get Data from tracking module
             if (trackingService != null) {
@@ -290,7 +312,7 @@ public class StorageMainService extends Service {
             dataFactor = maxData;
 
 
-        double[] minVals = calculateMinValues(list);
+       /* double[] minVals = calculateMinValues(list);
 
         // Rebases the settings of data points, thus no point has a negative X or Y value
         boolean REBASE = true;
@@ -319,14 +341,14 @@ public class StorageMainService extends Service {
         double factorY = (maxDist[1] - minVals[1]) / SCALEFACTOR_Y;
         if (factorY == 0)
             factorY = 1;
-
+*/
         // Scale the list values with the determined factors
         for (CompactData item : list) {
-            item.setX( (item.getOriginalX() - minVals[0]) / factorX + .5); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
-            item.setY( (item.getOriginalY() - minVals[1]) / factorY + .5);
+            //  item.setX( (item.getOriginalX() - minVals[0]) / factorX + .5); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
+            //  item.setY( (item.getOriginalY() - minVals[1]) / factorY + .5);
             item.setZ((item.getData() - minData) / dataFactor - 1.5);
             Log.d(TAG, "z = " + item.getZ());
-            Log.d(TAG, "" + dataFactor);
+            //s  Log.d(TAG, "" + dataFactor);
         }
 
     }

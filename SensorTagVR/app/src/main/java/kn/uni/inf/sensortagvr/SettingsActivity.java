@@ -73,6 +73,8 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), TrackingTestActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
             }
         });
+
+
         Button scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             /**
@@ -82,11 +84,25 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mBluetoothLEService.getmGatt() == null) {
                     unbindService(mServiceConnection);
+                    mBluetoothLEService = null;
                     startActivity(new Intent(getApplicationContext(),
                             ScanListActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                } else startActivity(new Intent(getApplicationContext(),
-                        LiveDataActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                } else {
+                    unbindService(mServiceConnection);
+                    mBluetoothLEService = null;
+                    startActivity(new Intent(getApplicationContext(),
+                            LiveDataActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                }
             }
         });
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mBluetoothLEService != null) {
+            unbindService(mServiceConnection);
+        }
     }
 }

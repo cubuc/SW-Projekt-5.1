@@ -24,7 +24,7 @@ import kn.uni.inf.sensortagvr.stor.UnsavedDataDialog;
 
 public class SessionActivity extends Activity implements UnsavedDataDialog.NoticeDialogListener {
 
-    public boolean unsavedChanges = true;
+    public boolean unsavedChanges = false;
     private StorageMainService storageService;
     private final ServiceConnection storageConnection = new ServiceConnection() {
         /**
@@ -36,7 +36,7 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
             storageService = binder.getService();
             Log.i(getLocalClassName(), "connected to stor svc");
 
-            if (getIntent().getBooleanExtra("cont", true)) {
+            if (getIntent().getBooleanExtra("cont", true) || unsavedChanges) {
                 try{
                     storageService.continueSession();
                 } catch (IOException e) {
@@ -119,7 +119,6 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
      */
     @Override
     protected void onStart() {
-        unsavedChanges = false;
         bindService(new Intent(this, StorageMainService.class), storageConnection, BIND_AUTO_CREATE);
         Log.i(getLocalClassName(), "bound Stor Svc");
         super.onStart();

@@ -1,4 +1,7 @@
 
+# Meeting Minutes
+[Link zum Google-Drive-Dokument](https://docs.google.com/document/d/1Sr-b2WpEn8F5z_KGIFfP36zVErQuSxq0MIUU9-rD9Z0/edit#heading=h.3mjhd2ue7hw0)
+
 # Ressources
 ## Must Read
 [Android App Fundamentals](https://developer.android.com/guide/components/fundamentals.html)

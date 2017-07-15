@@ -1,7 +1,7 @@
-<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>137</y><w>1110</w><h>580</h></coordinates><panel_attributes>title=VRBox:\nSwitch data Visualization
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>136</y><w>1110</w><h>580</h></coordinates><panel_attributes>title=VRBox:\nSwitch data Visualization
 autoTick=false
 obj=User~a 
-obj=Chrome~b 
+obj=Firefox~b 
 obj=VRBox~c
 
 tick=

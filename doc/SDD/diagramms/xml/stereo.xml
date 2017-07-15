@@ -1,7 +1,7 @@
-<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>60</x><y>127</y><w>1020</w><h>500</h></coordinates><panel_attributes>title=VRBox:\nSwitch to streoscopic 3D
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>127</y><w>1020</w><h>500</h></coordinates><panel_attributes>title=VRBox:\nSwitch to streoscopic 3D
 autoTick=false
 obj=User~a 
-obj=Chrome~b 
+obj=Firefox~b 
 obj=VRBox~c
 
 tick=

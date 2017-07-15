@@ -1,19 +1,19 @@
-<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>120</y><w>950</w><h>340</h></coordinates><panel_attributes>title=StartVR
+<diagram program="umletino" version="14.2"><zoom_level>10</zoom_level><element><id>UMLSequenceAllInOne</id><coordinates><x>0</x><y>120</y><w>920</w><h>340</h></coordinates><panel_attributes>title=StartVR
 autoTick=false
 obj=User~a 
 obj=GUI~b 
-obj=Chrome~c
+obj=Firefox~c
 tick=
 a-&gt;&gt;&gt;b: clickButton(startVR); 
 on=b;
 tick=
-b-&gt;b+: Intent: openChrome();
+b-&gt;b+: Intent: openFirefox();
 tick=
 on=b;
 tick=
-b-&gt;c: openChrome(localhost:8080);on=c;off=b; 
+b-&gt;c: openFirefox(localhost:8080);on=c;off=b; 
 tick=
-b-&gt;a :switchtoChrome();
+b-&gt;a :switchtoFirefox();
 off=b;
 tick=
 

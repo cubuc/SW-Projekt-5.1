@@ -55,7 +55,6 @@ public class StorageMainService extends Service {
     private final boolean DISTORT = true;
     // instantiate a custom broadcast receiver for the bluetooth broadcast
     private TrackingManagerService trackingService = null;
-    private boolean mBound = false;
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -71,7 +70,6 @@ public class StorageMainService extends Service {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             TrackingManagerService.TrackingBinder binder = (TrackingManagerService.TrackingBinder) service;
             trackingService = binder.getService();
-            mBound = true;
         }
 
         /**
@@ -80,15 +78,17 @@ public class StorageMainService extends Service {
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             trackingService = null;
-            mBound = false;
         }
     };
+
     // Saves all measured data in a session
     private ArrayList<CompactData> dataMeasured;
     private boolean sessionStarted = false;
+
     // Path a data.json file is saved to
     private String path = null;
     private Intent lastReceivedData;
+
     private final BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
         /**
          * {@inheritDoc}
@@ -103,16 +103,16 @@ public class StorageMainService extends Service {
                     Sensor mSensor = (Sensor) intent.getExtras().get(EXTRA_SENSOR);
                     if (mSensor != null && mSensor == Sensor.IR_TEMPERATURE) {
                         lastReceivedData = intent;
-                        Log.i("StorMainSvc", "received irt broadcast");
+                        Log.i(TAG, "received irt broadcast");
                     }
                     break;
                 default:
-                    Log.i("StorMainSvc", "received any broadcast");
+                    Log.i(TAG, "received any broadcast");
                     break;
             }
         }
     };
-    private double SCALEFACTOR_Y = 29;
+
     private LocalBroadcastManager mLocalBroadcastManager;
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -148,6 +148,9 @@ public class StorageMainService extends Service {
         return binder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onUnbind(Intent intent) {
         if (trackingService != null)
@@ -155,6 +158,10 @@ public class StorageMainService extends Service {
         return super.onUnbind(intent);
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
@@ -167,18 +174,21 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *
+     *  This method is essential to work with the StorageMainService. This Method registers
+     *  a receiver to get data from the sensor and initializes a new ArrayList.
      */
     public void createNewSession() {
-        mLocalBroadcastManager.registerReceiver(mUpdateReceiver, new IntentFilter(ACTION_DATA_AVAILABLE));
+        mLocalBroadcastManager.registerReceiver(mUpdateReceiver, makeGattUpdateIntentFilter());
+        bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
+
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
-        bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
         Toast.makeText(getApplicationContext(), "New Session created", Toast.LENGTH_SHORT).show();
     }
 
     /**
-     *
+     *  This method tries to read the current JSON-file and create a ArrayList from it.
+     *  If there isn't any JSON-file a new session will be created.
      */
     public void continueSession() throws IOException {
 
@@ -201,15 +211,17 @@ public class StorageMainService extends Service {
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                createNewSession();
             } finally {
                 if (fileReader != null)
                     fileReader.close();
                 if (reader != null)
                     reader.close();
             }
-
-        } else
-            Toast.makeText(getApplicationContext(), "No old session found", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "No old session found, new session created instead", Toast.LENGTH_SHORT).show();
+            createNewSession();
+        }
     }
 
     /**
@@ -233,11 +245,10 @@ public class StorageMainService extends Service {
                 loc = new PointF(0, 0);
             }
 
-                // receivedData will be scaled between -1.5 and -.5
+            // receivedData will be scaled between -1.5 and -.5
             dataMeasured.add(new CompactData(loc, receivedData));
                 Log.d(getClass().getSimpleName(), loc.toString());
             Log.d(TAG, "Data " + receivedData);
-
 
         } else
             Toast.makeText(getApplicationContext(), "No measure session is started", Toast.LENGTH_SHORT).show();
@@ -245,10 +256,11 @@ public class StorageMainService extends Service {
     }
 
     /**
-     *
+     *  Scales the data down (if necessary) and writes it to a JSON-file.
      */
     public void save() {
-        scaleAll(dataMeasured);
+        scaleData(dataMeasured);
+        scaleLocation(dataMeasured);
         try {
             writeInJsonFile(dataMeasured);
         } catch (IOException e) {
@@ -297,12 +309,64 @@ public class StorageMainService extends Service {
     }
 
     /**
+     *  This method scales all data values in a list thus the minimum data value is -1.5 and the maximum
+     *  data value is -.5
+     * @param list ArrayList with CompactData
+     */
+    private void scaleData(ArrayList<CompactData> list) {
+
+        double maxData = calculateMaxDataVal(list);
+        double minData = calculateMinDataVal(list);
+        double dataFactor = maxData - minData;
+
+        if (dataFactor == 0)
+            dataFactor = maxData;
+
+        for (CompactData item : list) {
+            item.setZ((item.getData() - minData) / dataFactor - 1.5);
+            Log.d(TAG, "z = " + item.getZ());
+
+        }
+    }
+
+    /**
+     * This method scales all location values in a list thus the minimum location value is .5 and
+     * the maximum location value is 29.5 for the x-values and 49.5 for the y values.
+     *
+     * @param list ArrayList with CompactData
+     */
+    private void scaleLocation(ArrayList<CompactData> list) {
+
+        double[] minValues = calculateMinValues(list);
+        double[] maxValues = calculateMaxDistance(list);
+
+        // Checks whether the location values are needed to scale down
+        if (maxValues[0] > 29 || maxValues[1] > 49) {
+
+            double xLocationFactor = (maxValues[0] - minValues[0]);
+            double yLocationFactor = (maxValues[1] - minValues[1]);
+
+            if (yLocationFactor == 0)
+                yLocationFactor = 1;
+
+            if (xLocationFactor == 0)
+                xLocationFactor = 1;
+
+            for (CompactData item : list) {
+                item.setX((item.getOriginalX() - minValues[0]) / xLocationFactor * 29 + 0.5);
+                item.setY((item.getOriginalY() - minValues[1]) / yLocationFactor * 49 + 0.5);
+            }
+        }
+    }
+
+
+    /**
      * This method changes the values of the Location for a easier triangulation by webVR
      * Current Implementation: scales all variables to mach SCALE (the biggest value in list = SCALE
      * afterwards)
      *
      * @param list List to be normalized
-     */
+     *
     private void scaleAll(ArrayList<CompactData> list) {
 
         double maxData = calculateMaxDataVal(list);
@@ -341,17 +405,16 @@ public class StorageMainService extends Service {
         double factorY = (maxDist[1] - minVals[1]) / SCALEFACTOR_Y;
         if (factorY == 0)
             factorY = 1;
-*/
+*
         // Scale the list values with the determined factors
         for (CompactData item : list) {
             //  item.setX( (item.getOriginalX() - minVals[0]) / factorX + .5); // = item.getOriginal X / maxDist[0] * SCALEFACTOR_X
             //  item.setY( (item.getOriginalY() - minVals[1]) / factorY + .5);
             item.setZ((item.getData() - minData) / dataFactor - 1.5);
             Log.d(TAG, "z = " + item.getZ());
-            //s  Log.d(TAG, "" + dataFactor);
         }
 
-    }
+    }*/
 
 
     /**
@@ -408,11 +471,7 @@ public class StorageMainService extends Service {
             maxY = Math.max(maxY, Math.abs(item.getOriginalY()));
         }
 
-        if (!DISTORT) {
-            maxX = Math.max(maxX, maxY);
-        }
-
-        return DISTORT ? new double[]{maxX, maxY} : new double[]{maxX, maxX};
+        return new double[]{maxX, maxY};
 
     }
 

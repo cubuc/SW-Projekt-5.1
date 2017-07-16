@@ -12,7 +12,7 @@
 \title{Virtual Reality for Sensor Data Analysis}
 \subtitle{SW-Projekt SS 2017 Gruppe 5.1}
 \author{Gero Birkh\"olzer \and Johannes Blank \and Alexej Gluschkow \\ \and Fabian Klopfer \and Lisa-Maria Mayer}
-\date{Pr\"asentation am 17. Juni 2017}
+\date{Endpr\"asentation, 17. Juni 2017}
 
 
 
@@ -56,14 +56,15 @@
 \end{frame}
 
 \subsubsection{Tracking}
-%TODO
 \begin{frame}
 \frametitle{Tracking}
 \begin{itemize}
-  \item fair tracking by GPS \& network provider
-  \item finer granularity tracking using RasPi \& OpenWRT
-  % Umgesetzt durch RasPi \& OpenWRT
-  \item	trilaterating AP's RSSI
+  	\item	Coarse tracking by GPS / Network Provider
+ 	\item 	Finer position tracking by RSSI trilateration using wifi access points:\\
+			\begin{center}
+			\includegraphics[scale=0.5]{trilateration.png}
+			\end{center}
+	
 \end{itemize}
 \end{frame}
 

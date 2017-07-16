@@ -11,13 +11,24 @@ import android.util.JsonWriter;
 import java.io.IOException;
 
 
+/**
+ * Class holding information about an wifi access point
+ */
 class WifiAP implements Parcelable {
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        /**
+         * 
+         * @param in 
+         */
         public WifiAP createFromParcel(Parcel in) {
             return new WifiAP(in);
         }
 
+        /**
+         * 
+         * @param size 
+         */
         public WifiAP[] newArray(int size) {
             return new WifiAP[size];
         }
@@ -31,6 +42,15 @@ class WifiAP implements Parcelable {
     private boolean tracked = false;
     private int RSSI = 0;
 
+    /**
+     * 
+     * @param SSID 
+     * @param BSSID 
+     * @param location 
+     * @param A 
+     * @param n 
+     * @param tracked 
+     */
     WifiAP(String SSID, String BSSID, PointF location, double A, double n, boolean tracked) {
         this.SSID = SSID;
         this.BSSID = BSSID;
@@ -40,6 +60,10 @@ class WifiAP implements Parcelable {
         this.tracked = tracked;
     }
 
+    /**
+     * 
+     * @param scan 
+     */
     WifiAP(ScanResult scan) {
         this.BSSID = scan.BSSID;
         this.location = new PointF();
@@ -49,6 +73,10 @@ class WifiAP implements Parcelable {
         update(scan);
     }
 
+    /**
+     * 
+     * @param in 
+     */
     private WifiAP(Parcel in) {
         SSID = in.readString();
         BSSID = in.readString();
@@ -58,6 +86,10 @@ class WifiAP implements Parcelable {
         tracked = (boolean) in.readValue(getClass().getClassLoader());
     }
 
+    /**
+     * 
+     * @param reader 
+     */
     WifiAP(JsonReader reader) throws IOException {
         float posX = 0;
         float posY = 0;
@@ -106,6 +138,10 @@ class WifiAP implements Parcelable {
         n = varN;
     }
 
+    /**
+     * Update this AP based on a scan result
+     * @param scan
+     */
     void update(ScanResult scan) {
         if(!BSSID.equals(scan.BSSID))
             return;
@@ -116,38 +152,66 @@ class WifiAP implements Parcelable {
 
     }
 
+    /**
+     * 
+     */
     String getSSID() {
         return SSID;
     }
 
+    /**
+     * 
+     */
     String getBSSID() {
         return BSSID;
     }
 
+    /**
+     * 
+     */
     double getDistance() {
         return distance;
     }
 
+    /**
+     * 
+     */
     public PointF getLocation() {
         return location;
     }
 
+    /**
+     * 
+     */
     public double getA() {
         return A;
     }
 
+    /**
+     * 
+     */
     double getN() {
         return n;
     }
 
+    /**
+     * 
+     */
     boolean isTracked() {
         return tracked;
     }
 
+    /**
+     * 
+     */
     public int getRSSI() {
         return RSSI;
     }
 
+    /**
+     * 
+     * @param tracked 
+     */
     public void setTracked(boolean tracked) {
         this.tracked = tracked;
     }
@@ -169,6 +233,8 @@ class WifiAP implements Parcelable {
     }
 
     /**
+     * @param dest
+     * @param flags
      * {@inheritDoc}
      */
     @Override
@@ -181,6 +247,10 @@ class WifiAP implements Parcelable {
         dest.writeValue(tracked);
     }
 
+    /**
+     * 
+     * @param writer 
+     */
     void writeToJSON(JsonWriter writer) throws IOException {
         writer.beginObject();
         writer.name("SSID").value(SSID);

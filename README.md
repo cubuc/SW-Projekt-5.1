@@ -1,5 +1,4 @@
-# Software Project 2017: Project 5, Group 1
-## University of Constance
+# Software Project 2017 @ the University of Constance: Project 5, Group 1
 
 ## Project Description  
 [Project Information](https://docs.google.com/document/d/1NU3C4fPVg0pZlbhVc_suEemk-JdRqWV59VsLgBA2hd8/edit)  

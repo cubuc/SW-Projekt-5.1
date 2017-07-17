@@ -36,7 +36,6 @@ import kn.uni.inf.sensortagvr.ble.BluetoothLEService;
 import kn.uni.inf.sensortagvr.ble.Sensor;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService;
 
-import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.ACTION_DATA_AVAILABLE;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_DATA;
 import static kn.uni.inf.sensortagvr.ble.BluetoothLEService.EXTRA_SENSOR;
 
@@ -80,7 +79,7 @@ public class StorageMainService extends Service {
             trackingService = null;
         }
     };
-
+    private boolean mBound = false;
     // Saves all measured data in a session
     private ArrayList<CompactData> dataMeasured;
     private boolean sessionStarted = false;
@@ -134,8 +133,10 @@ public class StorageMainService extends Service {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         path = getFilesDir().getAbsolutePath() + File.separator + "data.json";
         Intent intent = new Intent(this, TrackingManagerService.class);
-        if (trackingService == null)
+        if (!mBound) {
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            mBound = true;
+        }
     }
 
 
@@ -153,8 +154,10 @@ public class StorageMainService extends Service {
      */
     @Override
     public boolean onUnbind(Intent intent) {
-        if (trackingService != null)
+        if (mBound) {
             unbindService(mConnection);
+            mBound = false;
+        }
         return super.onUnbind(intent);
     }
 
@@ -165,7 +168,10 @@ public class StorageMainService extends Service {
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
-        bindService(new Intent(this, TrackingManagerService.class), mConnection, BIND_AUTO_CREATE);
+        if (!mBound) {
+            bindService(new Intent(this, TrackingManagerService.class), mConnection, BIND_AUTO_CREATE);
+            mBound = true;
+        }
         try {
             continueSession();
         } catch (IOException e) {
@@ -179,8 +185,10 @@ public class StorageMainService extends Service {
      */
     public void createNewSession() {
         mLocalBroadcastManager.registerReceiver(mUpdateReceiver, makeGattUpdateIntentFilter());
-        bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
-
+        if (!mBound) {
+            bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
+            mBound = true;
+        }
         dataMeasured = new ArrayList<>();
         sessionStarted = true;
         Toast.makeText(getApplicationContext(), "New Session created", Toast.LENGTH_SHORT).show();
@@ -197,8 +205,11 @@ public class StorageMainService extends Service {
         FileReader fileReader = null;
         if (data.isFile()) {
             mLocalBroadcastManager.registerReceiver(mUpdateReceiver, makeGattUpdateIntentFilter());
-            bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
 
+            if (!mBound) {
+                bindService(new Intent(this, TrackingManagerService.class), mConnection, 0);
+                mBound = true;
+            }
             try {
                 Gson gson = new Gson();
                 fileReader = new FileReader(path);
@@ -274,7 +285,10 @@ public class StorageMainService extends Service {
     public void closeMeasureSession() {
         if (sessionStarted) {
             mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
-            unbindService(mConnection);
+            if (mBound) {
+                unbindService(mConnection);
+                mBound = false;
+            }
             stopService(new Intent(this, TrackingManagerService.class));
             sessionStarted = false;
             Log.i(TAG, "unbound & stopped tracking manager");

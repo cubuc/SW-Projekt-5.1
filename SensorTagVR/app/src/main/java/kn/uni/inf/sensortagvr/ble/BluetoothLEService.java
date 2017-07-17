@@ -183,7 +183,6 @@ public class BluetoothLEService extends Service {
      */
     public BluetoothLEService() {
     }
-    // TODO Stor Svc connection & lifecycle
 
     /**
      * Parses the raw data and sends broadcasts dependent on the type of sensor.
@@ -428,9 +427,9 @@ public class BluetoothLEService extends Service {
     }
 
     /**
-     * @param s
-     * @param power
-     * @param notification
+     * @param s the sensor that is turned on or off or fet/unset notifications
+     * @param power true for on, false for off
+     * @param notification true for on, false for off
      */
     private void updateLists(Sensor s, boolean power, boolean notification) {
         if (power) {

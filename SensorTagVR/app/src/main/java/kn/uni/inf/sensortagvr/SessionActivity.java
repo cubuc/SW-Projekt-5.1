@@ -40,7 +40,7 @@ public class SessionActivity extends Activity implements UnsavedDataDialog.Notic
                 try{
                     storageService.continueSession();
                 } catch (IOException e) {
-                    Toast.makeText(getApplicationContext(), "Failed to continue Session", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Failed to continue Session", Toast.LENGTH_SHORT).show();
                     finish();
                 }
 

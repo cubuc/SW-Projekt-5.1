@@ -89,14 +89,13 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         return deviceSet.size();
     }
 
-    /**
-     *
-     */
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ListitemDeviceBinding binding;
 
         /**
-         * @param binding
+         * @param binding the data binding that shall be associated with this ViewHolder
+         *                see data binding library doc for more info
          */
         ViewHolder(ListitemDeviceBinding binding) {
             super(binding.getRoot());
@@ -104,7 +103,7 @@ public class LeDeviceListAdapter extends RecyclerView.Adapter<LeDeviceListAdapte
         }
 
         /**
-         * @param li
+         * @param li the list item that shall be filled by the data binding
          */
         void bind(ScanListItem li) {
             binding.setDeviceItem(li);

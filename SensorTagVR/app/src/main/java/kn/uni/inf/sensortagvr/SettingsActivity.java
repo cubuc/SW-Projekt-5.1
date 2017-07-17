@@ -21,7 +21,7 @@ import kn.uni.inf.sensortagvr.tracking.TrackingTestActivity;
  */
 
 public class SettingsActivity extends AppCompatActivity {
-    BluetoothLEService mBluetoothLEService = null;
+    private BluetoothLEService mBluetoothLEService = null;
     /**
      * Handles the connection with the BluetoothLEService
      */
@@ -52,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
             mBluetoothLEService = null;
         }
     };
+    private boolean mBound = false;
 
     /**
      * {@inheritDoc}
@@ -61,7 +62,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         startService(new Intent(this, BluetoothLEService.class));
-        bindService(new Intent(this, BluetoothLEService.class), mServiceConnection, BIND_AUTO_CREATE);
+        if (!mBound) {
+            bindService(new Intent(this, BluetoothLEService.class), mServiceConnection, BIND_AUTO_CREATE);
+            mBound = true;
+        }
 
         Button trackButton = (Button) findViewById(R.id.button_track);
         trackButton.setOnClickListener(new View.OnClickListener() {
@@ -83,13 +87,18 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mBluetoothLEService.getmGatt() == null) {
-                    unbindService(mServiceConnection);
+                    if (mBound) {
+                        unbindService(mServiceConnection);
+                        mBound = false;
+                    }
                     mBluetoothLEService = null;
                     startActivity(new Intent(getApplicationContext(),
                             ScanListActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                 } else {
-                    unbindService(mServiceConnection);
-                    mBluetoothLEService = null;
+                    if (mBound) {
+                        unbindService(mServiceConnection);
+                        mBound = false;
+                    }
                     startActivity(new Intent(getApplicationContext(),
                             LiveDataActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                 }
@@ -101,8 +110,9 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mBluetoothLEService != null) {
+        if (mBluetoothLEService != null && mBound) {
             unbindService(mServiceConnection);
+            mBound = false;
         }
     }
 }

@@ -17,8 +17,6 @@ import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_CONF;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_DATA;
 import static kn.uni.inf.sensortagvr.ble.TIUUIDs.UUID_OPT_SERV;
 
-// TODO New Session Toast, keine neg werte APConfigActivity, Temperatur
-
 
 public enum Sensor {
 
@@ -49,7 +47,7 @@ public enum Sensor {
             float ambient = extractAmbientTemperature(value);
             float target = extractTargetTemperature(value, ambient);
             float targetNewSensor = extractTargetTemperatureTMP007(value);
-            return targetNewSensor + (targetNewSensor / 15);
+            return targetNewSensor;
         }
 
 
@@ -58,7 +56,7 @@ public enum Sensor {
          */
         private float extractAmbientTemperature(byte[] v) {
             int offset = 2;
-            return (float) (shortUnsignedAtOffset(v, offset) / 128.0);
+            return (float) ((shortUnsignedAtOffset(v, offset) / 128.0));
         }
 
 
@@ -96,7 +94,7 @@ public enum Sensor {
          */
         private float extractTargetTemperatureTMP007(byte[] v) {
             int offset = 0;
-            return (float) (shortUnsignedAtOffset(v, offset) / 128.0);
+            return (float) ((shortUnsignedAtOffset(v, offset) / 128.0) * 1.2);
         }
     },
 
@@ -273,7 +271,7 @@ public enum Sensor {
         }*/;
 
 
-    protected static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
+    static final Sensor[] SENSOR_LIST = {IR_TEMPERATURE, LUXMETER, HUMIDITY, BAROMETER};
     private static final byte ENABLE_SENSOR_CODE = 1;
     private final String name;
     private final UUID service;

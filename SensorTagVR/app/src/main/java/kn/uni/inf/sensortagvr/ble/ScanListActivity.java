@@ -29,7 +29,6 @@ import kn.uni.inf.sensortagvr.R;
  */
 public class ScanListActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 5000;
-    private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothLeScanner mLEScanner;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler myHandler;
@@ -37,7 +36,7 @@ public class ScanListActivity extends AppCompatActivity {
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private LeDeviceListAdapter mLeDeviceListAdapter;
-    final ScanCallback mScanCallback = new ScanCallback() {
+    private final ScanCallback mScanCallback = new ScanCallback() {
         /**
          * {@inheritDoc}
          */

@@ -101,25 +101,11 @@ public class TrackingTestActivity extends AppCompatActivity {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    /**
-     * 
-     */
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mConnection);

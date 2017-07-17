@@ -12,7 +12,7 @@ function loadData(loadedData) {
   var verticies = new Array();
   // get the data from the file and store it in an array
   for (var i = 0; i < loadedData.length; i++) {
-    var vert = new THREE.Vector3(Number(loadedData[i].x), Number(loadedData[i].y), Number(loadedData[i].z));
+    var vert = new THREE.Vector3(Number(loadedData[i].y), Number(loadedData[i].x), Number(loadedData[i].z));
     verticies[i] = vert;
   }
 

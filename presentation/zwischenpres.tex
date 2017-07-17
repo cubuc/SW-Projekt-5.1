@@ -64,19 +64,39 @@
 			\begin{center}
 			\includegraphics[scale=0.5]{trilateration.png}
 			\end{center}
-	
+
 \end{itemize}
 \end{frame}
 
 \subsection{WebVR}
-% TODO
+% TODO Maybe some pics ...
 \begin{frame}
-\frametitle{Web Application}
+\frametitle{WebVR}
 \begin{itemize}
-  \item rudimentary designed 3D world of the gym
-  \item 2 diffrent visualization possibilities
-  \item switching between 3D and 3D stereoscopic by on screen button
-  \item moving \& switching by a bluetooth gamepad
+  \item WebVR a javascript API to get VR into the browser \pause
+%  \item Any VR headset or smartphone with Chrome or Firefox
+  \item Basic 3D model of a gym \pause
+  \item 2 different visualization possibilities
+  \begin{itemize}
+    \item datapoints
+    \item plane
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{WebVR}
+\begin{itemize}
+  \item Interpolation of the Data \pause
+  \item Using Inverse distance weighted (IDW) interpolation:
+  \begin{center}
+  \includegraphics[scale=0.3]{IDW.png}
+  \end{center}
+  \pause
+  \item Formula:
+  $$
+  u(x) = \frac{\sum_{i=1}^n w_i(x)u_i}{\sum_{i=1}^n w_i(x)}
+  $$
 \end{itemize}
 \end{frame}
 

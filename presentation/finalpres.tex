@@ -88,10 +88,32 @@
 \subsection{WebVR}
 
 \begin{frame}
-\frametitle{Struktur}
-\framesubtitle{WebVR}
+\frametitle{WebVR}
 \begin{itemize}
-  \item blabla
+  \item WebVR eine javascript API um VR im browser darzustellen \pause
+%  \item Any VR headset or smartphone with Chrome or Firefox
+  \item Einfaches 3d Modell einer Sporthalle \pause
+  \item 2 verschiende Visualisierungen
+  \begin{itemize}
+    \item Daten punkte
+    \item Ebene
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{WebVR}
+\begin{itemize}
+  \item Interpoliere die Daten \pause
+  \item Nutze Inverse Distanzgewichtung's interpolation:
+  \begin{center}
+  \includegraphics[scale=0.3]{IDW.png}
+  \end{center}
+  \pause
+  \item Formel:
+  $$
+  u(x) = \frac{\sum_{i=1}^n w_i(x)u_i}{\sum_{i=1}^n w_i(x)}
+  $$
 \end{itemize}
 \end{frame}
 

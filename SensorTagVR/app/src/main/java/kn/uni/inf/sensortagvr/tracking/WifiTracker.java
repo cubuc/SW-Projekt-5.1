@@ -24,20 +24,21 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * Class holding information about wifi access points, providing location calculation
+ */
 class WifiTracker {
 
     private final WifiManager wifiManager;
     private Map<String, WifiAP> aps = new HashMap<>();
 
-    /**
-     * @param wifiManager
-     */
+    /** @param wifiManager */
     WifiTracker(WifiManager wifiManager) {
         this.wifiManager = wifiManager;
     }
 
     /**
-     *
+     * Update all access points
      */
     void update() {
         List<ScanResult> results =  wifiManager.getScanResults();
@@ -66,7 +67,7 @@ class WifiTracker {
     }
 
     /**
-     *
+     * Mark an access point as relevant for tracking
      * @param ap
      */
     boolean trackAP(WifiAP ap) {
@@ -78,7 +79,7 @@ class WifiTracker {
     }
 
     /**
-     *
+     *  Calculate the device location based on access point RSSI
      */
     PointF calculateLocation() {
         this.update();

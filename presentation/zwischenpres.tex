@@ -12,7 +12,7 @@
 \title{Virtual Reality for Sensor Data Analysis}
 \subtitle{SW-Projekt SS 2017 Gruppe 5.1}
 \author{Gero Birkh\"olzer \and Johannes Blank \and Alexej Gluschkow \\ \and Fabian Klopfer \and Lisa-Maria Mayer}
-\date{Zwischenpr\"asentation am 12. Juni 2017}
+\date{Endpr\"asentation, 17. Juni 2017}
 
 
 
@@ -35,174 +35,76 @@
 \end{frame}
 
 
-\section{Einleitung}
+\section{Use Case}
 
-\subsection{Aufgabenstellung}
 
+
+% ENGLISCH FREUNDE.... ENGLISCH!
+
+
+
+
+
+\section{App \& WebVR}
+
+\subsection{Android App}
+
+\subsubsection{Overview}
+\begin{frame} % !!!!! TODO Flow diagramm !!!!!!
+\frametitle{Overview}
+\includegraphics[width=\textwidth]{../doc/SDD/pics/composite_app.png}
+\end{frame}
+
+\subsubsection{Tracking}
 \begin{frame}
-\frametitle{Einleitung}
-\framesubtitle{Aufgabenstellung}
+\frametitle{Tracking}
 \begin{itemize}
-	\item Visualisierung von mindestens einem Sensorwert (z.B. Temperatur) in Abh\"angigkeit von seiner Position.
-	\item Verschiedene Visualisierungsm\"oglichkeiten der Sensordaten.
-	\item Visualisierung in einer vorgefertigten 3D-Umgebung, basierend auf der Originalumgebung.
+  	\item	Coarse tracking by GPS / Network Provider
+ 	\item 	Finer position tracking by RSSI trilateration using wifi access points:\\
+			\begin{center}
+			\includegraphics[scale=0.5]{trilateration.png}
+			\end{center}
+
 \end{itemize}
 \end{frame}
 
-\subsection{Idee} %Requirements
-
+\subsection{WebVR}
+% TODO Maybe some pics ...
 \begin{frame}
-\frametitle{Einleitung}
-\framesubtitle{Idee}
+\frametitle{WebVR}
 \begin{itemize}
-  \item Aufzeichnen von Daten mit der App.
-  \item Positionstracking \"uber das Smartphone.
-  \item Anzeigen der aufgenommenen Daten in der WebVR Umgebung.
-\end{itemize}
-\end{frame}
-
-\subsection{Umsetzung} %SDD
-
-\begin{frame}
-\frametitle{Einleitung}
-\framesubtitle{Umsetzung}
-\begin{itemize}
-	\item Aufspaltung in zwei Teile: \pause
-  \begin{enumerate}
-    \item App f\"ur die Verbindung zum Sensor, Ortsbestimmung und Datenspeicherung.
-    \item Webanwendung zur Darstellung der Daten und der 3D-Umgebung.
-  \end{enumerate}
-\end{itemize}
-\end{frame}
-
-%\begin{frame}
-%\frametitle{Composite Diagram}
-%\includegraphics[width=\textwidth]{../doc/SDD/pics/composite_app.png}
-%\end{frame}
-
-
-\section{GUI}
-
-\begin{frame}
-\frametitle{GUI}
-\framesubtitle{Bisherige Funktionen}
-\begin{itemize}
-  \item Splash Screen beim Starten der App
-  \item Grundlegende Strukturierung durch Tableiste
-  \item Starten des Browsers, um Webanwendung auszuf\"uhren
-  \item Sendet Intent an den Bluetooth-Manager, um Scan zu starten und Live-Data anzuzeigen.
+  \item WebVR a javascript API to get VR into the browser \pause
+%  \item Any VR headset or smartphone with Chrome or Firefox
+  \item Basic 3D model of a gym \pause
+  \item 2 different visualization possibilities
+  \begin{itemize}
+    \item datapoints
+    \item plane
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{GUI}
-\framesubtitle{N\"achste Schritte}
+\frametitle{WebVR}
 \begin{itemize}
-  \item Tab-Activities zu Fragments umwandeln
-  \item LiveData in RecordActivity einbinden
-  \item SettingsActivity: Tracking- und Bluetooth-Funktionen sinnvoll integrieren
-  \item Layout vereinheitlichen
+  \item Interpolation of the Data \pause
+  \item Using Inverse distance weighted (IDW) interpolation:
+  \begin{center}
+  \includegraphics[scale=0.3]{IDW.png}
+  \end{center}
+  \pause
+  \item Formula:
+  $$
+  u(x) = \frac{\sum_{i=1}^n w_i(x)u_i}{\sum_{i=1}^n w_i(x)}
+  $$
 \end{itemize}
 \end{frame}
 
-
-\section{Bluetooth-Manager}
-
-
+\section{live demonstration}
+% Miracast
 \begin{frame}
-\frametitle{Bluetooth-Manager}
-\framesubtitle{Bisherige Funktionen}
-\begin{itemize}
-  \item Scannen nach TI CC2650 MCU(s)
-  \item Verbinden zum GATT Server eines TI CC2650 MCU
-  \item Anzeigen erhaltener Sensordaten in einer Live-Ansicht
-  \item Senden der Sensordaten (via LocalBroadcastManager) bzw. starten des IntentService
-\end{itemize}
-\end{frame}
+\frametitle{live demonstration using miracast or equal}
 
-\begin{frame}
-\frametitle{Bluetooth-Manager}
-\framesubtitle{N\"achste Schritte}
-\begin{itemize}
-  \item Debuggen (insbes. Scan)
-  \item Code kommentieren
-\end{itemize}
-\end{frame}
-
-
-\section{Storage-Manager}
-
-\begin{frame}
-\frametitle{Storage-Manager}
-\framesubtitle{Bisherige Funktionen}
-\begin{itemize}
-  \item Speichert den letzten Empfangenen Intent
-  \item Skaliert die Daten und schreibt diese in eine JSON-File
-  \item Bindet Tracking-Manager, noch kein Datentransfer von diesem
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Storage-Manager}
-\framesubtitle{N\"achste Schritte}
-\begin{itemize}
-  \item Webserver einrichten
-  \item Dateien auf Webserver hochladen
-  \item Positionsdaten einbinden
-  \item Code kommentieren
-\end{itemize}
-\end{frame}
-
-\section{Tracking-Manager}
-
-\begin{frame}
-\frametitle{Tracking-Manager}
-\framesubtitle{Bisherige Funktionen}
-\begin{itemize}
-  \item Grobe Positionsbestimmung durch GPS oder Networkprovider
-  \item	Genauere Positionsbestimmung durch Trilateration von WLAN-Accesspoints
-  \item	Abstandsbestimmung duch RSSI
-  \item	APs k\"onnen individuell konfiguriert und f\"ur das Tracking selektiert werden.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Tracking-Manager}
-\framesubtitle{N\"achste Schritte}
-\begin{itemize}
-  \item TESTEN\\
-  		(Raum w\"ahlen, ggf. APs installieren und konfigurieren)
-  \item Verbesserungsm\"oglichkeiten:
-  		\begin{itemize}
-  		\item	Smoothing der RSSI-Daten
-  		\item	Kombination mit Accelerometer und Gyrometer Daten
-      \item Code kommentieren
-  		\end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\section{Webanwendung}
-
-\begin{frame}
-\frametitle{Webanwendung}
-\framesubtitle{Bisherige Funktionen}
-\begin{itemize}
-  \item Umstellung auf stereoskopische 3D-Ansicht m\"oglich
-  \item Rudiment\"are 3D-Welt
-  \item Bewegung mit dem Gamepad m\"oglich
-  \item 2 verschiedene Visualisierungsm\"oglichkeiten der Daten
-  \item Umstellung der Visualisieren mit Gamepad m\"oglich
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Webanwendung}
-\framesubtitle{N\"achste Schritte}
-\begin{itemize}
-  \item Modellierung des Raumes in Blender
-  \item Code kommentieren
-\end{itemize}
 \end{frame}
 
 \end{document}

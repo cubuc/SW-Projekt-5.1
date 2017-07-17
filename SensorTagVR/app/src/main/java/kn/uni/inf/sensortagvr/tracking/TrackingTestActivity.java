@@ -25,6 +25,9 @@ import java.util.Comparator;
 import kn.uni.inf.sensortagvr.R;
 import kn.uni.inf.sensortagvr.tracking.TrackingManagerService.TrackingBinder;
 
+/**
+ * 
+ */
 public class TrackingTestActivity extends AppCompatActivity {
 
     private final int AP_SETTINGS_REQUEST = 1;
@@ -33,6 +36,8 @@ public class TrackingTestActivity extends AppCompatActivity {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         /**
+         * @param className
+         * @param service
          * {@inheritDoc}
          */
         @Override
@@ -45,6 +50,7 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
 
         /**
+         * @param arg0
          * {@inheritDoc}
          */
         @Override
@@ -54,6 +60,7 @@ public class TrackingTestActivity extends AppCompatActivity {
     };
 
     /**
+     * @param savedInstanceState
      * {@inheritDoc}
      */
     @Override
@@ -66,6 +73,10 @@ public class TrackingTestActivity extends AppCompatActivity {
         lv.setClickable(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /**
+             * @param arg0
+             * @param arg1
+             * @param position
+             * @param arg3
              * {@inheritDoc}
              */
             @Override
@@ -80,6 +91,9 @@ public class TrackingTestActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -103,6 +117,9 @@ public class TrackingTestActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * 
+     */
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mConnection);
@@ -111,6 +128,9 @@ public class TrackingTestActivity extends AppCompatActivity {
 
 
     /**
+     * @param requestCode
+     * @param resultCode
+     * @param data
      * {@inheritDoc}
      */
     @Override
@@ -128,13 +148,24 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 
+     */
     private class WifiAPAdapter extends ArrayAdapter<WifiAP> {
 
+        /**
+         * 
+         * @param context 
+         * @param aps 
+         */
         WifiAPAdapter(Context context, ArrayList<WifiAP> aps) {
             super(context, 0, aps);
         }
 
         /**
+         * @param position
+         * @param convertView
+         * @param parent
          * {@inheritDoc}
          */
         @NonNull
@@ -159,12 +190,22 @@ public class TrackingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 
+     */
     private class LocationUpdater implements Runnable {
         private Handler handler;
         private TextView textView;
         private WifiAPAdapter adapter;
         private TrackingManagerService trackingService;
 
+        /**
+         * 
+         * @param handler 
+         * @param textView 
+         * @param list 
+         * @param trackingService 
+         */
         LocationUpdater(Handler handler, TextView textView, ListView list, TrackingManagerService trackingService) {
             this.handler = handler;
             this.textView = textView;
@@ -190,6 +231,11 @@ public class TrackingTestActivity extends AppCompatActivity {
             adapter.clear();
             adapter.addAll(trackingService.getWifiAPs());
             adapter.sort(new Comparator<WifiAP>() {
+                /**
+                 * 
+                 * @param lhs 
+                 * @param rhs 
+                 */
                 @Override
                 public int compare(WifiAP lhs, WifiAP rhs) {
                     // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending

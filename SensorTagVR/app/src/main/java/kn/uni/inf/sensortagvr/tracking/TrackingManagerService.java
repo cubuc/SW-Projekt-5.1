@@ -36,9 +36,7 @@ public class TrackingManagerService extends Service {
 
     private LocationManager locationManager = null;
     private LocationListener locationListener = new LocationListener() {
-        /**
-         * @param location
-         */
+        /** @param location */
         public void onLocationChanged(Location location) {
             lastGPSPosition = location;
         }
@@ -91,6 +89,10 @@ public class TrackingManagerService extends Service {
         this.registerReceiver(br, filter);
     }
 
+    /**
+     * 
+     * @param intent 
+     */
     @Override
     public IBinder onBind(Intent intent) {
         try {
@@ -124,6 +126,9 @@ public class TrackingManagerService extends Service {
         return false;
     }
 
+    /**
+     * 
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -140,10 +145,17 @@ public class TrackingManagerService extends Service {
         unregisterReceiver(br);
     }
 
+    /**
+     * 
+     */
     public List<WifiAP> getWifiAPs() {
         return wifiTracker.getWifiAPs(false);
     }
 
+    /**
+     * 
+     * @param ap 
+     */
     public boolean trackAP(WifiAP ap) {
         return wifiTracker.trackAP(ap);
     }
@@ -160,6 +172,9 @@ public class TrackingManagerService extends Service {
         return lastPostion == null ? new PointF(0, 0) : lastPostion;
     }
 
+    /**
+     * 
+     */
     public Location getAbsolutePosition() throws Exception {
         //Earth’s radius, sphere
         final double R = 6378137.0;
@@ -179,6 +194,9 @@ public class TrackingManagerService extends Service {
         return loc;
     }
 
+    /**
+     * 
+     */
     public Location calibrateOrigin() throws Exception{
         if(lastGPSPosition != null)
             origin = lastGPSPosition;
@@ -188,6 +206,9 @@ public class TrackingManagerService extends Service {
         return lastGPSPosition;
     }
 
+    /**
+     * 
+     */
     public class TrackingBinder extends Binder {
         /**
          *
@@ -197,16 +218,27 @@ public class TrackingManagerService extends Service {
         }
     }
 
+    /**
+     * 
+     */
     class LocationUpdater implements Runnable {
 
         private Handler handler;
         private WifiTracker wifiTracker;
 
+        /**
+         * 
+         * @param handler 
+         * @param wifiTracker 
+         */
         public LocationUpdater(Handler handler, WifiTracker wifiTracker) {
             this.handler = handler;
             this.wifiTracker = wifiTracker;
         }
 
+        /**
+         * 
+         */
         @Override
         public void run() {
             // TODO remove Infinite loop

@@ -1,0 +1,124 @@
+\documentclass{beamer}
+
+\usepackage[ngerman,english]{babel}
+\usepackage[utf8]{inputenc}
+\usetheme{Montpellier}
+\usepackage{tikz}
+
+\definecolor{beamer@blendedblue}{rgb}{0.3,0.5,0.6}
+
+\setbeamercolor{normal text}{fg=black, bg=white}
+\setbeamercolor{alerted text}{fg=red}
+\setbeamercolor{example text}{fg=green!50!blue}
+
+\title{Virtual Reality for Sensor Data Analysis}
+\subtitle{SW-Projekt SS 2017 Gruppe 5.1}
+\author{Gero Birkhölzer \and Johannes Blank \and Alexej Gluschkow \\ \and Fabian Klopfer \and Lisa-Maria Mayer}
+\date{Endpräsentation am 25. Juli 2017}
+
+
+
+\addtobeamertemplate{frametitle}{}{%
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north east,yshift=2pt] at (current page.north east) {\includegraphics[height=0.8cm]{logo.png}};
+\end{tikzpicture}}
+
+
+\begin{document}
+
+
+\frame{\titlepage}
+
+
+
+\begin{frame}
+  \frametitle{Inhalt}
+  \tableofcontents%[hideallsubsections]
+\end{frame}
+
+
+\section{Einleitung}
+
+\subsection{Use Case}
+
+\begin{frame}
+\frametitle{Use Case}
+\begin{itemize}
+	\item  Fachbereich Sport will Sporthalle sanieren lassen
+	\item Brauchen "Beweise", dass Sanierung notwendig ist
+	\item U.a: Lüftungsanlage sanierungsbedürftig
+	\item Temperaturdaten aufnehmen und den Verantwortlichen in anschaulicher Form präsentieren
+	\item Halle wird renoviert, alle sind glücklich
+\end{itemize}
+\end{frame}
+
+
+\subsection{Grundidee} %SDD
+
+\begin{frame}
+\frametitle{Grundidee}
+\begin{itemize}
+	\item Aufspaltung in zwei Teile: \pause
+  \begin{enumerate}
+    \item App für die Verbindung zum Sensor, Ortsbestimmung und Datenspeicherung.
+    \item Webanwendung zur Darstellung der Daten und der 3D-Umgebung.
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\section{Struktur der App}
+
+\begin{frame}
+\frametitle{Struktur}
+\framesubtitle{Übersicht}
+	\includegraphics[width=\textwidth]{diagram/flow.png}
+\end{frame}
+
+\subsection{TrackingManager}
+
+\begin{frame}
+\frametitle{Struktur}
+\framesubtitle{Tracking Manager}
+\begin{itemize}
+  \item blabla
+\end{itemize}
+\end{frame}
+
+\subsection{WebVR}
+
+\begin{frame}
+\frametitle{Struktur}
+\framesubtitle{WebVR}
+\begin{itemize}
+  \item blabla
+\end{itemize}
+\end{frame}
+
+
+\section{Live-Demonstration}
+
+\begin{frame}
+\begin{center}
+	Live-Demonstration
+\end{center}
+\end{frame}
+
+
+%Zusatzfolien für eventuelle Erklärungen
+
+\begin{frame}
+\frametitle{Bluetooth Manager}
+\begin{itemize}
+  \item blabla
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Storage Manager}
+\begin{itemize}
+  \item blabla
+\end{itemize}
+\end{frame}
+
+\end{document}

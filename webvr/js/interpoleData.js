@@ -26,7 +26,7 @@ function idwInterpol(data, x, y) {
     if(data[i].x == x && data[i].y==y){
       return data[i].z;
     }
-    weights[i] = 1 / Math.pow(distance(data[i], x, y),2);
+    weights[i] = 1 / Math.pow(distance(data[i], x, y),3);
     sumWeights += weights[i];
     value += weights[i] * data[i].z;
   }

@@ -12,7 +12,13 @@ function loadData(loadedData) {
   var verticies = new Array();
   // get the data from the file and store it in an array
   for (var i = 0; i < loadedData.length; i++) {
-    var vert = new THREE.Vector3(Number(loadedData[i].y), Number(loadedData[i].x), Number(loadedData[i].z));
+    var vert = new THREE.Vector3(Number(loadedData[i].originalY), Number(loadedData[i].originalX), Number(loadedData[i].z));
+    if (vert.x < 0) {
+      vert.x = 0.0;
+    }
+    if (vert.y < 0) {
+      vert.y = 0.0;
+    }
     verticies[i] = vert;
   }
 
@@ -77,6 +83,8 @@ function makeText(data, loadedData) {
 
 // constructs the value sptrites used to show the real recored data
 function makeSprite(pos, data) {
+  // use a canvas to display the data as a sprite
+  // so it rotates automatacly depending where the user is standing
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
   var size = 64;
@@ -88,7 +96,7 @@ function makeSprite(pos, data) {
   context.fillStyle = 'white';
   context.strokeStyle = 'black';
   context.fillText(data, 0, 0);
-
+  // now put the canvas as a texture on a sprite that roatest with the view vector
   var texture = new THREE.Texture(canvas);
   texture.needsUpdate = true;
 

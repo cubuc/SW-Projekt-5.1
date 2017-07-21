@@ -70,10 +70,14 @@
 \section{Struktur der App}
 
 \begin{frame}
-\frametitle{Struktur}
-\framesubtitle{Work Flow}
-	\includegraphics[width=\textwidth]{diagram/workflow.png}
+\frametitle{Data Flow}
+\begin{center}
+	\includegraphics[width=\textwidth]{diagram/dataflow.png}
+\end{center}
 \end{frame}
+
+
+
 
 \subsection{TrackingManager}
 
@@ -110,27 +114,26 @@
 \begin{itemize}
   \item Interpoliere die Daten \pause
   \item Nutze Inverse Distanzgewichtung's interpolation:
-  \begin{center}
-  \includegraphics[scale=0.3]{IDW.png}
-  \end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{WebVR}
+  \includegraphics[scale=0.5]{IDW.png}
   \pause
-  \item Formel:
   $$
   u(x) = \frac{\sum_{i=1}^n w_i(x)u_i}{\sum_{i=1}^n w_i(x)}
   $$
-\end{itemize}
 \end{frame}
 
 
 \section{Live-Demonstration}
 
 \begin{frame}
-\frametitle{Data Flow}
-\begin{center}
-	\includegraphics[width=\textwidth]{diagram/dataflow.png}
-\end{center}
+\frametitle{Struktur}
+\framesubtitle{Work Flow}
+	\includegraphics[width=\textwidth]{diagram/workflow.png}
 \end{frame}
-
 
 %Zusatzfolien für eventuelle Erklärungen
 

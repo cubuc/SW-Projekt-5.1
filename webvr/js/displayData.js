@@ -159,8 +159,9 @@ function formPlane(data) {
   }
   // add the color to the geometry
   geometry.addAttribute('color', new THREE.BufferAttribute(colors, 3));
-  var planeMat = new THREE.MeshBasicMaterial({
+  var planeMat = new THREE.MeshPhongMaterial({
     side: THREE.DoubleSide,
+    shading: THREE.SmoothShading,
     wireframe: false,
     transparent: true,
     vertexColors: THREE.VertexColors

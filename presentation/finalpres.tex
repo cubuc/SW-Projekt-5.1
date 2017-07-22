@@ -97,22 +97,25 @@
 
 \begin{frame}
 \frametitle{WebVR}
+\only<1,2,4>{
 \begin{itemize}
-  \item WebVR eine javascript API um VR im browser darzustellen \pause
-%  \item Any VR headset or smartphone with Chrome or Firefox
+  \item WebVR eine javascript API um VR im browser darzustellen
   \item Einfaches 3d Modell einer Sporthalle \pause
   \item 2 verschiende Visualisierungen
   \begin{itemize}
     \item Daten punkte
-    \item Ebene
+    \item<4> Ebene
   \end{itemize}
-\end{itemize}
+\end{itemize}}
+\only<3>{\includegraphics[width=\textwidth]{points.png}}
+
+
 \end{frame}
 
 \begin{frame}
 \frametitle{WebVR}
 \begin{itemize}
-  \item Interpoliere die Daten \pause
+  \item Interpoliere die Daten
   \item Nutze Inverse Distanzgewichtung's interpolation:
 \end{itemize}
 \end{frame}

@@ -10,6 +10,8 @@
 \setbeamercolor{normal text}{fg=black, bg=white}
 \setbeamercolor{alerted text}{fg=red}
 \setbeamercolor{example text}{fg=green!50!blue}
+\setbeamertemplate{footline}[page number]
+
 
 \title{Virtual Reality for Sensor Data Analysis}
 \subtitle{SW-Projekt SS 2017 Gruppe 5.1}
@@ -143,14 +145,19 @@
 \begin{frame}
 \frametitle{Bluetooth Manager}
 \begin{itemize}
-  \item blabla
+  \item Scannen nach TI CC2650 MCU(s)
+  \item Verbinden zum GATT Server eines TI CC2650 MCU
+  \item Anzeigen erhaltener Sensordaten in einer Live-Ansicht
+  \item Senden der Sensordaten (via LocalBroadcastManager) bzw. starten des IntentService
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Storage Manager}
 \begin{itemize}
-  \item blabla
+  \item Speichert den letzten Empfangenen Intent
+  \item Skaliert die Daten und schreibt diese in eine JSON-File
+  \item Bindet Tracking-Manager, noch kein Datentransfer von diesem
 \end{itemize}
 \end{frame}
 

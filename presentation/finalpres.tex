@@ -46,11 +46,12 @@
 \begin{frame}
 \frametitle{Use Case}
 \begin{itemize}
-	\item  Fachbereich Sport will Sporthalle sanieren lassen
-	\item Brauchen "Beweise", dass Sanierung notwendig ist
-	\item U.a: Lüftungsanlage sanierungsbedürftig
-	\item Temperaturdaten aufnehmen und den Verantwortlichen in anschaulicher Form präsentieren
-	\item Halle wird renoviert, alle sind glücklich
+	\item Ziel: Temperaturschwankungen in Sporthalle messen
+	\item Vorgehen: \begin{itemize}
+		\item Mit Smartphone an verschiedenen Standorten Temperatur aufnehmen
+		\item Daten in dreidimensionaler Darstellung betrachten
+	\end{itemize}
+		
 \end{itemize}
 \end{frame}
 
@@ -101,11 +102,11 @@
 \frametitle{WebVR}
 \only<1,2,4>{
 \begin{itemize}
-  \item WebVR eine javascript API um VR im browser darzustellen
-  \item Einfaches 3d Modell einer Sporthalle \pause
+  \item WebVR eine javascript API, um VR im Browser darzustellen
+  \item Einfaches 3D Modell einer Sporthalle \pause
   \item 2 verschiende Visualisierungen
   \begin{itemize}
-    \item Daten punkte
+    \item Datenpunkte
     \item<4> Ebene
   \end{itemize}
 \end{itemize}}
@@ -155,7 +156,7 @@
 \begin{frame}
 \frametitle{Storage Manager}
 \begin{itemize}
-  \item Speichert den letzten Empfangenen Intent
+  \item Speichert den letzten empfangenen Intent
   \item Skaliert die Daten und schreibt diese in eine JSON-File
   \item Bindet Tracking-Manager, noch kein Datentransfer von diesem
 \end{itemize}
